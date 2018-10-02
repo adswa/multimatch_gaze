@@ -1,0 +1,108 @@
+onset	duration	major_location	setting	locale	int_or_ext	flow_of_time	time_of_day
+6.76	18.92	Gump property	Gump House	garden	ext	+	day
+25.68	13.72	Gump property	Gump House	front of Gump House	ext	0	day
+39.4	5.72	Gump property	Gump House	garden	ext	0	day
+45.12	2.76	Gump property	Gump House	garden	ext	0	day
+47.88	9.4	Gump property	Gump House	garden	ext	0	day
+57.28	2.24	Gump property	Gump House	garden	ext	0	day
+59.52	2.32	Gump property	Gump House	garden	ext	0	day
+61.84	5.12	Gump property	Gump House	garden	ext	0	day
+66.96	2.04	Gump property	Gump House	garden	ext	0	day
+69.0	3.0	Gump property	Gump House	garden	ext	0	day
+72.0	3.12	Gump property	Gump House	garden	ext	0	day
+75.12	5.36	Gump property	Gump House	garden	ext	0	day
+80.48	7.08	Gump property	Gump House	garden	ext	0	day
+87.56	15.92	Gump property	Gump House	Jenny's bedroom	int	++	day
+103.48	17.88	Greenbow Alabama	random meadow	random meadow	ext	++	day
+121.36	10.28	Greenbow Alabama	tree on a field	tree on a field	ext	++	day
+131.64	7.4	Gump property	Gump House	unknown_1	int	++	day
+139.04	7.28	Gump property	Gump House	front of Gump House	ext	++	day
+146.32	19.36	Gump property	Gump House	front of Gump House	ext	++	day
+165.68	12.96	Greenbow Alabama	riverside	riverside	ext	++	day
+178.64	27.56	Gump property	Gump House	living room	int	++	night
+206.2	12.4	Gump property	Gump House	corridor downstairs	int	0	night
+218.6	4.36	Gump property	Gump House	corridor downstairs	int	0	night
+222.96	4.04	Gump property	Gump House	corridor downstairs	int	0	night
+227.0	4.6	Gump property	Gump House	corridor downstairs	int	0	night
+231.6	5.28	Gump property	Gump House	corridor downstairs	int	0	night
+236.88	2.28	Gump property	Gump House	corridor downstairs	int	0	night
+239.16	11.16	Gump property	Gump House	corridor downstairs	int	0	night
+250.32	1.96	Gump property	Gump House	corridor downstairs	int	0	night
+252.28	3.44	Gump property	Gump House	corridor downstairs	int	0	night
+255.72	3.64	Gump property	Gump House	corridor downstairs	int	0	night
+259.36	3.32	Gump property	Gump House	corridor downstairs	int	0	night
+262.68	4.0	Gump property	Gump House	front of Gump House	ext	+	night
+266.68	20.96	Gump property	Gump House	Forrest's bedroom	int	+	night
+287.64	21.48	Gump property	Gump House	Forrest's bedroom	int	0	night
+309.12	11.16	Gump property	Gump House	Forrest's bedroom	int	0	night
+320.28	17.0	Gump property	Gump House	front of Gump House	ext	++	day
+337.28	9.76	Gump property	Gump House	front of Gump House	ext	0	day
+347.04	17.16	Gump property	Gump House	Forrest's bedroom	int	0	day
+364.2	13.48	Gump property	Gump House	unknown_2	int	++	day
+377.68	8.64	Gump property	Gump House	Jenny's bedroom	int	++	day
+386.32	8.32	Gump property	Gump House	living room	int	++	day
+394.64	19.4	Gump property	Gump House	front of Gump House	ext	++	day
+414.04	16.32	Gump property	Gump House	front of Gump House	ext	0	day
+430.36	6.56	Gump property	access-road	alley to Gump House	ext	0	day
+436.92	6.64	Gump property	access-road	at the mail boxes	ext	+	day
+443.56	4.6	Greenbow Alabama	main street	in the barbershop	int	+	day
+448.16	8.32	Greenbow Alabama	road with bridge	road with bridge	ext	+	day
+456.48	5.6	Mississippi	road with Mississippi sign	road with Mississippi sign	ext	++	day
+462.08	6.36	Savannah	bench at bus stop	bench at bus stop	ext	++	day
+468.44	4.2	Santa Monica	yacht harbor	yacht harbor	ext	-	day
+472.64	9.72	Santa Monica	yacht harbor	yacht harbor's jetty	ext	+	day
+482.36	11.52	Atlantic Ocean	beacon	beacon	ext	++	day
+493.88	5.36	Atlantic Ocean	beacon	beacon	ext	0	day
+499.24	5.64	Savannah	bench at bus stop	bench at bus stop	ext	++	day
+504.88	3.28	Savannah	bench at bus stop	bench at bus stop	ext	0	day
+508.16	3.04	Savannah	bench at bus stop	bench at bus stop	ext	0	day
+511.2	9.4	United States	road at a river	road at a river	ext	-	day
+520.6	6.92	United States	road between wheat fields	road between wheat fields	ext	++	day
+527.52	7.48	Rocky Mountains	stone bridge	stone bridge	ext	++	day
+535.0	6.92	United States	road between fences	road between fences	ext	++	day
+541.92	10.04	United States	autumn forrest	autumn forrest with houses	ext	++	day
+551.96	6.04	United States	autumn forrest	road trough autumn forrest	ext	+	day
+558.0	6.28	Greenbow Alabama	main street	in the barbershop	int	+	day
+564.28	2.24	Greenbow Alabama	main street	in the barbershop	int	+	day
+566.52	13.44	Savannah	restaurant	restaurant	int	+	day
+579.96	16.64	Mississippi	bridge at mississippi river	bridge at mississippi river	ext	0	day
+596.6	1.64	Savannah	bench at bus stop	bench at bus stop	ext	++	day
+598.24	4.48	United States	street with houses	street with houses	ext	-	day
+602.72	5.36	Savannah	bench at bus stop	bench at bus stop	ext	++	day
+608.08	12.04	United States	street with houses	street with houses	ext	-	day
+620.12	5.36	United States	street in mountains	street in mountains	ext	++	day
+625.48	5.52	United States	street in desert	street in desert	ext	++	day
+631.0	6.8	Savannah	bench at bus stop	bench at bus stop	ext	++	day
+637.8	32.04	United States	street with sidewalk	street with sidewalk	ext	-	day
+669.84	3.2	United States	street with crashing cars	street with crashing cars	ext	++	day
+673.04	21.36	United States	truck stop	truck stop	ext	-	day
+694.4	4.96	United States	truck stop	truck stop	ext	0	day
+699.36	3.92	United States	truck stop	truck stop	ext	0	day
+703.28	32.6	Monument Valley	road through Monument Valley	road through Monument Valley	ext	++	day
+735.88	9.76	Monument Valley	road through Monument Valley	road through Monument Valley	ext	0	day
+745.64	18.76	Monument Valley	road through Monument Valley	road through Monument Valley	ext	0	day
+764.4	27.92	Monument Valley	road through Monument Valley	road through Monument Valley	ext	0	day
+792.32	6.44	Washington D.C.	Hilton Hotel	Ronald Reagon (broadcast)	ext	++	day
+798.76	12.56	Gump property	Gump House	living room	int	0	day
+811.32	36.32	Savannah	bench at bus stop	bench at bus stop	ext	++	day
+847.64	10.12	Savannah	bench at bus stop	bench at bus stop	ext	0	day
+857.76	2.2	Savannah	Jenny's apartment	Jenny's apartment's front door	int	+	day
+859.96	3.12	Savannah	Jenny's apartment	Jenny's apartment	int	0	day
+863.08	1.72	Savannah	Jenny's apartment	Jenny's apartment	int	0	day
+864.8	21.32	Savannah	Jenny's apartment	Jenny's apartment	int	0	day
+886.12	3.76	Savannah	Jenny's apartment	Jenny's apartment	int	0	day
+889.88	5.8	Savannah	Jenny's apartment	Jenny's apartment	int	0	day
+895.68	7.48	Savannah	Jenny's apartment	Jenny's apartment	int	0	day
+903.16	39.04	Savannah	Jenny's apartment	Jenny's apartment	int	0	day
+942.2	3.4	Savannah	Jenny's apartment	Jenny's apartment	int	0	day
+945.6	11.0	Savannah	Jenny's apartment	Jenny's apartment	int	0	day
+956.6	3.12	Savannah	Jenny's apartment	Jenny's apartment	int	0	day
+959.72	1.84	Savannah	Jenny's apartment	Jenny's apartment	int	0	day
+961.56	7.44	Savannah	Jenny's apartment	Jenny's apartment	int	0	day
+969.0	27.64	Savannah	Jenny's apartment	Jenny's apartment	int	0	day
+996.64	4.2	Savannah	Jenny's apartment	Jenny's apartment	int	0	day
+1000.84	12.0	Savannah	Jenny's apartment	Jenny's apartment	int	0	day
+1012.84	4.12	Savannah	Jenny's apartment	Jenny's apartment	int	0	day
+1016.96	31.76	Savannah	Jenny's apartment	Jenny's apartment	int	0	day
+1048.72	14.76	Savannah	Jenny's apartment	Jenny's apartment	int	0	day
+1063.48	6.08	Savannah	Jenny's apartment	Jenny's apartment	int	0	day

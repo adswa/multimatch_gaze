@@ -1,0 +1,85 @@
+onset	duration	major_location	setting	locale	int_or_ext	flow_of_time	time_of_day
+0.0	17.0	Paramount	mountain logo	mountain logo	ext	0	day
+17.0	151.08	Savannah	sky over Savannah	sky over Savannah	ext	++	day
+168.08	104.12	Savannah	bench at bus stop	bench at bus stop	ext	0	day
+272.2	14.12	Greenbow Alabama	doctor's office	doctor's office	int	-	day
+286.32	14.24	Greenbow Alabama	doctor's office	doctor's office	int	0	day
+300.56	11.4	Greenbow Alabama	doctor's office	doctor's office	int	0	day
+311.96	6.32	Greenbow Alabama	main street	crossroads	ext	+	day
+318.28	24.76	United States	flashback countryside	flashback countryside	ext	-	day
+343.04	10.04	Greenbow Alabama	main street	in front of barbershop	ext	++	day
+353.08	5.0	Greenbow Alabama	main street	in front of barbershop	ext	0	day
+358.08	1.96	Greenbow Alabama	main street	in front of barbershop	ext	0	day
+360.04	1.8	Greenbow Alabama	main street	in front of barbershop	ext	0	day
+361.84	1.2	Greenbow Alabama	main street	in front of barbershop	ext	0	day
+363.04	22.6	Greenbow Alabama	main street	in front of barbershop	ext	0	day
+385.64	17.16	Gump property	access-road	at the mail boxes	ext	+	day
+402.8	22.8	Gump property	access-road	alley to Gump House	ext	+	day
+425.6	8.88	Gump property	Gump House	front of Gump House	ext	0	day
+434.48	4.08	Greenbow Alabama	school	Hancock's office	int	++	day
+438.56	4.88	Greenbow Alabama	school	Hancock's office	int	0	day
+443.44	4.32	Greenbow Alabama	school	Hancock's office	int	0	day
+447.76	14.68	Greenbow Alabama	school	school hallway	int	0	day
+462.44	4.4	Greenbow Alabama	school	Hancock's office	int	0	day
+466.84	4.52	Greenbow Alabama	school	Hancock's office	int	0	day
+471.36	4.16	Greenbow Alabama	school	Hancock's office	int	0	day
+475.52	17.16	Greenbow Alabama	school	Hancock's office	int	0	day
+492.68	3.4	Greenbow Alabama	school	Hancock's office	int	0	day
+496.08	4.08	Greenbow Alabama	school	Hancock's office	int	0	day
+500.16	7.52	Greenbow Alabama	school	school hallway	int	0	day
+507.68	4.64	Greenbow Alabama	school	Hancock's office	int	0	day
+512.32	4.56	Greenbow Alabama	school	Hancock's office	int	0	day
+516.88	5.36	Gump property	Gump House	front of Gump House	ext	++	night
+522.24	4.52	Gump property	Gump House	front of Gump House	ext	0	night
+526.76	28.96	Gump property	Gump House	front of Gump House	ext	+	night
+555.72	30.76	Gump property	Gump House	Forrest's bedroom	int	+	night
+586.48	8.36	Gump property	Gump House	front of Gump House	ext	++	day
+594.84	17.24	Gump property	Gump House	corridor downstairs	int	0	day
+612.08	18.32	Gump property	Gump House	corridor upstairs	int	+	day
+630.4	2.08	Gump property	Gump House	Jenny's bedroom	int	0	day
+632.48	1.16	Gump property	Gump House	Jenny's bedroom	int	0	day
+633.64	2.72	Gump property	Gump House	Jenny's bedroom	int	0	day
+636.36	20.52	Gump property	Gump House	Jenny's bedroom	int	0	day
+656.88	2.56	Gump property	Gump House	Jenny's bedroom	int	0	day
+659.44	10.12	Gump property	Gump House	Jenny's bedroom	int	0	day
+669.56	5.44	Greenbow Alabama	main street	in front of electronic store	ext	++	night
+675.0	4.8	Greenbow Alabama	main street	in front of electronic store	ext	0	night
+679.8	1.76	Greenbow Alabama	main street	in front of electronic store	ext	0	night
+681.56	4.64	Greenbow Alabama	main street	in front of electronic store	ext	0	night
+686.2	6.32	Greenbow Alabama	main street	in front of electronic store	ext	0	night
+692.52	10.04	Greenbow Alabama	main street	in front of electronic store	ext	0	night
+702.56	10.12	Savannah	bench at bus stop	bench at bus stop	ext	++	day
+712.68	8.68	Gump property	access-road	at the mail boxes	ext	-	day
+721.36	6.08	Gump property	access-road	at the mail boxes	ext	0	day
+727.44	2.64	Gump property	access-road	at the mail boxes	ext	0	day
+730.08	2.8	Gump property	access-road	at the mail boxes	ext	0	day
+732.88	5.56	Gump property	access-road	at the mail boxes	ext	0	day
+738.44	2.24	Gump property	access-road	at the mail boxes	ext	0	day
+740.68	2.4	Gump property	access-road	at the mail boxes	ext	0	day
+743.08	2.08	Gump property	access-road	at the mail boxes	ext	0	day
+745.16	7.08	Gump property	access-road	at the mail boxes	ext	0	day
+752.24	3.0	Greenbow Alabama	school bus	inside driving bus	int	0	day
+755.24	2.64	Greenbow Alabama	school bus	inside driving bus	int	0	day
+757.88	1.44	Greenbow Alabama	school bus	inside driving bus	int	0	day
+759.32	1.32	Greenbow Alabama	school bus	inside driving bus	int	0	day
+760.64	1.0	Greenbow Alabama	school bus	inside driving bus	int	0	day
+761.64	8.6	Greenbow Alabama	school bus	inside driving bus	int	0	day
+770.24	1.04	Greenbow Alabama	school bus	inside driving bus	int	0	day
+771.28	7.24	Greenbow Alabama	school bus	inside driving bus	int	0	day
+778.52	12.52	Savannah	bench at bus stop	bench at bus stop	ext	++	day
+791.04	8.52	Greenbow Alabama	school bus	inside driving bus	int	-	day
+799.56	2.2	Greenbow Alabama	school bus	inside driving bus	int	0	day
+801.76	4.52	Greenbow Alabama	school bus	inside driving bus	int	0	day
+806.28	1.72	Greenbow Alabama	school bus	inside driving bus	int	0	day
+808.0	5.44	Greenbow Alabama	school bus	inside driving bus	int	0	day
+813.44	15.88	Greenbow Alabama	school bus	inside driving bus	int	0	day
+829.32	4.16	Greenbow Alabama	school bus	inside driving bus	int	0	day
+833.48	3.48	Greenbow Alabama	school bus	inside driving bus	int	0	day
+836.96	2.92	Greenbow Alabama	school bus	inside driving bus	int	0	day
+839.88	7.44	Greenbow Alabama	school bus	inside driving bus	int	0	day
+847.32	4.8	Greenbow Alabama	tree on a field	tree on a field	ext	++	day
+852.12	5.08	Greenbow Alabama	tree on a field	tree on a field	ext	+	day
+857.2	3.96	Greenbow Alabama	tree on a field	tree on a field	ext	++	day
+861.16	4.04	Greenbow Alabama	tree on a field	tree on a field	ext	+	day
+865.2	7.12	Greenbow Alabama	tree on a field	tree on a field	ext	++	day
+872.32	13.76	Greenbow Alabama	tree on a field	tree on a field	ext	0	day

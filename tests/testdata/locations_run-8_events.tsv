@@ -1,0 +1,78 @@
+onset	duration	major_location	setting	locale	int_or_ext	flow_of_time	time_of_day
+1.48	6.12	Savannah	Jenny's apartment	Jenny's apartment	int	0	day
+7.6	23.64	Savannah	park with playground	park with playground	ext	+	day
+31.24	20.64	Savannah	park with playground	park with playground	ext	0	day
+51.88	4.16	Savannah	park with playground	park with playground	ext	0	day
+56.04	7.56	Savannah	park with playground	park with playground	ext	0	day
+63.6	37.96	Gump property	Gump House	front of Gump House	ext	++	day
+101.56	3.72	Gump property	Gump House	front of Gump House	ext	0	day
+105.28	2.28	Gump property	Gump House	front of Gump House	ext	0	day
+107.56	3.16	Gump property	Gump House	front of Gump House	ext	0	day
+110.72	4.4	Gump property	Gump House	front of Gump House	ext	0	day
+115.12	8.2	Gump property	Gump House	front of Gump House	ext	0	day
+123.32	2.56	Gump property	Gump House	front of Gump House	ext	0	day
+125.88	7.44	Gump property	Gump House	front of Gump House	ext	0	day
+133.32	7.52	Gump property	Gump House	front of Gump House	ext	0	day
+140.84	3.12	Gump property	Gump House	front of Gump House	ext	0	day
+143.96	6.12	Gump property	Gump House	front of Gump House	ext	0	day
+150.08	4.8	Gump property	Gump House	front of Gump House	ext	0	day
+154.88	2.08	Gump property	Gump House	front of Gump House	ext	0	day
+156.96	8.24	Gump property	Gump House	front of Gump House	ext	0	day
+165.2	4.4	Gump property	Gump House	front of Gump House	ext	0	day
+169.6	2.04	Gump property	Gump House	front of Gump House	ext	0	day
+171.64	2.36	Gump property	Gump House	front of Gump House	ext	0	day
+174.0	14.96	Gump property	Gump House	garden	ext	+	day
+188.96	14.24	Gump property	access-road	alley to Gump House	ext	++	day
+203.2	8.76	Gump property	Gump House	Forrest's mother's bedroom	int	++	day
+211.96	7.12	Gump property	Gump House	Forrest's mother's bedroom	int	0	day
+219.08	2.88	Gump property	Gump House	Forrest's mother's bedroom	int	0	day
+221.96	19.68	Gump property	Gump House	Forrest's mother's bedroom	int	0	day
+241.64	6.68	Gump property	Gump House	Forrest's mother's bedroom	int	0	day
+248.32	11.64	Vietnam	yet another jungle	yet another jungle	ext	-	night
+259.96	1.48	Gump property	Gump House	Forrest's mother's bedroom	int	++	day
+261.44	4.4	Gump property	Gump House	Forrest's mother's bedroom	int	0	day
+265.84	8.4	Bayou La Batre	on the boat	on the boat	ext	-	day
+274.24	8.28	Rocky Mountains	street at a lake	street at a lake	ext	++	day
+282.52	3.32	Gump property	Gump House	Forrest's mother's bedroom	int	++	day
+285.84	12.72	Monument Valley	road through Monument Valley	road through Monument Valley	ext	-	day
+298.56	2.84	Gump property	Gump House	Forrest's mother's bedroom	int	++	day
+301.4	3.96	Gump property	Gump House	Forrest's mother's bedroom	int	0	day
+305.36	5.04	Gump property	Gump House	Forrest's mother's bedroom	int	0	day
+310.4	3.44	Gump property	Gump House	Forrest's mother's bedroom	int	0	day
+313.84	3.08	Gump property	Gump House	Forrest's mother's bedroom	int	0	day
+316.92	2.2	Gump property	Gump House	Forrest's mother's bedroom	int	0	day
+319.12	2.72	Gump property	Gump House	Forrest's mother's bedroom	int	0	day
+321.84	6.92	Gump property	Gump House	Forrest's mother's bedroom	int	0	day
+328.76	6.92	Greenbow Alabama	tree on a field	Jenny's Grave	ext	++	day
+335.68	8.56	Greenbow Alabama	tree on a field	Jenny's Grave	ext	0	day
+344.24	5.24	Greenbow Alabama	Jenny's house	front of Jenny's house	ext	-	day
+349.48	5.96	Greenbow Alabama	tree on a field	Jenny's Grave	ext	++	day
+355.44	5.36	Greenbow Alabama	tree on a field	Jenny's Grave	ext	0	day
+360.8	7.0	Greenbow Alabama	tree on a field	Jenny's Grave	ext	0	day
+367.8	8.56	Gump property	Gump House	Forrest's bedroom	int	-	night
+376.36	13.76	Greenbow Alabama	tree on a field	Jenny's Grave	ext	++	day
+390.12	6.72	Gump property	Gump House	front of Gump House	ext	-	night
+396.84	6.32	Greenbow Alabama	riverside	riverside	ext	++	day
+403.16	25.48	Greenbow Alabama	tree on a field	Jenny's Grave	ext	++	day
+428.64	4.88	Greenbow Alabama	tree on a field	Jenny's Grave	ext	0	day
+433.52	11.52	Greenbow Alabama	tree on a field	Jenny's Grave	ext	0	day
+445.04	63.76	Greenbow Alabama	tree on a field	Jenny's Grave	ext	0	day
+508.8	25.6	Greenbow Alabama	tree on a field	Jenny's Grave	ext	0	day
+534.4	7.32	Gump property	access-road	at the mail boxes	ext	++	day
+541.72	9.4	Gump property	access-road	at the mail boxes	ext	0	day
+551.12	4.12	Gump property	access-road	at the mail boxes	ext	0	day
+555.24	2.64	Gump property	access-road	at the mail boxes	ext	0	day
+557.88	6.36	Gump property	access-road	at the mail boxes	ext	0	day
+564.24	3.08	Gump property	access-road	at the mail boxes	ext	0	day
+567.32	1.56	Gump property	access-road	at the mail boxes	ext	0	day
+568.88	1.52	Gump property	access-road	at the mail boxes	ext	0	day
+570.4	5.08	Gump property	access-road	at the mail boxes	ext	0	day
+575.48	1.96	Gump property	access-road	at the mail boxes	ext	0	day
+577.44	3.84	Gump property	access-road	at the mail boxes	ext	0	day
+581.28	1.4	Gump property	access-road	at the mail boxes	ext	0	day
+582.68	11.2	Gump property	access-road	at the mail boxes	ext	0	day
+593.88	1.56	Gump property	access-road	at the mail boxes	ext	0	day
+595.44	2.12	Gump property	access-road	at the mail boxes	ext	0	day
+597.56	5.0	Gump property	access-road	at the mail boxes	ext	0	day
+602.56	9.0	Gump property	access-road	at the mail boxes	ext	0	day
+611.56	60.2	Gump property	access-road	at the mail boxes	ext	0	day
