@@ -1,7 +1,7 @@
 # MultiMatch
-Reimplementation of MultiMatch toolbox (Dewhurst et al., 2012) in Python.
+# Reimplementation of MultiMatch toolbox (Dewhurst et al., 2012) in Python.
 
-The MultiMatch method proposed by Jarodzka, Holmqvist and Nyström (2010),
+The **MultiMatch** method proposed by Jarodzka, Holmqvist and Nyström (2010),
 implemented in Matlab as the MultiMatch toolbox and validated by Dewhurst
 and colleagues (2012) is a vector-based, multi-dimensional approach to
 measuring scanpath similarity.
@@ -10,13 +10,15 @@ The method represents scanpaths as geometrical vectors in a two-dimensional
 space: Any scanpath is build up of a vector sequence in which the vectors
 represent saccades, and the start and end position of saccade vectors represent
 fixations. Two such sequences (which can differ in length) are compared on the
-five dimensions 'vector shape', 'vector length' (saccadic amplitude), 'vector
-position', 'vector direction' and 'fixation duration' for a multidimensional
-similarity evaluation. The original Matlab toolbox was kindly provided via email
-by Dr. Richard Dewhurst and the method was ported into Python with the intent of
-comparing scanpaths evoked by movie 'Forrest Gump' in subjects.
+five dimensions **'vector shape'**, **'vector length'** (saccadic amplitude),
+**'vector position'**, **'vector direction'** and **'fixation duration'** for a
+multidimensional similarity evaluation. The original Matlab toolbox was kindly
+provided via email by Dr. Richard Dewhurst and the method was ported into Python
+with the intent of comparing scanpaths evoked by movie 'Forrest Gump' in subjects.
 
-The orginal method takes n x 3 fixation vectors of two scanpaths with x- and
+## Method overview
+
+- The orginal method takes n x 3 fixation vectors of two scanpaths with x- and
 y-coordinates of the fixations and their duration as variables as its input. In
 a first step, based on the coordinates and durations of fixations, the scanpaths
 are represented as a vector sequences:
@@ -30,7 +32,7 @@ lengths in x and y directions are transformed into polar coordinates, namely
 length from coordinate origin (Rho) and polar angle in radians (Theta) by means
 of trigonometry.
 
-In a second step, the scanpaths are simplified according to angle and amplitude
+- In a second step, the scanpaths are simplified according to angle and amplitude
 (length) to reduce their complexity. Two or more saccades are grouped together
 if angles between two consecutive saccades are below an angular threshold, or if
 the amplitude of successive saccades is below a length threshold. As such,
@@ -41,7 +43,7 @@ implements an angular threshold of 45° and an amplitude threshold of 10% of the
 screen diagonal (Jarodzka, Holmqvist & Nyström, 2010). This process is repeated
 until no further simplifications are made.
 
-In a third step, the two simplified scanpaths are temporally aligned in order to
+- In a third step, the two simplified scanpaths are temporally aligned in order to
 find pairings of saccade vectors to compare. The aim is to not necessarily align
 two saccade vectors that constitute the same component in  their respective
 vector sequence, but those two vectors that are the most similar while still
@@ -62,7 +64,7 @@ of a directed, weighted graph. The elements of the matrix are the
 nodes, the connection rules constitute edges and the weights define the cost
 associated with each connection.
 
-A Dijkstra algorithm (Dijksta, 1959) is used to find the shortest path from the
+- A Dijkstra algorithm (Dijksta, 1959) is used to find the shortest path from the
 top left node, the first two saccade vectors, to the bottom right node, the last
 two saccade vectors. “Shortest” path is defined as the connection between nodes
 with the lowest possible sum of weights. This algorithm is common in way-finding
@@ -72,7 +74,7 @@ is a sequence of indexes, denoting pairings of saccade vectors from each
 scanpath, and as such the desired alignment of scanpaths (Dewhurst et al.,
 2012).
 
-Finally, in a last step, five measures of scanpath similarity are computed. This
+- Finally, in a last step, five measures of scanpath similarity are computed. This
 is done by performing simple vector arithmetic on all aligned saccade pairs
 (u_i, v_j), taking the average of the results and normalizing this average
 according to a certain metric. As a result, all five measures are in range [0,
@@ -104,7 +106,7 @@ In the future, the code will hopefully be updated to be a standalone used with
 ready-to-use nx3 fixation vectors with the additional possibility of usage
 within the studyforrest context.
 
-Examplary usage of the script in a terminal:
+## Examplary usage of the script in a terminal:
 
 ./MultiMatch.py -i inputs/eyemovements/sub-01/sub-01_task-movie_run-1_events.tsv
 -j inputs/eyemovements/sub-02/sub-02_task-movie_run-1_events.tsv -k
@@ -114,7 +116,7 @@ inputs/studyforrest-data-annotations/segments/avmovie/locations_run-1_events.tsv
 
 
 
-References:
+### References:
 
 Dewhurst, R., Nyström, M., Jarodzka, H., Foulsham, T., Johansson, R. &
 Holmqvist, K. (2012). It depends on how you look at it: scanpath comparison in
