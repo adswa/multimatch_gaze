@@ -121,6 +121,9 @@ Holmqvist, K. (2012). It depends on how you look at it: scanpath comparison in
 multiple dimensions with MultiMatch, a vector-based approach. Behaviour Research
 Methods, 44(4), 1079-1100.
 
+Dijkstra, E. W. (1959). A note on two problems in connexion withgraphs.
+Numerische Mathematik, 1, 269–271.
+
 Jarodzka, H., Holmqvist, K., & Nyström, M. (eds.) (2010). A vector-based,
 multidimensional scanpath similarity measure. In Proceedings of the 2010
 symposium on eye-tracking research & applications (pp. 211-218). ACM.
