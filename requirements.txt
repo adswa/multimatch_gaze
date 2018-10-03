@@ -1,6 +1,5 @@
 numpy
 pandas
-math
 bisect
 argparse
 pytest
