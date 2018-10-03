@@ -10,9 +10,9 @@ def same_sample(run = 1, subj = 1):
         sub = "sub-30"
     else:
         sub = "sub-10"
-    path = os.path.join("/home/adina/Documents/MastersThesis/Alles/code/tests/testdata",
+    path = os.path.join("MultiMatch/tests/testdata",
     "{}_task-movie_run-{}_events.tsv".format(sub, run))
-    loc = os.path.join("/home/adina/Documents/MastersThesis/Alles/code/tests/testdata", "locations_run-{}_events.tsv".format(run))
+    loc = os.path.join("MultiMatch/tests/testdata", "locations_run-{}_events.tsv".format(run))
     data = np.recfromcsv(path, delimiter= '\t', dtype={'names':('onset',
             'duration', 'label', 'start_x', 'start_y', 'end_x', 'end_y', 'amp',
             'peak_vel', 'med_vel', 'avg_vel'), 'formats':('f8', 'f8', 'U10',
@@ -23,8 +23,7 @@ def same_sample(run = 1, subj = 1):
 
 def short_shots(run=3):
     '''create a shortened shots location annotation to test longshots()'''
-    loc = os.path.join("/home/adina/Documents/MastersThesis/Alles/code/tests/testdata",
-    "locations_run-{}_events.tsv".format(run))
+    loc = os.path.join("MultiMatch/tests/testdata","locations_run-{}_events.tsv".format(run))
     shots = pd.read_csv(loc, sep = '\t')
     shortshots = shots[0:20]
     return shortshots
