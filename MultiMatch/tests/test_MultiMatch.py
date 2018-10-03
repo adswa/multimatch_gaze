@@ -5,7 +5,7 @@ from .. import MultiMatch as M
 
 def test_same_real_data(run = 1, subj = 1):
     data1, data2, shots = ut.same_sample(run, subj)
-    segments = M.doComparison(shots, data1, data2)
+    segments, onset, duration = M.doComparison(shots, data1, data2)
     segmentfinal = np.array(segments)
     assert np.all(segmentfinal.all(1))
 
