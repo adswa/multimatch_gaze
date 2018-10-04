@@ -6,7 +6,7 @@ python:
 env:
     global:
         #stole this from one of mih ymls.
-        - Coverage=coverage
+        - COVERAGE=coverage
 
 #command to install dependencies
 install:
