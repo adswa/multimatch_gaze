@@ -18,4 +18,6 @@ script:
     - python -m pytest -s -v --cov=MultiMatch/
 
 after success:
+    #stole this from mih as well
+    - coverage combine -a /tmp/.coverage-entrypoints-*
     - codecov
