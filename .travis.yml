@@ -19,5 +19,8 @@ script:
 
 after success:
     #stole this from mih as well
-    - coverage combine -a /tmp/.coverage-entrypoints-*
-    - codecov --file coverage/lcov.info --disable search
+    - codecov
+
+
+codecov:
+  token: 44656c54-250a-4f8b-bd58-688056318912
