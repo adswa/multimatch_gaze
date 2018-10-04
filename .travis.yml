@@ -15,7 +15,7 @@ install:
     - pip install pytest-cov
 #command to run tests
 script:
-    - python -m pytest -s -v --cov=MultiMatch/
+    - python -m pytest -s -v --cov=MultiMatch/ --cov-report=term-missing
 
 after success:
     #stole this from mih as well
