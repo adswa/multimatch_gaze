@@ -20,4 +20,4 @@ script:
 after success:
     #stole this from mih as well
     - coverage combine -a /tmp/.coverage-entrypoints-*
-    - codecov
+    - codecov --file coverage/lcov.info --disable search
