@@ -11,11 +11,12 @@ env:
 #command to install dependencies
 install:
     - pip install -r requirements.txt
-    - pip install -q codecov
+    - pip install -U codecov
     - pip install pytest-cov
 #command to run tests
 script:
     - python -m pytest -s -v --cov=MultiMatch/ --cov-report=term-missing
+    - codecov
 
 after success:
     #stole this from mih as well
