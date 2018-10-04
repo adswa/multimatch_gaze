@@ -1,5 +1,10 @@
 [![Build Status](https://travis-ci.com/AdinaWagner/MultiMatch.svg?branch=master)](https://travis-ci.com/AdinaWagner/MultiMatch)
-[![codecov.io](https://codecov.io/github/AdinaWagner/MultiMatch/coverage.svg?branch=master)](https://codecov.io/github/AdinaWagner/MultiMatch?branch=master)
+
+
+[![codecov](https://codecov.io/gh/AdinaWagner/MultiMatch/branch/master/graph/badge.svg)](https://codecov.io/gh/AdinaWagner/MultiMatch)
+
+
+
 # MultiMatch
 # Reimplementation of MultiMatch toolbox (Dewhurst et al., 2012) in Python.
 
