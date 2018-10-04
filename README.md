@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/AdinaWagner/MultiMatch.svg?branch=master)](https://travis-ci.com/AdinaWagner/MultiMatch)
+
 # MultiMatch
 # Reimplementation of MultiMatch toolbox (Dewhurst et al., 2012) in Python.
 
