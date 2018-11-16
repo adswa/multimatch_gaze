@@ -13,38 +13,6 @@ from bisect import bisect_right
 from bisect import bisect_left
 import os.path as op
 
-if __name__ == '__main__':
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    #define arguments
-    parser.add_argument('-i', '--input', nargs = '+', help = 'Input: eyemovement data of one subject', metavar = 'PATH', required = True)
-    parser.add_argument('-o', '--output', help = 'Output: Specify path where output should be saved', metavar = 'PATH', required = True)
-    parser.add_argument('-sz', '--screensize', help = 'Screensize: what are the dimensions of the screen the stimulus was displayed on in px, e.g. [1280, 720]', default=[1280, 720])
-    parser.add_argument('-s', '--shots', help = 'Input3: location annotation of the movie segment', metavar = 'PATH', required = True)
-    parser.add_argument('-d'. '--duration', help = 'approximate duration of video segments to derive fixation vectors from', default=5.0)
-    args = parser.parse_args()
-
-#Data read in
-
-    data1 = np.recfromcsv(args.input1[0],
-            delimiter='\t',
-            dtype={'names':('onset', 'duration', 'label', 'start_x', 'start_y',
-            'end_x', 'end_y', 'amp', 'peak_vel', 'med_vel', 'avg_vel'),
-            'formats':('f8', 'f8', 'U10', 'f8', 'f8', 'f8', 'f8', 'f8', 'f8',
-            'f8', 'f8')})
-    shots = pd.read_csv(args.input3, sep = '\t')
-
-    if args.screensize:
-        sz = args.screensize
-    else:
-        sz = [1280, 720]
-
-    if args.duration:
-        dur = args.duration
-    else:
-        dur = 5.0
-
 
 def pursuits_to_fixations(npdata):
     '''this function takes a numpy record array from Asims eye-event detection
@@ -190,22 +158,63 @@ def longshot(shots, dur):
     'duration'])
     return aggregated
 
-header = fixation_vector[0].dtype.names
-subname = op.basename(args.input1[0]).split('_')[0]
 
 
-def savefile(fixation_vector, output, header = header):
+def savefile(fixation_vector, output, header):
     newheader = ''.join([w+'\t' for w in header]).strip()
     np.savetxt(output, fixation_vector, delimiter='\t', comments='', header =  newheader)
 
 
-def run(data1, shots, sz, dur, subname = subname):
+def run(data1, shots, sz, dur, subname):
     newdata1 = pursuits_to_fixations(data1)
     fixations1 = preprocess(newdata1, sz)
     shots = longshot(shots, dur)
-    onset = createOffsets(shots, dur)
-    startid1, endid1 = createOffsetChunks(onset, fixations1, dur)
+    onset = createOnsets(shots, dur)
+    startid1, endid1 = createChunks(onset, fixations1, dur)
     fixation_vectors1 = FixationsChunks(fixations1, startid1, endid1)
+    header = fixation_vectors1[0].dtype.names
     for i in range(0, len(onset)):
         output = args.output + '/fixvectors/segment_' + str(i) + '_' + subname + '.tsv'
-        savefile(fixation_vector[i], output)
+        print('saving file', i, 'into', output)
+        savefile(fixation_vectors1[i], output, header)
+
+
+
+if __name__ == '__main__':
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    #define arguments
+    parser.add_argument('-i', '--input1', nargs = '+', help = 'Input: eyemovement data of one subject', metavar = 'PATH', required = True)
+    parser.add_argument('-o', '--output', help = 'Output: Specify path where output should be saved', metavar = 'PATH', required = True)
+    parser.add_argument('-sz', '--screensize', help = 'Screensize: what are the dimensions of the screen the stimulus was displayed on in px, e.g. [1280, 720]', default=[1280, 720])
+    parser.add_argument('-s', '--shots', help = 'Input3: location annotation of the movie segment', metavar = 'PATH', required = True)
+    parser.add_argument('-d', '--duration', help = 'approximate duration of video segments to derive fixation vectors from', default=5.0)
+    args = parser.parse_args()
+
+#Data read in
+
+    data1 = np.recfromcsv(args.input1[0],
+            delimiter='\t',
+            dtype={'names':('onset', 'duration', 'label', 'start_x', 'start_y',
+            'end_x', 'end_y', 'amp', 'peak_vel', 'med_vel', 'avg_vel'),
+            'formats':('f8', 'f8', 'U10', 'f8', 'f8', 'f8', 'f8', 'f8', 'f8',
+            'f8', 'f8')})
+    shots = pd.read_csv(args.shots, sep = '\t')
+
+    subname = op.basename(args.input1[0]).split('_')[0]
+
+    if args.screensize:
+        sz = args.screensize
+    else:
+        sz = [1280, 720]
+
+    if args.duration:
+        dur = float(args.duration)
+    else:
+        dur = 5.0
+
+    #run everything
+    run(data1, shots, sz, dur, subname)
+
+
