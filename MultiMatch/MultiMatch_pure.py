@@ -6,6 +6,7 @@ import math
 
 
 
+
 def cart2pol(x, y):
     '''transform cartesian into polar coordinates. Returns rho (length from 0,0)
     and theta (angle).'''
@@ -72,26 +73,69 @@ def generateStructureArrayScanpath(data):
 def simplifyDirection(eyedata, TDir):
     #for every line in length (rho)
     for i in range(0, len(eyedata[8])):
-        s1 = [eyedata[5][i], eyedata[5][i+1]]
-        s2 = [eyedata[6][i], eyedata[6][i+1]]
-        angle = calcangle(s1, s2)
-        if angle < TDir:
-            if eyedata[2][i+1] > TDur:
-                continue
+    # we dynamically shorten the list accoring to the amplitude threshold.
+    # don't run into index errors
+        if i < len(eyedata[8]):
+            s1 = [eyedata[5][i], eyedata[5][i+1]]
+            s2 = [eyedata[6][i], eyedata[6][i+1]]
+            angle = calcangle(s1, s2)
+            if angle < TAmp:
+                if eyedata[2][i+1] > TDur:
+                    continue
+                else:
+                    #combine vectors
+                    v_x = eyedata[5][i]+eyedata[5][i+1]
+                    v_y = eyedata[6][i]+eyedata[6][i+1]
+                    rho, theta = cart2pol(v_x, v_y)
+                    #add durations together
+                    fix = eyedata[2][i] + eyedata[2][i+1]
+                    eyedata[5][i] = v_x
+                    eyedata[6][i] = v_y
+                    eyedata[7][i] = theta
+                    eyedata[8][i] = rho
+                    eyedata[2][i] = fix
+                    #delete characteristics of second vector
+                    for list in eyedata:
+                        del list[i+1]
+                        print('I combined saccades ', i, ' and ', i+1,' based on their small angle')
             else:
-                #combine vectors
-                v_x = eyedata[5][i]+eyedata[5][i+1]
-                v_y = eyedata[6][i]+eyedata[6][i+1]
-                rho, theta = cart2pol(v_x, v_y)
-                #add durations together
-                fix = eyedata[2][i] + eyedata[2][i+1]
-                eyedata[5][i] = v_x
-                eyedata[6][i] = v_y
-                eyedata[7][i] = theta
-                eyedata[8][i] = rho
-                eyedata[2][i] = fix
-                #delete characteristics of second vector
-                for list in eyedata
+                continue
+        else:
+            break
+    return eyedata
+
+def simplifyLength(eyedata, TAmp):
+    for i in range(0, len(eyedata[8])):
+        if i < len(eyedata[8]):
+            if eyedata[8][i] > TAmp:
+                continue
+                if eyedata[2] > TDur:
+                    continue
+                else:
+                    v_x = eyedata[5][i] + eyedata[5][i + 1]
+                    v_y = eyedata[6][i] + eyedata[6][i + 1]
+                    rho, theta = cart2pol(v_x, v_y)
+                    #add durations together
+                    fix = eyedata[2][i] + eyedata[2][i+1]
+                    eyedata[5][i] = v_x
+                    eyedata[6][i] = v_y
+                    eyedata[7][i] = theta
+                    eyedata[8][i] = rho
+                    eyedata[2][i] = fix
+                    #delete characteristics of second vector
+                    for list in eyedata:
+                        del list[i]
+                        print('I combined saccades ', i, ' and ', i+1, ' based on their short length')
+            else:
+                continue
+        else:
+            break
+    return eyedata
+
+
+
+
+
 
 
 
