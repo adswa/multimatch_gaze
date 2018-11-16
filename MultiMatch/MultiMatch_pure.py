@@ -69,6 +69,70 @@ def generateStructureArrayScanpath(data):
               saccade_lenx, saccade_leny, saccade_theta, saccade_rho]
     return eyedata
 
+def simplifyDirection(eyedata, TDir):
+    #for every line in length (rho)
+    for i in range(0, len(eyedata[8])):
+        s1 = [eyedata[5][i], eyedata[5][i+1]]
+        s2 = [eyedata[6][i], eyedata[6][i+1]]
+        angle = calcangle(s1, s2)
+        if angle < TDir:
+            if eyedata[2][i+1] > TDur:
+                continue
+            else:
+                #combine vectors
+                v_x = eyedata[5][i]+eyedata[5][i+1]
+                v_y = eyedata[6][i]+eyedata[6][i+1]
+                rho, theta = cart2pol(v_x, v_y)
+                #add durations together
+                fix = eyedata[2][i] + eyedata[2][i+1]
+                eyedata[5][i] = v_x
+                eyedata[6][i] = v_y
+                eyedata[7][i] = theta
+                eyedata[8][i] = rho
+                eyedata[2][i] = fix
+                #delete characteristics of second vector
+                for list in eyedata
+
+
+
+
+
+
+
+
+    def pursuits_to_fixations(npdata):
+        '''this function takes a numpy record array from Asims eye-event detection
+        algorithm. Start and end points of pursuits are transformed into a fixation,
+        the pursuit movement can then be simplified as a saccade. The function
+        returns a recordarray'''
+        # initialize empty rec array of the same shape
+        newdata = np.recarray((0,), dtype=[('onset', '<f8'),
+                                           ('duration', '<f8'),
+                                           ('label', '<U10'),
+                                           ('start_x', '<f8'),
+                                           ('start_y', '<f8'),
+                                           ('end_x', '<f8'),
+                                           ('end_y', '<f8'),
+                                           ('amp', '<f8'),
+                                           ('peak_vel', '<f8'),
+                                           ('med_vel', '<f8'),
+                                           ('avg_vel', '<f8')])
+        # reassemble rec array. split pursuits to use end and start as fixations later
+        for i in range(0, len(npdata)):
+            if npdata[i]['label'] == 'PURS':
+                row_1 = npdata[i]
+                row_1['duration'] = npdata[i]['duration'] / 2
+                row_2 = row_1.copy()
+                row_2['onset'] += row_2['duration']
+                row_2['start_x'] = row_2['end_x']
+                row_2['start_y'] = row_2['end_y']
+                newdata = np.append(newdata, row_1)
+                newdata = np.append(newdata, row_2)
+            else:
+                newdata = np.append(newdata, npdata[i])
+        return newdata
+
+
 def calVectordifferences(data1, data2):
     '''create M, a Matrix with all possible saccade-length differences between
     saccade pairs. Takes two scanpaths from generateSrtuctureArray() as input.'''
@@ -352,12 +416,9 @@ def doComparison(fixation_vectors1, fixation_vectors2, sz = [1280, 720]): #TODO:
         scanpathcomparisons.append(np.repeat(np.nan, 5))
     return scanpathcomparisons
 
-#TODO: data save
-header = x1.dtype.names
-newheader = ''.join([w+'\t' for w in header]).strip()
-np.savetxt('testvector.txt', x1, delimiter='\t', comments='', header = newheader)
-
-
+#TODO Argparse
+#TODO TDir , TDur
 #TODO: dataread in
 data1 =np.recfromcsv('testvector.txt', delimiter='\t', dtype={'names':('start_x', 'start_y', 'duration'), 'formats':('f8', 'f8', 'f8')})
 data2 =
+
