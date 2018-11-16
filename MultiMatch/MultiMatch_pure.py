@@ -1,0 +1,363 @@
+#!/usr/bin/python3
+
+
+import numpy as np
+import math
+
+
+
+def cart2pol(x, y):
+    '''transform cartesian into polar coordinates. Returns rho (length from 0,0)
+    and theta (angle).'''
+    rho = np.sqrt(x**2 + y**2)
+    theta = np.arctan2(y,x)
+    return(rho, theta)
+
+def calcangle(x1, x2):
+    '''Calculate and return the angle between to vectors (saccades).'''
+    angle = math.degrees(
+            math.acos(
+            np.dot(x1, x2)/(np.linalg.norm(x1)*np.linalg.norm(x2))))
+    return angle
+
+
+
+#Functions ported or adapted from MultiMatch
+def generateStructureArrayScanpath(data):
+    '''Take an n x 3 fixation vector (start_x, start_y, duration) in the form of
+    of a record array and transform it into appropriate vectorbased scanpath
+    representation. Indices are as follows:
+    0: fixation_x
+    1: fixation_y
+    2: fixation_dur
+    3: saccade_x
+    4: saccade_y
+    5: saccade_lenx
+    6: saccade_leny
+    7: saccade_theta
+    8: saccade_rho'''
+    #initialize empty lists
+    fixation_x = []
+    fixation_y = []
+    fixation_dur = []
+    saccade_x = []
+    saccade_y = []
+    saccade_lenx = []
+    saccade_leny = []
+    saccade_theta = []
+    saccade_rho = []
+    #get the number of rows
+    length=np.shape(data)[0]
+    #keep coordinates and durations of fixations
+    for i in range(0, length):
+        fixation_x.append(data[i]['start_x'])
+        fixation_y.append(data[i]['start_y'])
+        fixation_dur.append(data[i]['duration'])
+    #fixations as start coordinates for saccades (ignores PSOs and the like)
+    for i in range(0, length-1):
+        saccade_x.append(data[i]['start_x'])
+        saccade_y.append(data[i]['start_y'])
+    #calculate saccade length and angle
+    for i in range(1, length):
+        saccade_lenx.append(fixation_x[i] - saccade_x[i-1])
+        saccade_leny.append(fixation_y[i] - saccade_y[i-1])
+        rho, theta = cart2pol(saccade_lenx[i-1], saccade_leny[i-1])
+        saccade_rho.append(rho)
+        saccade_theta.append(theta)
+    #append everything. Eyedata is a list of lists.
+    eyedata = [fixation_x, fixation_y, fixation_dur, saccade_x, saccade_y,
+              saccade_lenx, saccade_leny, saccade_theta, saccade_rho]
+    return eyedata
+
+def calVectordifferences(data1, data2):
+    '''create M, a Matrix with all possible saccade-length differences between
+    saccade pairs. Takes two scanpaths from generateSrtuctureArray() as input.'''
+    #take length in x and y direction of both scanpaths
+    x1 = np.asarray(data1[5])
+    x2 = np.asarray(data2[5])
+    y1 = np.asarray(data1[6])
+    y2 = np.asarray(data2[6])
+    #initialize empty lists M and row, will become matrix to store sacc-length
+    #pairings
+    M = []
+    row = []
+    #calculate saccade length differences, vectorized
+    for i in range(0, len(x1)):
+        x_diff = abs(x1[i] * np.ones(len(x2)) - x2)
+        y_diff = abs(y1[i] * np.ones(len(y2)) - y2)
+        #calc final length from x and y lengths, append, stack into matrix M
+        row.append(np.asarray(np.sqrt(x_diff**2 + y_diff**2)))
+        M = np.stack(row)
+    return M
+
+
+def createdirectedgraph(szM, M, M_assignment):
+    '''create a directed graph. The data structure of the result is a
+    dicitionary within a dictionary as in
+    https://stackoverflow.com/questions/22897209/dijkstras-algorithm-in-python:
+    weightedGraph = {0 : {1:259.55, 15:48.19, 16:351.95}, 1 : {2:249.354, 16:351.951,
+    17:108.97}, 2 : {3:553.30, 17:108.97, 18:341.78}, ...}
+    szM = shape of M
+    M = Matrix with all saccade-length difference pairings
+    M_assignment = Matrix, aranged with values from 0 to end if szM[0]*szM[1]
+    entries'''
+    #initialize dictionary for neighbouring vertices and edge weights
+    adjacent = {}
+    weight = {}
+    #loop through every node rowwise
+    for i in range(0, szM[0]):
+        #loop through every node columnwise
+        for j in range(0, szM[1]):
+            currentNode = i * szM[1]+j
+            #if in the last (bottom) row, only go right
+            if (i == szM[0]-1) & (j < szM[1]-1):
+                adjacent[M_assignment[i,j]] = [currentNode + 1]
+                weight[M_assignment[i,j]] = [M[i, j+1]]
+            #if in the last (rightmost) column, only go down
+            elif (i < szM[0]-1) & (j ==szM[1]-1):
+                adjacent[M_assignment[i,j]] = [currentNode + szM[1]]
+                weight[M_assignment[i, j]] = [M[i + 1, j]]
+            #if in the last (bottom-right) vertex, do not move any further
+            elif (i == szM[0]-1) & (j == szM[1]-1):
+                adjacent[M_assignment[i, j]] = [currentNode]
+                weight[M_assignment[i, j]] = [0]
+            #anywhere else, move right, down and down-right.
+            else:
+                adjacent[M_assignment[i, j]] = [currentNode + 1, currentNode + szM[1], currentNode + szM[1]+1]
+                weight[M_assignment[i, j]] = [M[i, j+1],M[i + 1, j], M[i + 1, j + 1]]
+    #create list of all Nodes
+    Nodes = np.hstack(list(adjacent.values()))
+    #create list of all associated distances (=weights)
+    Distances = np.hstack(list(weight.values()))
+    #create ascending list ranging from first to last node
+    Startnodes = range(0, szM[0] * szM[1])
+    #initialize list with adjacent nodes and their weights
+    weightedEdges = []
+    #zip Nodes and weights
+    for i in range(0, len(adjacent)):
+        weightedEdges.append(list(zip(list(adjacent.values())[i], list(weight.values())[i])))
+    #initialize final dictionary
+    weightedGraph = {}
+    #zip Startnodes together with Nodes-Weights, result is a nested dict
+    for i in range(0, len(weightedEdges)):
+        weightedGraph[Startnodes[i]] = dict(weightedEdges[i])
+    return weightedGraph
+
+
+def dijkstra(weightedGraph, start, end):
+    '''use the dijkstra algorithm to find the shortest path through a directed
+    graph (weightedGraph) from start to end. weightedGraph is the output from
+    createdirectedgraph() and has {node: {adjacent:weight}} structure.
+    Returns the path and the final distance.'''
+    #initialize empty dictionary to hold distances
+    dist = {}
+    #inialize list of vertices in the path to the current vertex (predecessors)
+    pred = {}
+    #where do I need to go?
+    to_assess = weightedGraph.keys()
+    for node in weightedGraph:
+        #set inital distances to infinity
+        dist[node] = float('inf')
+        #no node has any predecessors yet
+        pred[node] = None
+    #initialize list to be filled with final distances(weights) of nodes
+    sp_set = []
+    #the starting node get a weight of 0 to make sure to start there
+    dist[start] = 0
+    #continue the algorithm as long as there are still unexplored nodes
+    while len(sp_set) < len(to_assess):
+        still_in = {node : dist[node] for node in [node for node in to_assess if
+        node not in sp_set]}
+        #find adjacent node with minimal weight and append to sp_set
+        closest = min(still_in, key = dist.get)
+        sp_set.append(closest)
+        for node in weightedGraph[closest]:
+            if dist[node] > dist[closest] + weightedGraph[closest][node]:
+                dist[node] = dist[closest] + weightedGraph[closest][node]
+                pred[node] = closest
+    #append endnode to list path
+    path = [end]
+    #append contents of pred in reversed order to path
+    while start not in path:
+        path.append(pred[path[-1]])
+    #return path in reverse order (begin to end) and final distance
+    return path[::-1], dist[end]
+
+def calAngularDifference(data1, data2, path, M_assignment):
+    '''calculate the angular similarity of two scanpaths. Returns a list of
+    angle-differences of aligned saccades in range -pi, pi.
+    data1, data2: two scanpaths, output from generateStructureArrayScanpaths()
+    path: shortest path (lowest distance) to align the two scanpaths
+    M_assigment: Matrix of the size of all scanpath pairs from data1 and data2'''
+    #get the angle between saccades from the scanpaths
+    theta1 = data1[7]
+    theta2 = data2[7]
+    #initialize list to hold individual angle differences
+    anglediff = []
+    #calculate the angular differences between the saccades along specified path
+    for k in range(0, len(path)):
+        #which saccade indices correspond to path?
+        i, j = np.where(M_assignment == path[k])
+        #extract the angle
+        spT = [theta1[np.asscalar(i)], theta2[np.asscalar(j)]]
+        for t in range(0, len(spT)):
+            #get results in range -pi, pi
+            if spT[t] < 0:
+                spT[t] = math.pi + (math.pi + spT[t])
+        spT = abs(spT[0]-spT[1])
+        if spT > math.pi:
+            spT= 2 * math.pi - spT
+        anglediff.append(spT)
+    return anglediff
+
+def calDurationDifference(data1, data2, path, M_assignment):
+    '''calculate the duration similarity of two scanpaths. Returns a list of
+    absolute duration-differences of aligned saccades, scaled by largest
+    duration in the compared pair. Should be non-negative.
+    data1, data2: two scanpaths, output from generateStructureArrayScanpaths()
+    path: shortest path (lowest distance) to align the two scanpaths
+    M_assigment: Matrix of the size of all scanpath pairs from data1 and data2'''
+    #get the duration of fixations in the scanpath
+    dur1 = data1[2]
+    dur2 = data2[2]
+    #initialize list to hold individual duration differences
+    durdiff = []
+    #calculation fixation duration differences between saccades along path
+    for k in range(0, len(path)):
+        #which saccade indices correspond to path?
+        i, j = np.where(M_assignment == path[k])
+        maxlist = [dur1[np.asscalar(i)], dur2[np.asscalar(j)]]
+        #compute abs. duration difference, normalize by largest duration in pair
+        durdiff.append(abs(dur1[np.asscalar(i)] -
+            dur2[np.asscalar(j)])/abs(max(maxlist)))
+    return durdiff
+
+def calLengthDifference(data1, data2, path, M_assignment):
+    '''calculate the length similarity of two scanpaths. Returns a list of
+    absolute length differences of aligned saccades.
+    data1, data2: two scanpaths, output from generateStructureArrayScanpaths()
+    path: shortest path (lowest distance) to align the two scanpaths
+    M_assigment: Matrix of the size of all scanpath pairs from data1 and data2'''
+    #get the saccade lengths rho
+    len1 = np.asarray(data1[8])
+    len2 = np.asarray(data2[8])
+    #initialize list to hold individual length differences
+    lendiff = []
+    #calculate length differences between saccades along path
+    for k in range(0, len(path)):
+        i, j = np.where(M_assignment == path[k])
+        lendiff.append(abs(len1[i]-len2[j]))
+    return lendiff
+
+
+def calPositionDifference(data1, data2, path, M_assignment):
+    '''calculate the fixation position similarity of two scanpaths. Returns a
+    list of absolute position differences of aligned fixations.
+    data1, data2: two scanpaths, output from generateStructureArrayScanpaths()
+    path: shortest path (lowest distance) to align the two scanpaths
+    M_assigment: Matrix of the size of all scanpath pairs from data1 and data2'''
+    #get the x and y coordinates of points between saccades
+    x1 = np.asarray(data1[3])
+    x2 = np.asarray(data2[3])
+    y1 = np.asarray(data1[4])
+    y2 = np.asarray(data2[4])
+    #initialize list to hold individual position differences
+    posdiff = []
+    #calculate position differences along path
+    for k in range(0, len(path)):
+        i, j = np.where(M_assignment == path[k])
+        posdiff.append(math.sqrt((x1[np.asscalar(i)] - x2[np.asscalar(j)])**2 +
+            (y1[np.asscalar(i)] - y2[np.asscalar(j)])**2))
+    return posdiff
+
+def calVectorDifferenceAlongPath(data1, data2, path, M_assignment):
+    '''calculate the vector similarity of two scanpaths. Returns a
+    list of absolute vector differences of aligned scanpaths.
+    data1, data2: two scanpaths, output from generateStructureArrayScanpaths()
+    path: shortest path (lowest distance) to align the two scanpaths
+    M_assigment: Matrix of the size of all scanpath pairs from data1 and data2'''
+    #get the saccade lengths in x and y direction of both scanpaths
+    x1 = np.asarray(data1[5])
+    x2 = np.asarray(data2[5])
+    y1 = np.asarray(data1[6])
+    y2 = np.asarray(data2[6])
+    #initialize list to hold individual vector differences
+    vectordiff = []
+    #calculate vector differences along path
+    for k in range(0, len(path)):
+        i, j = np.where(M_assignment == path[k])
+        vectordiff.append(np.sqrt((x1[np.asscalar(i)] - x2[np.asscalar(j)])**2 +
+        (y1[np.asscalar(i)] - y2[np.asscalar(j)])**2))
+    return vectordiff
+
+def getunnormalised(data1, data2, path, M_assignment):
+    '''calculate the unnormalised similarity measures for the five similarity
+    dimensions. Return the median value of the resulting lists per dimension.
+    data1, data2: two scanpaths, output from generateStructureArrayScanpaths()
+    path: shortest path (lowest distance) to align the two scanpaths
+    M_assignemtn: Matrix of the size of all scanpath pairs from data1 and
+    data2'''
+    VecSim = np.median(calVectorDifferenceAlongPath(data1, data2, path,
+                M_assignment))
+    DirSim = np.median(calAngularDifference(data1, data2, path, M_assignment))
+    LenSim = np.median(calLengthDifference(data1, data2, path, M_assignment))
+    PosSim = np.median(calPositionDifference(data1, data2, path, M_assignment))
+    DurSim = np.median(calDurationDifference(data1, data2, path, M_assignment))
+    unnormalised = [VecSim, DirSim, LenSim, PosSim, DurSim]
+    return unnormalised
+
+def normaliseresults(unnormalised, sz = [1280, 720]):
+    #normalize vector similarity against two times screen diagonal, the maximum
+    #theoretical distance
+    VectorSimilarity = 1 - unnormalised[0] / (2 * math.sqrt(sz[0]**2 + sz[1]**2))
+    #normalize against pi
+    DirectionSimilarity = 1 - unnormalised[1] / math.pi
+    #normalize against screen diagonal
+    LengthSimilarity = 1 - unnormalised[2] / math.sqrt(sz[0]**2 + sz[1]**2)
+    PositionSimilarity = 1 - unnormalised[3] / math.sqrt(sz[0]**2 + sz[1]**2)
+    #no normalisazion necessary, already done
+    DurationSimilarity = 1 - unnormalised[4]
+    normalresults = [VectorSimilarity, DirectionSimilarity, LengthSimilarity,
+                    PositionSimilarity, DurationSimilarity]
+    return normalresults
+
+
+def doComparison(fixation_vectors1, fixation_vectors2, sz = [1280, 720]): #TODO: amplitude + direction based grouping
+    '''
+    Compare the scanpaths evoked by the same moviesegment of two subjects.
+    Return a vector of five similarity measures: Vector (Shape), Direction
+    (Angle), Length, Position, and Duration. 1 means absolute similarity, 0 mean
+    lowest similarity possible.
+    shots: pandas dataframe with locaction annotation
+    data1: path to fixation data of subject 1
+    data2: path to fixation data of subject 2
+    sz: screen measurements. Default is 1280 x 720 px
+    '''
+    #initialize result vector
+    scanpathcomparisons = []
+    #check if fixation vectors/scanpaths are long enough
+    if (len(fixation_vectors1) >= 3) & (len(fixation_vectors2) >=3):
+        subj1 = generateStructureArrayScanpath(fixation_vectors1)
+        subj2 = generateStructureArrayScanpath(fixation_vectors2)
+        M = calVectordifferences(subj1, subj2)
+        szM = np.shape(M)
+        M_assignment = np.arange(szM[0]*szM[1]).reshape(szM[0], szM[1])
+        weightedGraph = createdirectedgraph(szM, M, M_assignment)
+        path, dist = dijkstra(weightedGraph, 0, szM[0]*szM[1]-1)
+        unnormalised = getunnormalised(subj1, subj2, path, M_assignment)
+        normal = normaliseresults(unnormalised, sz)
+        scanpathcomparisons.append(normal)
+    #return nan as result if at least one scanpath it too short
+    else:
+        scanpathcomparisons.append(np.repeat(np.nan, 5))
+    return scanpathcomparisons
+
+#TODO: data save
+header = x1.dtype.names
+newheader = ''.join([w+'\t' for w in header]).strip()
+np.savetxt('testvector.txt', x1, delimiter='\t', comments='', header = newheader)
+
+
+#TODO: dataread in
+data1 =np.recfromcsv('testvector.txt', delimiter='\t', dtype={'names':('start_x', 'start_y', 'duration'), 'formats':('f8', 'f8', 'f8')})
+data2 =
