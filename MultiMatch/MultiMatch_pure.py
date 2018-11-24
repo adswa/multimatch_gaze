@@ -444,7 +444,7 @@ def normaliseresults(unnormalised, sz = [1280, 720]):
     return normalresults
 
 
-def doComparison(fixation_vectors1, fixation_vectors2, sz = [1280, 720]): #TODO: amplitude + direction based grouping
+def doComparison(fixation_vectors1, fixation_vectors2, sz = [1280, 720], TDir = 45, TAmp = 30, TDur = 0.05):
     '''
     Compare the scanpaths evoked by the same moviesegment of two subjects.
     Return a vector of five similarity measures: Vector (Shape), Direction
@@ -461,12 +461,14 @@ def doComparison(fixation_vectors1, fixation_vectors2, sz = [1280, 720]): #TODO:
     if (len(fixation_vectors1) >= 3) & (len(fixation_vectors2) >=3):
         subj1 = generateStructureArrayScanpath(fixation_vectors1)
         subj2 = generateStructureArrayScanpath(fixation_vectors2)
-        M = calVectordifferences(subj1, subj2)
+        simple_subj1 = simplification(subj1, TDir, TAmp, TDur)
+        simple_subj2 = simplification(subj2, TDir, TAmp, TDur)
+        M = calVectordifferences(simple_subj1, simple_subj2)
         szM = np.shape(M)
         M_assignment = np.arange(szM[0]*szM[1]).reshape(szM[0], szM[1])
         weightedGraph = createdirectedgraph(szM, M, M_assignment)
         path, dist = dijkstra(weightedGraph, 0, szM[0]*szM[1]-1)
-        unnormalised = getunnormalised(subj1, subj2, path, M_assignment)
+        unnormalised = getunnormalised(simple_subj1, simple_subj2, path, M_assignment)
         normal = normaliseresults(unnormalised, sz)
         scanpathcomparisons.append(normal)
     #return nan as result if at least one scanpath it too short
