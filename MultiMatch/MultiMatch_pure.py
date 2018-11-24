@@ -70,20 +70,22 @@ def generateStructureArrayScanpath(data):
               saccade_lenx, saccade_leny, saccade_theta, saccade_rho]
     return eyedata
 
-def simplifyDirection(eyedata, TDir):
+def simplifyDirection(eyedata, TDir, TDur):
     #for every line in length (rho)
     for i in range(0, len(eyedata[8])):
     # we dynamically shorten the list accoring to the amplitude threshold.
     # don't run into index errors
-        if i < len(eyedata[8]):
+        if i < len(eyedata[8])-1:
             s1 = [eyedata[5][i], eyedata[5][i+1]]
             s2 = [eyedata[6][i], eyedata[6][i+1]]
             angle = calcangle(s1, s2)
-            if angle < TAmp:
+            if angle < TDir:
+                print(i,' and ',i+1, 'have a small angle')
                 if eyedata[2][i+1] > TDur:
                     continue
                 else:
                     #combine vectors
+                    print(i+1, 'is short')
                     v_x = eyedata[5][i]+eyedata[5][i+1]
                     v_y = eyedata[6][i]+eyedata[6][i+1]
                     rho, theta = cart2pol(v_x, v_y)
@@ -97,21 +99,23 @@ def simplifyDirection(eyedata, TDir):
                     #delete characteristics of second vector
                     for list in eyedata:
                         del list[i+1]
-                        print('I combined saccades ', i, ' and ', i+1,' based on their small angle')
+                    print('I combined saccades ', i, ' and ', i+1,' based on their small angle')
+
             else:
                 continue
         else:
             break
     return eyedata
 
-def simplifyLength(eyedata, TAmp):
+def simplifyLength(eyedata, TAmp, TDur):
     for i in range(0, len(eyedata[8])):
         if i < len(eyedata[8]):
-            if eyedata[8][i] > TAmp:
-                continue
-                if eyedata[2] > TDur:
+            if eyedata[8][i] < TAmp:
+                print(i, ' is short (lengthwise)')
+                if eyedata[2][i+1] > TDur:
                     continue
                 else:
+                    print(i, ' is short (durationwise')
                     v_x = eyedata[5][i] + eyedata[5][i + 1]
                     v_y = eyedata[6][i] + eyedata[6][i + 1]
                     rho, theta = cart2pol(v_x, v_y)
@@ -125,13 +129,23 @@ def simplifyLength(eyedata, TAmp):
                     #delete characteristics of second vector
                     for list in eyedata:
                         del list[i]
-                        print('I combined saccades ', i, ' and ', i+1, ' based on their short length')
+                    print('I combined saccades ', i, ' and ', i+1, ' based on their short length')
             else:
-                continue
+                 continue
         else:
             break
     return eyedata
 
+def simplification(eyedata, TDir, TAmp, TDur):
+    while True:
+        import copy
+        ref = copy.deepcopy(eyedata)
+        simplifyDirection(eyedata, TDir, TDur)
+        simplifyLength(eyedata, TAmp, TDur)
+        #if no further simplification is made:
+        if ref == eyedata:
+            break
+    return eyedata
 
 
 
