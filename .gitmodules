@@ -1,0 +1,6 @@
+[submodule "inputs/forrest_gump_remodnav"]
+	path = inputs/forrest_gump_remodnav
+	url = /home/adina/Repos/MultiMatch/../studyforrest-data-eyemovementlabels
+[submodule "inputs/loc_annotation"]
+	path = inputs/loc_annotation
+	url = git@github.com:psychoinformatics-de/studyforrest-data-annotations.git
