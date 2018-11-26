@@ -8,9 +8,7 @@ stimulation with hollywood movie forrest gump into fixation vectors
 
 import numpy as np
 import pandas as pd
-import math
 from bisect import bisect_right
-from bisect import bisect_left
 import os.path as op
 
 
