@@ -4,9 +4,6 @@
 import numpy as np
 import math
 
-
-
-
 def cart2pol(x, y):
     '''transform cartesian into polar coordinates. Returns rho (length from 0,0)
     and theta (angle).'''
@@ -20,8 +17,6 @@ def calcangle(x1, x2):
             math.acos(
             np.dot(x1, x2)/(np.linalg.norm(x1)*np.linalg.norm(x2))))
     return angle
-
-
 
 #Functions ported or adapted from MultiMatch
 def generateStructureArrayScanpath(data):
@@ -70,83 +65,267 @@ def generateStructureArrayScanpath(data):
               saccade_lenx, saccade_leny, saccade_theta, saccade_rho]
     return eyedata
 
-def simplifyDirection(eyedata, TDir, TDur):
-    #for every line in length (rho)
-    for i in range(0, len(eyedata[8])):
-    # we dynamically shorten the list accoring to the amplitude threshold.
-    # don't run into index errors
-        if i < len(eyedata[8])-1:
-            s1 = [eyedata[5][i], eyedata[5][i+1]]
-            s2 = [eyedata[6][i], eyedata[6][i+1]]
-            angle = calcangle(s1, s2)
-            if angle < TDir:
-                print(i,' and ',i+1, 'have a small angle')
-                if eyedata[2][i+1] > TDur:
-                    continue
-                else:
-                    #combine vectors
-                    print(i+1, 'is short')
-                    v_x = eyedata[5][i]+eyedata[5][i+1]
-                    v_y = eyedata[6][i]+eyedata[6][i+1]
-                    rho, theta = cart2pol(v_x, v_y)
-                    #add durations together
-                    fix = eyedata[2][i] + eyedata[2][i+1]
-                    eyedata[5][i] = v_x
-                    eyedata[6][i] = v_y
-                    eyedata[7][i] = theta
-                    eyedata[8][i] = rho
-                    eyedata[2][i] = fix
-                    #delete characteristics of second vector
-                    for list in eyedata:
-                        del list[i+1]
-                    print('I combined saccades ', i, ' and ', i+1,' based on their small angle')
 
+def simlen(data, TAmp, TDur):
+    if len(data[3]) < 1:
+        return data
+    #if the scanpath is long enough
+    else:
+        i = 0
+        j = 0
+        #initialize empty lists
+        sim_dur = []
+        sim_x = []
+        sim_y = []
+        sim_lenx = []
+        sim_leny = []
+        sim_theta = []
+        sim_len = []
+        #while we don't run into index errors
+        while i <= len(data[3])-1:
+            ### print(i, len(data[3])-1)
+            #if saccade is the last saccade
+            if i == len(data[3])-1:
+                ### print('I am the last one')
+                #if saccade has short length:
+                if data[8][i] < TAmp:
+                    ### print('and I am short')
+                    #if fixation duration is short:
+                    if (data[2][-1] < TDur) or (data[2][-2] < TDur): #was i-1, i
+                        ### print('and I have short fixations')
+                        #calculate sum of local vectors
+                        v_x = data[5][-2] + data[5][-1] #was i-1, i
+                        v_y = data[6][-2] + data[6][-1]
+                        rho, theta = cart2pol(v_x, v_y)
+                        #save them in the new vectors
+                        sim_lenx[j-1]= v_x #change this from .insert(j-1
+                        sim_leny[j-1]= v_y
+                        sim_theta[j-1]= theta
+                        sim_len[j-1]= rho
+                        sim_dur.insert(j, data[2][i-1]) #this is j-1, data[2][j-1] in original code! changed -1 to i
+                        #count somewhere with i and j
+                        j -= 1
+                        i += 1
+                        ### print('the last saccade is short and fixations are short, i and j are ', i, j)
+                    #if fixation duration is long:
+                    else:
+                        #insert original data in new list
+                        ### print('but I have long fixations')
+                        sim_lenx.insert(j, data[5][i])
+                        sim_leny.insert(j, data[6][i])
+                        sim_x.insert(j, data[3][i])
+                        sim_y.insert(j, data[4][i])
+                        sim_theta.insert(j, data[7][i])
+                        sim_len.insert(j, data[8][i])
+                        sim_dur.insert(j, data[2][i])
+                        #count up i and j
+                        i += 1
+                        j += 1
+                        ### print('the last saccade is short, but fixations are long, i and j are ', i, j)
+                #if saccade doesn't have short length:
+                else:
+                    #insert original data in new list
+                    sim_lenx.insert(j, data[5][i])
+                    sim_leny.insert(j, data[6][i])
+                    sim_x.insert(j, data[3][i])
+                    sim_y.insert(j, data[4][i])
+                    sim_theta.insert(j, data[7][i])
+                    sim_len.insert(j, data[8][i])
+                    sim_dur.insert(j, data[2][i])
+                    #count up i and j
+                    i += 1
+                    j += 1
+                    ### print('The last saccade is not short, i and j are ', i, j)
+            #if saccade is not the last one
             else:
-                continue
-        else:
-            break
+                #if saccade has short length
+                if (data[8][i] < TAmp) and (i < len(data[3])-1): #added
+                    #if fixation durations are short
+                    if (data[2][i+1] < TDur) or (data[2][i] < TDur):
+                        #calculate sum of local vectors in x and y length
+                        v_x = data[5][i] + data[5][i+1]
+                        v_y = data[6][i] + data[6][i+1]
+                        rho, theta = cart2pol(v_x, v_y)
+                        ### print(i, j, v_x, v_y, rho, theta) #this was added
+                        #save them in the new vectors
+                        sim_lenx.insert(j, v_x)
+                        sim_leny.insert(j, v_y)
+                        sim_x.insert(j, data[3][i])
+                        sim_y.insert(j, data[4][i])
+                        sim_theta.insert(j, theta)
+                        sim_len.insert(j, rho)
+                        #add the old fixation duration
+                        sim_dur.insert(j, data[2][i])
+                        #count up i
+                        i +=2
+                        j += 1
+                        ### print('The saccade is short and fixations are short, i and j are ', i, j)
+                    #if fixation durations are long
+                    else:
+                        #insert original data in new lists
+                        sim_lenx.insert(j, data[5][i])
+                        sim_leny.insert(j, data[6][i])
+                        sim_x.insert(j, data[3][i])
+                        sim_y.insert(j, data[4][i])
+                        sim_theta.insert(j, data[7][i])
+                        sim_len.insert(j, data[8][i])
+                        sim_dur.insert(j, data[2][i])
+                        #count up j and i
+                        j += 1
+                        i += 1
+                        ### print('The saccade is short, but fixations are long, i and j are ', i, j)
+                #if saccade doesn't have short length
+                else:
+                    #insert original data in new list
+                    sim_lenx.insert(j, data[5][i])
+                    sim_leny.insert(j, data[6][i])
+                    sim_x.insert(j, data[3][i])
+                    sim_y.insert(j, data[4][i])
+                    sim_theta.insert(j, data[7][i])
+                    sim_len.insert(j, data[8][i])
+                    sim_dur.insert(j, data[2][i])
+                    #count up j and i
+                    i += 1
+                    j += 1
+                    ### print('The saccade is too long, i and j are ', i, j)
+    sim_dur.append(data[2][-1])
+    eyedata = [[],[], sim_dur, sim_x, sim_y, sim_lenx, sim_leny, sim_theta, sim_len]
     return eyedata
 
-def simplifyLength(eyedata, TAmp, TDur):
-    for i in range(0, len(eyedata[8])):
-        if i < len(eyedata[8]):
-            if eyedata[8][i] < TAmp:
-                print(i, ' is short (lengthwise)')
-                if eyedata[2][i+1] > TDur:
-                    continue
-                else:
-                    print(i, ' is short (durationwise')
-                    v_x = eyedata[5][i] + eyedata[5][i + 1]
-                    v_y = eyedata[6][i] + eyedata[6][i + 1]
-                    rho, theta = cart2pol(v_x, v_y)
-                    #add durations together
-                    fix = eyedata[2][i] + eyedata[2][i+1]
-                    eyedata[5][i] = v_x
-                    eyedata[6][i] = v_y
-                    eyedata[7][i] = theta
-                    eyedata[8][i] = rho
-                    eyedata[2][i] = fix
-                    #delete characteristics of second vector
-                    for list in eyedata:
-                        del list[i]
-                    print('I combined saccades ', i, ' and ', i+1, ' based on their short length')
+
+def simdir(data, TDir, TDur):
+    if len(data[3]) < 1:
+        return data
+    #if the scanpath is long enough
+    else:
+        i = 0
+        j = 0
+        #initialize empty lists
+        sim_dur = []
+        sim_x = []
+        sim_y = []
+        sim_lenx = []
+        sim_leny = []
+        sim_theta = []
+        sim_len = []
+        #while we don't run into index errors
+        while i <= len(data[3])-1:
+            ### print(i, len(data[3])-1)
+            if i < len(data[3])-1:
+                #lets check angles
+                v1 = [data[5][i], data[6][i]]
+                v2 = [data[5][i+1], data[6][i+1]]
+                angle = calcangle(v1, v2)
+                ### print(data[5][i], data[6][i], data[5][i+1], data[6][i+1])
+                ### print('The angle between ', i, i+1, ' is ', angle)
             else:
-                 continue
-        else:
-            break
+                #an angle of infinite size won't go into any further loop
+                angle = float('inf')
+                ### print('reached saccade ', i)
+            #if the angle is small and its not the last saccade
+            if (angle < TDir) & (i < len(data[3])-1):
+                #if the fixation duration is short:
+                if data[2][i+1]<TDur:
+                #if the fixation durations are short:
+                    #calculate the sum of local vectors
+                    v_x = data[5][i] + data[5][i+1]
+                    v_y = data[6][i] + data[6][i+1]
+                    rho, theta = cart2pol(v_x, v_y)
+                    #save them in the new vectors
+                    sim_lenx.insert(j, v_x)
+                    sim_leny.insert(j, v_y)
+                    sim_x.insert(j, data[3][i])
+                    sim_y.insert(j, data[4][i])
+                    sim_theta.insert(j, theta)
+                    sim_len.insert(j, rho)
+                    #add the fixation duration
+                    sim_dur.insert(j, data[2][i])
+                    #count up i and j
+                    ### print('The saccades angle is small and fixations short, i and j are ',i,j, data[2][i])
+                    ### print('appended ', i, ' at ', j)
+                    i += 2
+                    j += 1
+                    ### print('counting up to... ',i,j)
+                else:
+                    #insert original data in new list
+                    sim_lenx.insert(j, data[5][i])
+                    sim_leny.insert(j, data[6][i])
+                    sim_x.insert(j, data[3][i])
+                    sim_y.insert(j, data[4][i])
+                    sim_theta.insert(j, data[7][i])
+                    sim_len.insert(j, data[8][i])
+                    sim_dur.insert(j, data[2][i])
+                    #count up j and i
+                    ### print('original data appended (small angle but long fix) ', i, ' at ', j, data[2][i])
+                    j += 1
+                    i += 1
+                    ### print('counting up... ', i, j)
+            #elif the angle is small, but its the last saccade:
+            elif (angle < TDir) & (i == len(data[3])-1):
+                #if the fixation duration is short:
+                if data[2][i+1]<TDur:
+                    #calculate sum of local vectors
+                    v_x = data[5][i-2] + data[5][i-1]
+                    v_y = data[6][i-2] + data[6][i-1]
+                    rho, theta = cart2pol(v_x, v_y)
+                    #save them in new vectors
+                    sim_lenx[j-1]= v_x #change this from .insert(j-1
+                    sim_leny[j-1]= v_y
+                    sim_theta[j-1]= theta
+                    sim_len[j-1]= rho
+                    sim_dur.insert(j, data[2][-1]+(data[2][i]/2)) #maybe -1?
+                    ### print('is this the correct duration?', data[2][-1]+(data[2][i]/2))
+                    #count somewhere with i and j
+                    ### print('this should be the last datapoint but angle should be infinite. NO')
+                    j -= 1
+                    i += 1
+                    ### print('The last saccade has small angle and short fixations, i and j are ', i, j)
+                #if fixation duration is long:
+                else:
+                    ### print('I am the last one')
+                    #insert original data in new list
+                    sim_lenx.insert(j, data[5][i])
+                    sim_leny.insert(j, data[6][i])
+                    sim_x.insert(j, data[3][i])
+                    sim_y.insert(j, data[4][i])
+                    sim_theta.insert(j, data[7][i])
+                    sim_len.insert(j, data[8][i])
+                    sim_dur.insert(j, data[2][i])
+                    #count up i and j
+                    ### print('original data for last saccade appended ', i, ' at ', j, data[2][i])
+                    i += 1
+                    j += 1
+                    ### print('counting up... ', i, j)
+            #else (the angle is too large
+            else:
+                #insert original data in new list
+                sim_lenx.insert(j, data[5][i])
+                sim_leny.insert(j, data[6][i])
+                sim_x.insert(j, data[3][i])
+                sim_y.insert(j, data[4][i])
+                sim_theta.insert(j, data[7][i])
+                sim_len.insert(j, data[8][i])
+                sim_dur.insert(j, data[2][i])
+                #count up i and j
+                ### print('2. original data for normal saccade appended ', i, ' at ', j, data[2][i])
+                i += 1
+                j += 1
+                ### print('counting up... ', i, j)
+    #now append the last fixation duration
+    sim_dur.append(data[2][-1])
+    ### print(data[2][-1])
+    eyedata = [[],[], sim_dur, sim_x, sim_y, sim_lenx, sim_leny, sim_theta, sim_len]
     return eyedata
 
-def simplification(eyedata, TDir, TAmp, TDur):
+def simplifyScanpath(data, TAmp, TDir, TDur):
+    looptime = 0
     while True:
-        import copy
-        ref = copy.deepcopy(eyedata)
-        simplifyDirection(eyedata, TDir, TDur)
-        simplifyLength(eyedata, TAmp, TDur)
-        #if no further simplification is made:
-        if ref == eyedata:
+        data = simdir(data, TDir, TDur)
+        data = simlen(data, TAmp, TDur)
+        looptime += 1
+        if looptime == len(data[2]):
+            return data
             break
-    return eyedata
-
 
 
 def calVectordifferences(data1, data2):
@@ -402,7 +581,7 @@ def normaliseresults(unnormalised, sz = [1280, 720]):
     return normalresults
 
 
-def doComparison(fixation_vectors1, fixation_vectors2, sz = [1280, 720], TDir = 45, TAmp = 30, TDur = 0.05):
+def doComparison(fixation_vectors1, fixation_vectors2, **kwargs):
     '''
     Compare the scanpaths evoked by the same moviesegment of two subjects.
     Return a vector of five similarity measures: Vector (Shape), Direction
@@ -419,14 +598,15 @@ def doComparison(fixation_vectors1, fixation_vectors2, sz = [1280, 720], TDir = 
     if (len(fixation_vectors1) >= 3) & (len(fixation_vectors2) >=3):
         subj1 = generateStructureArrayScanpath(fixation_vectors1)
         subj2 = generateStructureArrayScanpath(fixation_vectors2)
-        simple_subj1 = simplification(subj1, TDir, TAmp, TDur)
-        simple_subj2 = simplification(subj2, TDir, TAmp, TDur)
-        M = calVectordifferences(simple_subj1, simple_subj2)
+        if grouping:
+            subj1 = simplifyScanpath(subj1, TAmp, TDir, TDur)
+            subj2 = simplifyScanpath(subj2, TAmp, TDir, TDur)
+        M = calVectordifferences(subj1, subj2)
         szM = np.shape(M)
         M_assignment = np.arange(szM[0]*szM[1]).reshape(szM[0], szM[1])
         weightedGraph = createdirectedgraph(szM, M, M_assignment)
         path, dist = dijkstra(weightedGraph, 0, szM[0]*szM[1]-1)
-        unnormalised = getunnormalised(simple_subj1, simple_subj2, path, M_assignment)
+        unnormalised = getunnormalised(subj1, subj2, path, M_assignment)
         normal = normaliseresults(unnormalised, sz)
         scanpathcomparisons.append(normal)
     #return nan as result if at least one scanpath it too short
@@ -434,9 +614,57 @@ def doComparison(fixation_vectors1, fixation_vectors2, sz = [1280, 720], TDir = 
         scanpathcomparisons.append(np.repeat(np.nan, 5))
     return scanpathcomparisons
 
-#TODO Argparse
-#TODO TDir , TDur
-#TODO: dataread in
-data1 =np.recfromcsv('testvector.txt', delimiter='\t', dtype={'names':('start_x', 'start_y', 'duration'), 'formats':('f8', 'f8', 'f8')})
-data2 =
+
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser()
+    # define arguments
+    parser.add_argument('-i', '--input1', nargs='+', help='Input1: eyemovement data of the first subject', metavar='PATH', required=True)
+    parser.add_argument('-j', '--input2', nargs='+', help='Input2: eyemovement data of the second subject', metavar='PATH', required=True)
+    parser.add_argument('-di', '--direction_threshold', help='direction_threshold: for direction based grouping. If 0: no grouping will be performed', type = float, default=0.0)
+    parser.add_argument('-am', '--amplitude_threshold', help='amplitude_threshold: for amplitude based grouping. If 0: no grouping will be performed', type = float, default=0.0)
+    parser.add_argument('-du', '--duration_threshold', help='duration_threshold: for direction based grouping.', type = float, default=0.0)
+    parser.add_argument('-sz', '--screensize', help='screensize: Resolution of screen in px, default is [720, 1280]', default = [720, 1280])
+
+    args = parser.parse_args()
+
+    #read in data
+    data1 = np.recfromcsv(args.input1[0], delimiter='\t', dtype={'names':('start_x', 'start_y', 'duration'), 'formats':('f8', 'f8', 'f8')})
+    data2 = np.recfromcsv(args.input2[0], delimiter='\t', dtype={'names':('start_x', 'start_y', 'duration'), 'formats':('f8', 'f8', 'f8')})
+
+    TDir = args.direction_threshold
+    TAmp = args.amplitude_threshold
+    TDur = args.duration_threshold
+    sz = args.screensize
+
+    if (TDir != 0) and (TAmp != 0):
+        grouping = True
+        print('Scanpath comparison is done with grouping saccades shorter than {}px and with an angle smaller than {}°'
+              ' if consecutive fixation are shorter than {} seconds.'.format(TAmp, TDir, TDur))
+    else:
+        grouping = False
+        print('Scanpath comparison is done without any grouping')
+
+    #execution
+    if grouping:
+        kwargs = {"TDir": TDir, "TAmp": TAmp, "TDur":TDur, "sz": sz, "grouping": grouping}
+        result = doComparison(data1, data2, **kwargs )
+    else:
+        kwargs = {"sz": sz, "grouping": grouping}
+        result = doComparison(data1, data2, **kwargs)
+    print('Vector similarity = ', result[0][0])
+    print('Direction similarity = ', result[0][1])
+    print('Length similarity = ', result[0][2])
+    print('Position similarity = ', result[0][3])
+    print('Duration similarity = ', result[0][4])
+
+
+
+
+
+
+
+
+
+
 
