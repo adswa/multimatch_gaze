@@ -317,6 +317,15 @@ def simdir(data, TDir, TDur):
     eyedata = [[],[], sim_dur, sim_x, sim_y, sim_lenx, sim_leny, sim_theta, sim_len]
     return eyedata
 
+def simplifyScanpath(data, TAmp, TDir, TDur):
+    looptime = 0
+    while True:
+        data = simdir(data, TDir, TDur)
+        data = simlen(data, TAmp, TDur)
+        looptime += 1
+        if looptime == len(data[2]):
+            return data
+            break
 
 
 def calVectordifferences(data1, data2):
