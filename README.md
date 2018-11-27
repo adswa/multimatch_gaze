@@ -23,6 +23,24 @@ multidimensional similarity evaluation. The original Matlab toolbox was kindly
 provided via email by Dr. Richard Dewhurst and the method was ported into Python
 with the intent of comparing scanpaths evoked by movie 'Forrest Gump' in subjects.
 
+
+There is a standalone MultiMatch version now (cave: no unit tests yet) that can
+be used from the command line. Specify
+- --input1 (-i) and --input2 (-j), two nx3 fixation vectors (x, y, duration)
+- --screensize (-sz)
+if grouping should be performed (optional), please specify in addition
+- --amplitude_threshold (-am) in px
+- --direction_threshold (-di) in degrees
+- --duration_threshold (-du) in seconds
+
+Example usage with grouping:
+``` MultiMatch/MultiMatch_pure.py -i 'data/fixvectors/segment_10_sub-19.tsv' -j 'data/fixvectors/segment_10_sub-01.tsv' -di 45.0 -du 0.3 -am 147.0 ```
+
+Example usage without grouping:
+
+``` MultiMatch/MultiMatch_pure.py -i 'data/fixvectors/segment_10_sub-19.tsv' -j 'data/fixvectors/segment_10_sub-01.tsv' ```
+
+
 ## Method overview
 
 - The orginal method takes n x 3 fixation vectors of two scanpaths with x- and
