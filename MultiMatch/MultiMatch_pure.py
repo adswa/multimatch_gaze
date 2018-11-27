@@ -581,7 +581,7 @@ def normaliseresults(unnormalised, sz = [1280, 720]):
     return normalresults
 
 
-def doComparison(fixation_vectors1, fixation_vectors2, sz = [1280, 720], TDir = 45, TAmp = 30, TDur = 0.05):
+def doComparison(fixation_vectors1, fixation_vectors2, **kwargs):
     '''
     Compare the scanpaths evoked by the same moviesegment of two subjects.
     Return a vector of five similarity measures: Vector (Shape), Direction
@@ -598,14 +598,15 @@ def doComparison(fixation_vectors1, fixation_vectors2, sz = [1280, 720], TDir = 
     if (len(fixation_vectors1) >= 3) & (len(fixation_vectors2) >=3):
         subj1 = generateStructureArrayScanpath(fixation_vectors1)
         subj2 = generateStructureArrayScanpath(fixation_vectors2)
-        simple_subj1 = simplification(subj1, TDir, TAmp, TDur)
-        simple_subj2 = simplification(subj2, TDir, TAmp, TDur)
-        M = calVectordifferences(simple_subj1, simple_subj2)
+        if grouping:
+            subj1 = simplifyScanpath(subj1, TAmp, TDir, TDur)
+            subj2 = simplifyScanpath(subj2, TAmp, TDir, TDur)
+        M = calVectordifferences(subj1, subj2)
         szM = np.shape(M)
         M_assignment = np.arange(szM[0]*szM[1]).reshape(szM[0], szM[1])
         weightedGraph = createdirectedgraph(szM, M, M_assignment)
         path, dist = dijkstra(weightedGraph, 0, szM[0]*szM[1]-1)
-        unnormalised = getunnormalised(simple_subj1, simple_subj2, path, M_assignment)
+        unnormalised = getunnormalised(subj1, subj2, path, M_assignment)
         normal = normaliseresults(unnormalised, sz)
         scanpathcomparisons.append(normal)
     #return nan as result if at least one scanpath it too short
@@ -613,9 +614,57 @@ def doComparison(fixation_vectors1, fixation_vectors2, sz = [1280, 720], TDir = 
         scanpathcomparisons.append(np.repeat(np.nan, 5))
     return scanpathcomparisons
 
-#TODO Argparse
-#TODO TDir , TDur
-#TODO: dataread in
-data1 =np.recfromcsv('testvector.txt', delimiter='\t', dtype={'names':('start_x', 'start_y', 'duration'), 'formats':('f8', 'f8', 'f8')})
-data2 =
+
+if __name__ == '__main__':
+    import argparse
+    parser = argparse.ArgumentParser()
+    # define arguments
+    parser.add_argument('-i', '--input1', nargs='+', help='Input1: eyemovement data of the first subject', metavar='PATH', required=True)
+    parser.add_argument('-j', '--input2', nargs='+', help='Input2: eyemovement data of the second subject', metavar='PATH', required=True)
+    parser.add_argument('-di', '--direction_threshold', help='direction_threshold: for direction based grouping. If 0: no grouping will be performed', type = float, default=0.0)
+    parser.add_argument('-am', '--amplitude_threshold', help='amplitude_threshold: for amplitude based grouping. If 0: no grouping will be performed', type = float, default=0.0)
+    parser.add_argument('-du', '--duration_threshold', help='duration_threshold: for direction based grouping.', type = float, default=0.0)
+    parser.add_argument('-sz', '--screensize', help='screensize: Resolution of screen in px, default is [720, 1280]', default = [720, 1280])
+
+    args = parser.parse_args()
+
+    #read in data
+    data1 = np.recfromcsv(args.input1[0], delimiter='\t', dtype={'names':('start_x', 'start_y', 'duration'), 'formats':('f8', 'f8', 'f8')})
+    data2 = np.recfromcsv(args.input2[0], delimiter='\t', dtype={'names':('start_x', 'start_y', 'duration'), 'formats':('f8', 'f8', 'f8')})
+
+    TDir = args.direction_threshold
+    TAmp = args.amplitude_threshold
+    TDur = args.duration_threshold
+    sz = args.screensize
+
+    if (TDir != 0) and (TAmp != 0):
+        grouping = True
+        print('Scanpath comparison is done with grouping saccades shorter than {}px and with an angle smaller than {}°'
+              ' if consecutive fixation are shorter than {} seconds.'.format(TAmp, TDir, TDur))
+    else:
+        grouping = False
+        print('Scanpath comparison is done without any grouping')
+
+    #execution
+    if grouping:
+        kwargs = {"TDir": TDir, "TAmp": TAmp, "TDur":TDur, "sz": sz, "grouping": grouping}
+        result = doComparison(data1, data2, **kwargs )
+    else:
+        kwargs = {"sz": sz, "grouping": grouping}
+        result = doComparison(data1, data2, **kwargs)
+    print('Vector similarity = ', result[0][0])
+    print('Direction similarity = ', result[0][1])
+    print('Length similarity = ', result[0][2])
+    print('Position similarity = ', result[0][3])
+    print('Duration similarity = ', result[0][4])
+
+
+
+
+
+
+
+
+
+
 
