@@ -11,7 +11,7 @@
 The **MultiMatch** method proposed by Jarodzka, Holmqvist and Nyström (2010),
 implemented in Matlab as the MultiMatch toolbox and validated by Dewhurst
 and colleagues (2012) is a vector-based, multi-dimensional approach to
-measuring scanpath similarity.
+compute scanpath similarity.
 
 The method represents scanpaths as geometrical vectors in a two-dimensional
 space: Any scanpath is build up of a vector sequence in which the vectors
@@ -21,7 +21,14 @@ five dimensions **'vector shape'**, **'vector length'** (saccadic amplitude),
 **'vector position'**, **'vector direction'** and **'fixation duration'** for a
 multidimensional similarity evaluation. The original Matlab toolbox was kindly
 provided via email by Dr. Richard Dewhurst and the method was ported into Python
-with the intent of comparing scanpaths evoked by movie 'Forrest Gump' in subjects.
+with the intent of providing an open source alternative to the matlab toolbox.
+Additionally, it contains options to compute scanpath similarities from the
+studyforrest phase 2 eyetracking dataset, in which participants (n = 15 during
+fmri acquisition, n = 15 in lab) watched the movie 'Forrest Gump'.
+
+# Installation instructions
+
+< This is a TODO >
 
 
 There is a standalone MultiMatch version now (cave: no unit tests yet) that can
