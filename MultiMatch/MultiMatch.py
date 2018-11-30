@@ -618,6 +618,13 @@ if __name__ == '__main__':
     parser.add_argument('-j', '--input2', nargs = '+', help = 'Input2: eyemovement data of the second subject', metavar = 'PATH', required = True)
     parser.add_argument('-k', '--input3', help = 'Input3: location annotation of the movie segment', metavar = 'PATH', required = True)
     parser.add_argument('-o', '--output', help = 'Output: Specify path where output should be saved', metavar = 'PATH', required = True)
+    parser.add_argument('-d', '--duration', help = 'duration: Specify the approx. time of a scanpath in seconds, i.e. 3.0. Note: Scanpaths are extracted within a shot, not across shots! Long durations will lead to only few scanpaths', type = float, default = 4.92)
+    parser.add_argument('-ld', '--lduration', help = 'duration: group short shots in the same locale (i.e. no change of scenes between them) together for longer scanpaths', type=float, default=None)
+    parser.add_argument('-di', '--direction_threshold', help='direction_threshold: for direction based grouping. If 0: no grouping will be performed', type = float, default=0.0)
+    parser.add_argument('-am', '--amplitude_threshold', help='amplitude_threshold: for amplitude based grouping. If 0: no grouping will be performed', type = float, default=0.0)
+    parser.add_argument('-du', '--duration_threshold', help='duration_threshold: for direction based grouping.', type = float, default=0.0)
+    parser.add_argument('-sz', '--screensize', help='screensize: Resolution of screen in px, default is [720, 1280]', default = [720, 1280])
+    parser.add_argument('-pos', '--position_offset', help='position_offset: if True, scanpaths of dur length stop at shotoffset (instead of starting at shotonset', default=False)
 
     args = parser.parse_args()
 
@@ -637,6 +644,21 @@ if __name__ == '__main__':
             'end_x', 'end_y', 'amp', 'peak_vel', 'med_vel', 'avg_vel'),
             'formats':('f8', 'f8', 'U10', 'f8', 'f8', 'f8', 'f8', 'f8', 'f8',
             'f8', 'f8')})
+    dur = args.duration
+    TDir = args.direction_threshold
+    TAmp = args.amplitude_threshold
+    TDur = args.duration_threshold
+    sz = args.screensize
+    ldur = args.lduration
+    offset = args.position_offset
+    #derive simple boolean variable to
+    if (TDir != 0) and (TAmp != 0):
+        grouping = True
+        print('Scanpath comparison is done with grouping saccades shorter than {}px and with an angle smaller than {}°'
+              ' if consecutive fixation are shorter than {} seconds.'.format(TAmp, TDir, TDur))
+    else:
+        grouping = False
+        print('Scanpath comparison is done without any grouping')
 
 #Execution
 #TODO: optional arguments need to go here as well (sz and dur)
