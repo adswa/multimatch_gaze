@@ -176,98 +176,121 @@ def preprocess(data, sz=[1280, 720]):
 
 
 
-def longshot(shots, dur = 4.92):
-    '''group movie shots without a cut together to obtain longer movie
+def longshot(shots, group_shots, ldur = 4.92):
+    """
+    group movie shots without a cut together to obtain longer movie
     segments. This way, fewer but longer scanpaths are obtained. Example: use
     median shotlength of 4.92s.
-    shots = dataframe, contains movie location annotation
-    dur = length in seconds for movie shot
-    '''
+    If dur = None, no shotgrouping will be performed.
+    :param shots: dataframe, contains movie location annotation
+    :param dur: length in seconds for movie shot
+    :return:
+    """
     #turn pandas dataframe shots into record array
     structshots = shots.to_records()
-    i = 0
-    while i < len(structshots):
-        #break before running into index error
-        if structshots[i] == structshots[-1]:
-            break
-        else:
-            if (structshots[i]['duration'] < dur) & \
-            (structshots[i+1]['duration'] < dur) & \
-            (structshots[i]['locale'] == structshots[i+1]['locale']):
-                #add durations together and delete second row
-                structshots[i]['duration'] += structshots[i+1]['duration']
-                structshots = np.delete(structshots, i+1, 0)
+    if group_shots:
+        i = 0
+        while i < len(structshots):
+            #break before running into index error
+            if structshots[i] == structshots[-1]:
+                break
             else:
-                i += 1
+                if (structshots[i]['duration'] < ldur) & \
+                (structshots[i+1]['duration'] < ldur) & \
+                (structshots[i]['locale'] == structshots[i+1]['locale']):
+                    #add durations together and delete second row
+                    structshots[i]['duration'] += structshots[i+1]['duration']
+                    structshots = np.delete(structshots, i+1, 0)
+                else:
+                    i += 1
     aggregated = pd.DataFrame({'onset':structshots['onset'].tolist(),
     'duration': structshots['duration'].tolist()}, columns = ['onset',
     'duration'])
     return aggregated
 
 
-def doComparison(shots, data1, data2, sz = [1280, 720], dur = 5):
-    '''
-    Compare the scanpaths evoked by the same moviesegment of two subjects.
-    Return a vector of five similarity measures: Vector (Shape), Direction
-    (Angle), Length, Position, and Duration. 1 means absolute similarity, 0 mean
-    lowest similarity possible.
-    shots: pandas dataframe with locaction annotation
-    data1: eyemovement data of subject 1
-    data2: eyemovement data of subject 2
-    sz: screen measurements. Default is 1280 x 720 px
-    dur: shot duration over which scanpaths should be compared in seconds,
-    default is 3 seconds.
-    '''
-    #initialize result vector
+def doComparisonForrest(shots,
+                        data1,
+                        data2,
+                        sz = [1280, 720],
+                        dur = 5,
+                        ldur = 0.0,
+                        offset = False,
+                        TDur = 0,
+                        TDir = 0,
+                        TAmp = 0,
+                        grouping = False
+                        ):
+    """
+    Compare the scanpaths evoked by the same movie-segment of the Forrest Gump movie
+    in two subjects.
+
+    :param shots: pandas dataframe with locaction annotation
+    :param data1: eyemovement data of subject 1
+    :param data2: eyemovement data of subject 2
+    :param sz: screen measurements. Default is 1280 x 720 px
+    :param dur: shot duration over which scanpaths should be compared in seconds,
+    default is 5 seconds.
+    :return: Returns a vector of five similarity measures: Vector (Shape), Direction
+    (Angle), Length, Position, and Duration. 1 means absolute similarity, 0 means
+    lowest similarity possible. Also returns durations and onset times of the scanpath.
+
+    """
+    #determine whether short shots should be grouped together
+    if ldur != 0:
+        group_shots=True
+    else:
+        group_shots=False
+
     scanpathcomparisons = []
-    #transform pursuits into fixations
+    # transform pursuits into fixations
     newdata1 = pursuits_to_fixations(data1)
     newdata2 = pursuits_to_fixations(data2)
-    #preprocess input files
+    # preprocess input files
     fixations1 = preprocess(newdata1, sz)
     fixations2 = preprocess(newdata2, sz)
-    shots = longshot(shots, dur) #for longer shots, change dur
-
-    #for the first seconds in a shot for comparison take the following code
-    ###onset = createOnsets(shots, dur)
-    ###startid1, endid1 = createChunks(onset, fixations1, dur)
-    ###startid2, endid2 = createChunks(onset, fixations2, dur)
-
-    #for the last seconds in a shot for comparison take this code instead
-    onset = createOffsets(shots, dur)
-    startid1, endid1 = createOffsetChunks(onset, fixations1, dur)
-    startid2, endid2 = createOffsetChunks(onset, fixations2, dur)
+    shots = longshot(shots, group_shots, ldur)
+    # get shots and scanpath on- and offsets
+    if offset:
+        onset = createOffsets(shots, dur)
+        startid1, endid1 = createOffsetChunks(onset, fixations1, dur)
+        startid2, endid2 = createOffsetChunks(onset, fixations2, dur)
+    else:
+        onset = createOnsets(shots, dur)
+        startid1, endid1 = createChunks(onset, fixations1, dur)
+        startid2, endid2 = createChunks(onset, fixations2, dur)
     fixation_vectors1 = FixationsChunks(fixations1, startid1, endid1)
     fixation_vectors2 = FixationsChunks(fixations2, startid2, endid2)
-    #save onset and duration times, if valid ones can be calculated
+    # save onset and duration times, if valid ones can be calculated
     onset_times = []
     exact_durations = []
     for i in range(0, len(startid1)):
         onset_time = fixations1[startid1[i]]['onset']
         onset_times.append(onset_time)
         exact_duration = fixations1[endid1[i]]['onset']-fixations1[startid1[i]]['onset']
-    #capture negative durations for invalid scanpaths
+    # capture negative durations for invalid scanpaths
         if exact_duration > 0:
             exact_durations.append(exact_duration)
         else:
             exact_durations.append(np.nan)
-#    onset_times = fixations1[startid1]['onset']
-#    exact_durations = fixations1[endid1]['onset']-fixations1[startid1]['onset']
-    #loop over all fixation vectors/scanpaths and calculate similarity
+    # loop over all fixation vectors/scanpaths and calculate similarity
     for i in range(0, len(onset)):
         #check if fixation vectors/scanpaths are long enough
         if (len(fixation_vectors1[i]) >= 3) & (len(fixation_vectors2[i]) >=3):
-            subj1 = generateStructureArrayScanpath(fixation_vectors1[i])
-            subj2 = generateStructureArrayScanpath(fixation_vectors2[i])
-            M = calVectordifferences(subj1, subj2)
+            subj1 = Mp.gen_scanpath_structure(fixation_vectors1[i])
+            subj2 = Mp.gen_scanpath_structure(fixation_vectors2[i])
+            if grouping:
+                subj1 = Mp.simplify_scanpath(subj1, TAmp, TDir, TDur)
+                subj2 = Mp.simplify_scanpath(subj2, TAmp, TDir, TDur)
+            M = Mp.cal_vectordifferences(subj1, subj2)
             szM = np.shape(M)
             M_assignment = np.arange(szM[0]*szM[1]).reshape(szM[0], szM[1])
-            weightedGraph = createdirectedgraph(szM, M, M_assignment)
-            path, dist = dijkstra(weightedGraph, 0, szM[0]*szM[1]-1)
-            unnormalised = getunnormalised(subj1, subj2, path, M_assignment)
-            normal = normaliseresults(unnormalised, sz)
+            weightedGraph = Mp.createdirectedgraph(szM, M, M_assignment)
+            path, dist = Mp.dijkstra(weightedGraph, 0, szM[0]*szM[1]-1)
+            unnormalised = Mp.getunnormalised(subj1, subj2, path, M_assignment)
+            normal = Mp.normaliseresults(unnormalised, sz)
             scanpathcomparisons.append(normal)
-        #return nan as result if at least one scanpath it too short
+        # return nan as result if at least one scanpath it too short
         else:
             scanpathcomparisons.append(np.repeat(np.nan, 5))
     return scanpathcomparisons, onset_times, exact_durations
@@ -325,18 +348,19 @@ if __name__ == '__main__':
         print('Scanpath comparison is done without any grouping')
 
 #Execution
-#TODO: optional arguments need to go here as well (sz and dur)
-#TODO: output format needs changing. Should be BIDS format. "Onset", "Duration"
-#(obsolete?), "segment"
-    segment, onset, duration = doComparison(shots, data1, data2)
-#transform list into numpy array
+    segment, onset, duration = doComparisonForrest(shots,
+                                                   data1,
+                                                   data2,
+                                                   sz,
+                                                   dur,
+                                                   ldur,
+                                                   offset,
+                                                   TDur,
+                                                   TDir,
+                                                   TAmp,
+                                                   grouping)
     segmentfinal = np.array(segment)
-#stack stuff together
     results = np.column_stack((onset, duration, segmentfinal))
-#to record array
-#    final = np.core.records.fromarrays(results.transpose(), names = "onset,
-#    duration, vector_sim, direction_sim, length_sim, position_sim,
-#    duration_sim", formats = 'f8, f8, f8, f8, f8, f8, f8')
 #save
     if not os.path.isdir(os.path.dirname(args.output)):
         os.makedirs(os.path.dirname(args.output))
