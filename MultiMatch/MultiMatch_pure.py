@@ -581,7 +581,7 @@ def normaliseresults(unnormalised, sz = [1280, 720]):
     return normalresults
 
 
-def doComparison(fixation_vectors1, fixation_vectors2, **kwargs):
+def doComparison(fixation_vectors1, fixation_vectors2, sz, grouping, TDir, TDur, TAmp): #**kwargs):
     '''
     Compare the scanpaths evoked by the same moviesegment of two subjects.
     Return a vector of five similarity measures: Vector (Shape), Direction
@@ -646,12 +646,15 @@ if __name__ == '__main__':
         print('Scanpath comparison is done without any grouping')
 
     #execution
-    if grouping:
-        kwargs = {"TDir": TDir, "TAmp": TAmp, "TDur":TDur, "sz": sz, "grouping": grouping}
-        result = doComparison(data1, data2, **kwargs )
-    else:
-        kwargs = {"sz": sz, "grouping": grouping}
-        result = doComparison(data1, data2, **kwargs)
+    result = doComparison(data1, data2, sz, grouping, TDir, TDur, TAmp)
+
+    #if grouping:
+    #    kwargs = {"TDir": TDir, "TAmp": TAmp, "TDur":TDur, "sz": sz, "grouping": grouping}
+    #    result = doComparison(data1, data2, **kwargs )
+    #else:
+    #    kwargs = {"sz": sz, "grouping": grouping}
+    #    result = doComparison(data1, data2, **kwargs)
+
     print('Vector similarity = ', result[0][0])
     print('Direction similarity = ', result[0][1])
     print('Length similarity = ', result[0][2])
