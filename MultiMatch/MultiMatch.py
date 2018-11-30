@@ -12,23 +12,52 @@ import MultiMatch.MultiMatch_pure as Mp
 
 #Functions specifically for the data at hand
 
-def takeClosestright(myList, myNumber):
-    '''return the integer closest to 'myNumber' in an ordered list.(shamelessly
-    stolen from
+def takeclosestright(mylist, mynumber):
+    """Return integer closest right to 'myNumber' in an ordered list
+
+    Parameters
+    ------------
+    mylist: int
+    mynumber: array
+
+    Returns
+    ------------
+    after: float
+        number within mylist closest to the right of mynumber
+
+    References
+    -----------
+
+    I stole this from
     https://stackoverflow.com/questions/12141150/from-list-of-integers-get-number-
-    closest-to-a-given-value)
-    '''
-    pos = bisect_right(myList, myNumber)
+    closest-to-a-given-value
+
+    """
+
+    pos = bisect_right(mylist, mynumber)
     if pos == 0:
-        return myList[0]
-    if pos == len(myList):
-        return myList[-1]
-    after = myList[pos]
+        return mylist[0]
+    if pos == len(mylist):
+        return mylist[-1]
+    after = mylist[pos]
     return after
 
-def takeClosestleft(myList, myNumber):
-    '''return the integer closest to 'myNumber' in an ordered list that is lower
-    than 'myNumber'''
+def takeclosestleft(myList, myNumber):
+    """Return integer closest left to 'myNumber' in an ordered list
+
+    Parameters
+    ------------
+    mylist: int
+    mynumber: array
+
+    Returns
+    ------------
+    after: float
+        number within mylist closest to the left of mynumber
+
+
+    """
+
     pos = bisect_left(myList, myNumber)
     if pos == 0:
         return myList[0]
@@ -37,10 +66,24 @@ def takeClosestleft(myList, myNumber):
     before = myList[pos - 1]
     return before
 
-def createOnsets(data, dur):
-    '''create onset times of all shots of 'dur' seconds of length
-    data = dataframe, should be location annotation
-    dur = duration in seconds'''
+def create_onsets(data, dur):
+    """Create shot onsets from studyforrests location annotation
+
+    Create onset times of all shots of at least 'dur' seconds of length
+
+    Parameters
+    -----------
+
+    data: dataframe
+        location annotation from studyforrest
+    dur: float
+        time in seconds a shot should at least be long
+
+    Returns
+    ----------
+    onsets: array-like
+        list of shot onset times
+    """
     onsets = []
     for index, row in data.iterrows():
         if row['duration'] >= dur:
@@ -48,10 +91,25 @@ def createOnsets(data, dur):
     return onsets
 
 
-def createOffsets(data, dur):
-    '''create offset times of all shots of 'dur' seconds of length
-    data = dataframe, should be location annotation
-    dur = duration in seconds'''
+def create_offsets(data, dur):
+    """Create shot offsets from studyforrests location annotation
+
+    Create offset times of all shots of at least 'dur' seconds of length
+
+    Parameters
+    -----------
+
+    data: dataframe
+        location annotation from studyforrest
+    dur: float
+        time in seconds a shot should at least be long
+
+    Returns
+    ----------
+    onsets: array-like
+        list of shot offset times
+    """
+
     offsets = []
     for index, row in data.iterrows():
         if row['duration'] >= dur:
@@ -61,12 +119,27 @@ def createOffsets(data, dur):
     return offsets
 
 
-def createChunks(onsets, fixations, dur):
-    '''Create and return start and end indices to chunk eye movement data into
-    segments to compare scanpaths across.
-    onsets = output from CreateOnsets()
-    fixations = output from preprocess(). n x 4 np record array
-    dur = durations of segments in seconds'''
+def create_chunks(onsets, fixations, dur):
+    """Chunk eyetracking data into scanpaths.
+
+    Use onset data to obtain indices of full eyetracking data
+    for chunking.
+
+    Parameters
+    -----------
+
+    onsets:  array-like
+        onset times of movie shots
+    fixations: record array
+        nx4 fixation vector (onset, x, y, duration), output of preprocess function
+    dur: float
+        desired duration of segment length
+
+    Returns
+    -----------
+    startidx, endix: array
+        start and end ids of eyemovement data to chunk into segments
+    """
     #initialize empty lists
     startidx, endidx = [], []
     for shotonset in onsets:
@@ -82,12 +155,27 @@ def createChunks(onsets, fixations, dur):
 
 #createOffsetChunks changes to **last** seconds of shot!!
 
-def createOffsetChunks(offsets, fixations, dur):
-    '''Create and return start and end indices to chunk eye movement data into
-    segments to compare scanpaths across.
-    onsets = output from CreateOff(!!)sets()
-    fixations = output from preprocess(). n x 4 np record array
-    dur = durations of segments in seconds'''
+def create_offsetchunks(offsets, fixations, dur):
+    """Chunk eyetracking data into scanpaths.
+
+    Use offset data to obtain indices of full eyetracking data
+    for chunking.
+
+    Parameters
+    -----------
+
+    offsets:  array-like
+        offset times of movie shots
+    fixations: record array
+        nx4 fixation vector (onset, x, y, duration), output of preprocess()
+    dur: float
+        desired duration of segment length
+
+    Returns
+    -----------
+    startidx, endix: array
+        start and end ids of eyemovement data to chunk into segments
+    """
     startidx, endidx = [], []
     for shotoffset in offsets:
         start = takeClosestright(fixations['onset'], shotoffset - dur)
@@ -100,7 +188,22 @@ def createOffsetChunks(offsets, fixations, dur):
     return startidx, endidx
 
 
-def FixationsChunks(fixations, startid, endid):
+def fixations_chunks(fixations, startid, endid):
+    """Chunk eyemovement data into scanpaths.
+
+    Parameters
+    -----------
+    fixations: record array
+        nx4 fixation vector (onset, x, y, duration), output of preprocess()
+    startid, endid: array
+        start- and end-ids of the scanpaths, output from either create_chunks()
+        or create_offsetchunks()
+
+    Returns
+    -----------
+    fixation_vector: array-like
+        a nx3 fixation vector (x, y, duration)
+    """
     '''Chunk eye movement data into segments of approximate length to compute
     scanpath similarities. Output is returned as a n x 3 fixation vector.
     startid, endid = output from createChunks
