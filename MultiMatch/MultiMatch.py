@@ -382,7 +382,6 @@ def createOnsets(data, dur):
             onsets.append(row['onset'])
     return onsets
 
-#TODO: this needs to take the end of a shot
 
 def createOffsets(data, dur):
     '''create offset times of all shots of 'dur' seconds of length
@@ -685,54 +684,3 @@ if __name__ == '__main__':
 
 
 
-#Argparse
-
-#instantiate argparse
-###parser = argparse.ArgumentParser()
-#define arguments
-###parser.add_argument('-i', '--input1', nargs = '+', help = 'Input1: eyemovement data of the first subject', metavar = 'PATH', required = True)
-###parser.add_argument('-j', '--input2', nargs = '+', help = 'Input2: eyemovement data of the second subject', metavar = 'PATH', required = True)
-###parser.add_argument('-k', '--input3', help = 'Input3: location annotation of the movie segment', metavar = 'PATH', required = True)
-###parser.add_argument('-o', '--output', help = 'Output: Specify path where output should be saved', metavar = 'PATH', required = True)
-#TODO: I would like to have additional optional parameters like screensize and
-#shotlength (for shots longer than 3 seconds). How do I include those? Ask
-#Michael or check detect.py.
-#parser.add_argument('-s', '--screensize', help = 'Screensize: Please state the
-#measurements of the screen in px. Default is 1280 x 720 px', metavar = #TODO
-#finish this!
-
-#parser.add_argument('-d', '--duration', help = 'Duration: Please state the
-#duration of movie segment length in s scanpaths shall be compared over. Keep in
-#mind: median shots length is 4.92s. Default is 3s', metavar = #TODO
-#finish this!
-
-
-#call parse_args() method
-###args = parser.parse_args()
-
-#Data read in
-
-###shots = pd.read_csv(args.input3, sep = '\t')
-###data1 = np.recfromcsv(args.input1[0],
-#            delimiter='\t',
- #           dtype={'names':('onset', 'duration', 'label', 'start_x', 'start_y',
-  #          'end_x', 'end_y', 'amp', 'peak_vel', 'med_vel', 'avg_vel'),
-   #         'formats':('f8', 'f8', 'U10', 'f8', 'f8', 'f8', 'f8', 'f8', 'f8',
-    #        'f8', 'f8')})
-
-###data2 = np.recfromcsv(args.input2[0],
- #           delimiter='\t',
-  #          dtype={'names':('onset', 'duration', 'label', 'start_x', 'start_y',
-   #         'end_x', 'end_y', 'amp', 'peak_vel', 'med_vel', 'avg_vel'),
-    #        'formats':('f8', 'f8', 'U10', 'f8', 'f8', 'f8', 'f8', 'f8', 'f8',
-     #       'f8', 'f8')})
-
-
-
-#Execution
-#TODO: optional arguments need to go here as well (sz and dur)
-#segment = doComparison(shots, data1, data2)
-#transform list into numpy array
-#segmentfinal = np.array(segment)
-#save
-#np.savetxt(args.output, segmentfinal, delimiter='\t')
