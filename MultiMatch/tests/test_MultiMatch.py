@@ -30,23 +30,46 @@ def test_same_real_data():
                           delimiter='\t',
                           dtype={'names':('start_x', 'start_y', 'duration'),
                                  'formats':('f8', 'f8', 'f8')})
-    results = Mp.doComparison(data1, data1, sz = [720, 1280], grouping = False, TDir = 0, TDur = 0, TAmp = 0)
+    results = Mp.docomparison(data1,
+                              data1,
+                              sz = [720, 1280],
+                              grouping = False,
+                              TDir = 0,
+                              TDur = 0,
+                              TAmp = 0)
     resultsfinal = np.array(results)
     assert np.all(resultsfinal.all(1))
 
-def test_simplification():
+def test_simplification(run=1, subj=1):
     """
-    Smoketest to see whether simplification blows up.
+    Smoketest to see whether simplification blows up and whether identical
+    scanpaths are still identical after grouping.
     """
     testfile = os.path.abspath('MultiMatch/tests/testdata/segment_5_sub-19.tsv')
     data1 = np.recfromcsv(testfile,
                           delimiter='\t',
                           dtype={'names':('start_x', 'start_y', 'duration'),
                                  'formats':('f8', 'f8', 'f8')})
-    results = Mp.doComparison(data1, data1, sz = [720, 1280], grouping = True, TDir = 30.0, TDur = 0.05, TAmp = 100.0)
+    results = Mp.docomparison(data1,
+                              data1,
+                              sz = [720, 1280],
+                              grouping = True,
+                              TDir = 30.0,
+                              TDur = 0.05,
+                              TAmp = 100.0)
+    Mdata1, Mdata2, shots = ut.same_sample(run, subj)
+    segments, onset, duration = M.doComparisonForrest(shots,
+                                                      Mdata1,
+                                                      Mdata2,
+                                                      sz = [1280, 720],
+                                                      grouping=True,
+                                                      TDir = 30.0,
+                                                      TDur=0.05,
+                                                      TAmp = 100.0)
     resultsfinal = np.array(results)
+    resultsfinal_M = np.array(segments)
     assert np.all(resultsfinal.all(1))
-
+    assert np.all(resultsfinal_M.all(1))
 
 def test_StructureGeneration(length = 5):
     """
@@ -54,7 +77,7 @@ def test_StructureGeneration(length = 5):
     :param length: Specify the length of the fixation vector to be transformed
     """
     fix_vector = ut.mk_fix_vector(length)
-    results = Mp.generateStructureArrayScanpath(fix_vector)
+    results = Mp.gen_scanpath_structure(fix_vector)
     assert len(results[0]) == len(fix_vector)
     assert len(results[1]) == len(fix_vector)
     assert len(results[2]) == len(fix_vector)
@@ -71,7 +94,7 @@ def test_calVectorDifferences(length = 5):
     :param length: specify the length of the structured array to be used
     """
     data1, data2 = ut.mk_strucArray(length=5)
-    Matrix = Mp.calVectordifferences(data1, data2)
+    Matrix = Mp.cal_vectordifferences(data1, data2)
     assert Matrix.shape[0] == length -1
     assert Matrix.shape[1] == 2*length -2
 
@@ -80,8 +103,8 @@ def test_anglesim():
     Tests whether predefined angular relations (quarters of the unit circle) yield the expected similarity results.
     """
     M_assignment, path, angles1, angles2, angles3, angles4 = ut.mk_angles()
-    a1a2 = Mp.calAngularDifference(angles1, angles2, path, M_assignment)
-    a3a4 = Mp.calAngularDifference(angles3, angles4, path, M_assignment)
+    a1a2 = Mp.cal_angulardifference(angles1, angles2, path, M_assignment)
+    a3a4 = Mp.cal_angulardifference(angles3, angles4, path, M_assignment)
     assert a1a2 == [0, 1.0459999999999994, 1.5700000000000003, 2.08,
     3.1400000000000006]
     assert a3a4 == [3.1400000000000006, 2.0971853071795863, 1.5711853071795865,
@@ -93,7 +116,7 @@ def test_durationsim():
     Tests whether similar but not identical durations result in duration similarities greater zero
     """
     M_assignment, path, duration1, duration2 = ut.mk_durs()
-    res = Mp.calDurationDifference(duration1, duration2, path, M_assignment)
+    res = Mp.cal_durationdifference(duration1, duration2, path, M_assignment)
     assert all(np.asarray(res)>= 0)
 
 #TODO: position similarity test, vector length test, vector shape test
@@ -154,7 +177,7 @@ def test_longshot():
     Test whether longshots combines scenes of longer length into the correct number of shots.
     """
     shots = ut.short_shots()
-    newshots = M.longshot(shots, dur = 4.92)
+    newshots = M.longshot(shots, group_shots=True, ldur = 4.92)
     assert len(newshots) == len(shots)-2
 
 
