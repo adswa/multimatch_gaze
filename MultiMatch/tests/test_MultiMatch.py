@@ -186,5 +186,41 @@ def test_longshot_nogrouping():
     Tests whether longshots will perform no grouping if dur = None.
     """
     shots = ut.short_shots()
-    newshots = M.longshot(shots, dur = None)
+    newshots = M.longshot(shots, group_shots=False, ldur = 0.0)
     assert len(newshots) == len(shots)
+
+def test_compare2matlab():
+    """
+    compares whether analysis with given inputs yields the same results as a
+    calculation with the matlab toolbox
+    :return:
+    """
+    testfile = os.path.abspath('MultiMatch/tests/testdata/segment_10_sub-19.tsv')
+    testfile2 = os.path.abspath('MultiMatch/tests/testdata/segment_10_sub-01.tsv')
+    data1 = np.recfromcsv(testfile,
+                          delimiter='\t',
+                          dtype={'names':('start_x', 'start_y', 'duration'),
+                                 'formats':('f8', 'f8', 'f8')})
+    data2 = np.recfromcsv(testfile2,
+                          delimiter='\t',
+                          dtype={'names': ('start_x', 'start_y', 'duration'),
+                                 'formats': ('f8', 'f8', 'f8')})
+    res_grouping = Mp.docomparison(data1,
+                                   data2,
+                                   sz = [720, 1280],
+                                   grouping = True,
+                                   TDir = 45.0,
+                                   TDur = 0.3,
+                                   TAmp = 146.8)
+    res_no_grouping = Mp.docomparison(data1,
+                                   data2,
+                                   sz = [720, 1280],
+                                   grouping = False,
+                                   TDir=0,
+                                   TDur=0,
+                                   TAmp=0)
+    matlab_grouping = [0.95076, 0.95638, 0.94082, 0.94491, 0.78261]
+    matlab_no_grouping = [0.99082, 0.69902, 0.98927, 0.94767, 0.65563]
+    from pytest import approx
+    assert matlab_grouping == approx(res_grouping[0], abs=1e-5, rel=1e-5)
+    assert matlab_no_grouping == approx(res_no_grouping[0], abs=1e-5, rel=1e-5)
