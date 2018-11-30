@@ -139,16 +139,12 @@ def simlen(data, TAmp, TDur):
         sim_len = []
         #while we don't run into index errors
         while i <= len(data[3])-1:
-            ### print(i, len(data[3])-1)
             #if saccade is the last saccade
             if i == len(data[3])-1:
-                ### print('I am the last one')
                 #if saccade has short length:
                 if data[8][i] < TAmp:
-                    ### print('and I am short')
                     #if fixation duration is short:
                     if (data[2][-1] < TDur) or (data[2][-2] < TDur): #was i-1, i
-                        ### print('and I have short fixations')
                         #calculate sum of local vectors
                         v_x = data[5][-2] + data[5][-1] #was i-1, i
                         v_y = data[6][-2] + data[6][-1]
@@ -162,11 +158,9 @@ def simlen(data, TAmp, TDur):
                         #count somewhere with i and j
                         j -= 1
                         i += 1
-                        ### print('the last saccade is short and fixations are short, i and j are ', i, j)
                     #if fixation duration is long:
                     else:
                         #insert original data in new list
-                        ### print('but I have long fixations')
                         sim_lenx.insert(j, data[5][i])
                         sim_leny.insert(j, data[6][i])
                         sim_x.insert(j, data[3][i])
@@ -177,7 +171,6 @@ def simlen(data, TAmp, TDur):
                         #count up i and j
                         i += 1
                         j += 1
-                        ### print('the last saccade is short, but fixations are long, i and j are ', i, j)
                 #if saccade doesn't have short length:
                 else:
                     #insert original data in new list
@@ -191,7 +184,6 @@ def simlen(data, TAmp, TDur):
                     #count up i and j
                     i += 1
                     j += 1
-                    ### print('The last saccade is not short, i and j are ', i, j)
             #if saccade is not the last one
             else:
                 #if saccade has short length
@@ -202,7 +194,6 @@ def simlen(data, TAmp, TDur):
                         v_x = data[5][i] + data[5][i+1]
                         v_y = data[6][i] + data[6][i+1]
                         rho, theta = cart2pol(v_x, v_y)
-                        ### print(i, j, v_x, v_y, rho, theta) #this was added
                         #save them in the new vectors
                         sim_lenx.insert(j, v_x)
                         sim_leny.insert(j, v_y)
@@ -215,7 +206,6 @@ def simlen(data, TAmp, TDur):
                         #count up i
                         i +=2
                         j += 1
-                        ### print('The saccade is short and fixations are short, i and j are ', i, j)
                     #if fixation durations are long
                     else:
                         #insert original data in new lists
@@ -229,7 +219,6 @@ def simlen(data, TAmp, TDur):
                         #count up j and i
                         j += 1
                         i += 1
-                        ### print('The saccade is short, but fixations are long, i and j are ', i, j)
                 #if saccade doesn't have short length
                 else:
                     #insert original data in new list
@@ -285,18 +274,14 @@ def simdir(data, TDir, TDur):
         sim_len = []
         #while we don't run into index errors
         while i <= len(data[3])-1:
-            ### print(i, len(data[3])-1)
             if i < len(data[3])-1:
                 #lets check angles
                 v1 = [data[5][i], data[6][i]]
                 v2 = [data[5][i+1], data[6][i+1]]
                 angle = calcangle(v1, v2)
-                ### print(data[5][i], data[6][i], data[5][i+1], data[6][i+1])
-                ### print('The angle between ', i, i+1, ' is ', angle)
             else:
                 #an angle of infinite size won't go into any further loop
                 angle = float('inf')
-                ### print('reached saccade ', i)
             #if the angle is small and its not the last saccade
             if (angle < TDir) & (i < len(data[3])-1):
                 #if the fixation duration is short:
@@ -316,11 +301,8 @@ def simdir(data, TDir, TDur):
                     #add the fixation duration
                     sim_dur.insert(j, data[2][i])
                     #count up i and j
-                    ### print('The saccades angle is small and fixations short, i and j are ',i,j, data[2][i])
-                    ### print('appended ', i, ' at ', j)
                     i += 2
                     j += 1
-                    ### print('counting up to... ',i,j)
                 else:
                     #insert original data in new list
                     sim_lenx.insert(j, data[5][i])
@@ -331,10 +313,8 @@ def simdir(data, TDir, TDur):
                     sim_len.insert(j, data[8][i])
                     sim_dur.insert(j, data[2][i])
                     #count up j and i
-                    ### print('original data appended (small angle but long fix) ', i, ' at ', j, data[2][i])
                     j += 1
                     i += 1
-                    ### print('counting up... ', i, j)
             #elif the angle is small, but its the last saccade:
             elif (angle < TDir) & (i == len(data[3])-1):
                 #if the fixation duration is short:
@@ -349,12 +329,9 @@ def simdir(data, TDir, TDur):
                     sim_theta[j-1]= theta
                     sim_len[j-1]= rho
                     sim_dur.insert(j, data[2][-1]+(data[2][i]/2)) #maybe -1?
-                    ### print('is this the correct duration?', data[2][-1]+(data[2][i]/2))
                     #count somewhere with i and j
-                    ### print('this should be the last datapoint but angle should be infinite. NO')
                     j -= 1
                     i += 1
-                    ### print('The last saccade has small angle and short fixations, i and j are ', i, j)
                 #if fixation duration is long:
                 else:
                     ### print('I am the last one')
@@ -370,7 +347,6 @@ def simdir(data, TDir, TDur):
                     ### print('original data for last saccade appended ', i, ' at ', j, data[2][i])
                     i += 1
                     j += 1
-                    ### print('counting up... ', i, j)
             #else (the angle is too large
             else:
                 #insert original data in new list
