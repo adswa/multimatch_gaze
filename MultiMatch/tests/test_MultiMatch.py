@@ -14,7 +14,7 @@ def test_same_real_data_forrest(run = 1, subj = 1):
     :param subj: specify the subject (example data of lab subject (1) or mri subject (2) available)
     """
     data1, data2, shots = ut.same_sample(run, subj)
-    segments, onset, duration = M.doComparison(shots, data1, data2)
+    segments, onset, duration = M.doComparisonForrest(shots, data1, data2)
     segmentfinal = np.array(segments)
     assert np.all(segmentfinal.all(1))
 
@@ -30,11 +30,23 @@ def test_same_real_data():
                           delimiter='\t',
                           dtype={'names':('start_x', 'start_y', 'duration'),
                                  'formats':('f8', 'f8', 'f8')})
-    grouping=False
-    kwargs={"grouping": False}
-    # TODO: ask Kyle why this fails
-    results = Mp.doComparison(data1, data1, **kwargs)
-    assert np.all(results.all(1))
+    results = Mp.doComparison(data1, data1, sz = [720, 1280], grouping = False, TDir = 0, TDur = 0, TAmp = 0)
+    resultsfinal = np.array(results)
+    assert np.all(resultsfinal.all(1))
+
+def test_simplification():
+    """
+    Smoketest to see whether simplification blows up.
+    """
+    testfile = os.path.abspath('MultiMatch/tests/testdata/segment_5_sub-19.tsv')
+    data1 = np.recfromcsv(testfile,
+                          delimiter='\t',
+                          dtype={'names':('start_x', 'start_y', 'duration'),
+                                 'formats':('f8', 'f8', 'f8')})
+    results = Mp.doComparison(data1, data1, sz = [720, 1280], grouping = True, TDir = 30.0, TDur = 0.05, TAmp = 100.0)
+    resultsfinal = np.array(results)
+    assert np.all(resultsfinal.all(1))
+
 
 def test_StructureGeneration(length = 5):
     """
@@ -140,10 +152,16 @@ def test_createChunks(run=1, subj=1):
 def test_longshot():
     """
     Test whether longshots combines scenes of longer length into the correct number of shots.
-    :return:
     """
     shots = ut.short_shots()
     newshots = M.longshot(shots, dur = 4.92)
     assert len(newshots) == len(shots)-2
 
 
+def test_longshot_nogrouping():
+    """
+    Tests whether longshots will perform no grouping if dur = None.
+    """
+    shots = ut.short_shots()
+    newshots = M.longshot(shots, dur = None)
+    assert len(newshots) == len(shots)
