@@ -673,6 +673,8 @@ if __name__ == '__main__':
 #    duration, vector_sim, direction_sim, length_sim, position_sim,
 #    duration_sim", formats = 'f8, f8, f8, f8, f8, f8, f8')
 #save
+    if not os.path.isdir(os.path.dirname(args.output)):
+        os.makedirs(os.path.dirname(args.output))
     np.savetxt(args.output,
                 results,
                 fmt = '%f\t%f\t%f\t%f\t%f\t%f\t%f',
