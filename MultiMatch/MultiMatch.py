@@ -306,11 +306,11 @@ if __name__ == '__main__':
     parser.add_argument('-k', '--input3', help = 'Input3: location annotation of the movie segment', metavar = 'PATH', required = True)
     parser.add_argument('-o', '--output', help = 'Output: Specify path where output should be saved', metavar = 'PATH', required = True)
     parser.add_argument('-d', '--duration', help = 'duration: Specify the approx. time of a scanpath in seconds, i.e. 3.0. Note: Scanpaths are extracted within a shot, not across shots! Long durations will lead to only few scanpaths', type = float, default = 4.92)
-    parser.add_argument('-ld', '--lduration', help = 'duration: group short shots in the same locale (i.e. no change of scenes between them) together for longer scanpaths', type=float, default=None)
+    parser.add_argument('-ld', '--lduration', help = 'duration: group short shots in the same locale (i.e. no change of scenes between them) together for longer scanpaths.', type=float, default=0.0)
     parser.add_argument('-di', '--direction_threshold', help='direction_threshold: for direction based grouping. If 0: no grouping will be performed', type = float, default=0.0)
     parser.add_argument('-am', '--amplitude_threshold', help='amplitude_threshold: for amplitude based grouping. If 0: no grouping will be performed', type = float, default=0.0)
     parser.add_argument('-du', '--duration_threshold', help='duration_threshold: for direction based grouping.', type = float, default=0.0)
-    parser.add_argument('-sz', '--screensize', help='screensize: Resolution of screen in px, default is [720, 1280]', default = [720, 1280])
+    parser.add_argument('-sz', '--screensize', help='screensize: Resolution of screen in px, default is [1280, 720]', default = [1280, 720])
     parser.add_argument('-pos', '--position_offset', help='position_offset: if True, scanpaths of dur length stop at shotoffset (instead of starting at shotonset', default=False)
 
     args = parser.parse_args()
