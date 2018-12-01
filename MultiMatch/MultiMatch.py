@@ -143,9 +143,9 @@ def create_chunks(onsets, fixations, dur):
     #initialize empty lists
     startidx, endidx = [], []
     for shotonset in onsets:
-        start = takeClosestright(fixations['onset'], shotonset)
+        start = takeclosestright(fixations['onset'], shotonset)
         startidx.append(np.where(fixations['onset']==start)[0].tolist())
-        end = takeClosestright(fixations['onset'], shotonset + dur)
+        end = takeclosestright(fixations['onset'], shotonset + dur)
         endidx.append(np.where(fixations['onset']==end)[0].tolist())
     #flatten the nested lists
     startidx = [element for sublist in startidx for element in sublist]
@@ -178,9 +178,9 @@ def create_offsetchunks(offsets, fixations, dur):
     """
     startidx, endidx = [], []
     for shotoffset in offsets:
-        start = takeClosestright(fixations['onset'], shotoffset - dur)
+        start = takeclosestright(fixations['onset'], shotoffset - dur)
         startidx.append(np.where(fixations['onset']==start)[0].tolist())
-        end = takeClosestleft(fixations['onset'], shotoffset)
+        end = takeclosestleft(fixations['onset'], shotoffset)
         endidx.append(np.where(fixations['onset'] == end)[0].tolist())
     #flatten the nested lists
     startidx = [element for sublist in startidx for element in sublist]
@@ -404,14 +404,14 @@ def doComparisonForrest(shots,
     # get shots and scanpath on- and offsets
     if offset:
         onset = createOffsets(shots, dur)
-        startid1, endid1 = createOffsetChunks(onset, fixations1, dur)
-        startid2, endid2 = createOffsetChunks(onset, fixations2, dur)
+        startid1, endid1 = create_offsetchunks(onset, fixations1, dur)
+        startid2, endid2 = create_offsetchunks(onset, fixations2, dur)
     else:
-        onset = createOnsets(shots, dur)
-        startid1, endid1 = createChunks(onset, fixations1, dur)
-        startid2, endid2 = createChunks(onset, fixations2, dur)
-    fixation_vectors1 = FixationsChunks(fixations1, startid1, endid1)
-    fixation_vectors2 = FixationsChunks(fixations2, startid2, endid2)
+        onset = create_onsets(shots, dur)
+        startid1, endid1 = create_chunks(onset, fixations1, dur)
+        startid2, endid2 = create_chunks(onset, fixations2, dur)
+    fixation_vectors1 = fixations_chunks(fixations1, startid1, endid1)
+    fixation_vectors2 = fixations_chunks(fixations2, startid2, endid2)
     # save onset and duration times, if valid ones can be calculated
     onset_times = []
     exact_durations = []

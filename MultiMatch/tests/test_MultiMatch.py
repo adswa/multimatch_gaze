@@ -128,7 +128,7 @@ def test_closestright():
     """
     mylist = np.arange(0, 25)
     for i in range(0, len(mylist)):
-        res = M.takeClosestright(mylist, i)
+        res = M.takeclosestright(mylist, i)
         if i == 0:
             assert res == 1
         elif i == len(mylist)-1:
@@ -144,7 +144,7 @@ def test_closestleft():
     """
     mylist = np.arange(0, 25)
     for i in range(0, len(mylist)):
-        res = M.takeClosestleft(mylist, i)
+        res = M.takeclosestleft(mylist, i)
         if i == 0:
             assert res == 0
         elif i == len(mylist)-1:
@@ -162,9 +162,9 @@ def test_createChunks(run=1, subj=1):
     :param subj: specify the subject (example data of lab subject (1) or mri subject (2) available)
     """
     data1, data2, shots = ut.same_sample(run, subj)
-    onsets = M.createOnsets(shots, 3)
+    onsets = M.create_onsets(shots, 3)
     fixations = M.preprocess(data1)
-    startid, endid = M.createChunks(onsets, fixations, 3)
+    startid, endid = M.create_chunks(onsets, fixations, 3)
     assert len(startid) == len(endid)
     trues = []
     for i in range(0, len(startid)):
