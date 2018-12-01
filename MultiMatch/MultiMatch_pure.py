@@ -869,7 +869,9 @@ def docomparison(fixation_vectors1,
     Returns
     ------------
     scanpathcomparisons: array
-        array of 5 scanpath similarity measures
+        array of 5 scanpath similarity measures. Vector (Shape), Direction
+    (Angle), Length, Position, and Duration. 1 means absolute similarity, 0 means
+    lowest similarity possible.
 
     Examples
     ------------
