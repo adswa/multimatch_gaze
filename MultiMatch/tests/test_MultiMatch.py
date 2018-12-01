@@ -9,7 +9,7 @@ from .. import MultiMatch_pure as Mp
 def test_same_real_data_forrest(run = 1, subj = 1):
     """
     Tests the studyforrest-specific functionality: are two identical scanpaths
-    from the movie identical in all scanpath dimensions?
+    from the movie identical in all scanpath dimensions? (no grouping)
     :param run: specify the run (choose between 1 - 8)
     :param subj: specify the subject (example data of lab subject (1) or mri subject (2) available)
     """
@@ -18,7 +18,6 @@ def test_same_real_data_forrest(run = 1, subj = 1):
     segmentfinal = np.array(segments)
     assert np.all(segmentfinal.all(1))
 
-# TODO: Full test of MultiMatch_pure
 def test_same_real_data():
     """
     Tests the pure MultiMatch functionality: are two identical scanpaths supplied as fixation
