@@ -204,10 +204,7 @@ def fixations_chunks(fixations, startid, endid):
     fixation_vector: array-like
         a nx3 fixation vector (x, y, duration)
     """
-    '''Chunk eye movement data into segments of approximate length to compute
-    scanpath similarities. Output is returned as a n x 3 fixation vector.
-    startid, endid = output from createChunks
-    fixations = output from preprocess'''
+
     fixation_vector = []
     #slice fixation data according to indices, take columns start_x, start_y and
     #duration
@@ -217,10 +214,20 @@ def fixations_chunks(fixations, startid, endid):
     return fixation_vector
 
 def pursuits_to_fixations(npdata):
-    '''this function takes a numpy record array from Asims eye-event detection
-    algorithm. Start and end points of pursuits are transformed into a fixation,
-    the pursuit movement can then be simplified as a saccade. The function
-    returns a recordarray'''
+    """Transform start and endpoints of pursuits to fixations
+
+    Uses the output of a record array created by the remodnav algorithm for eye-
+    movement classification to transform pursuit data into fixations.
+
+    Parameters
+    ------------
+    npdata: recordarray
+        remodnav output of eyemovement data
+
+    Returns
+    -----------
+    newdata: recordarray
+    """
     #initialize empty rec array of the same shape
     newdata=np.recarray((0,), dtype=[('onset', '<f8'),
                                 ('duration', '<f8'),
@@ -250,14 +257,26 @@ def pursuits_to_fixations(npdata):
 
 
 def preprocess(data, sz=[1280, 720]):
-    '''
-    data = n x 11 rec array
-    sz = screen measurements
-    preprocesses a recordarray with eye events (from pursuits_to_fixations()
-    function. Assumes the datafile is sorted by time. Will filter to include
-    only Fixations and Pursuits-start/end-points, will check for out-of-bound
-    gazes.
-    Returns clean Fixation data with onset, start_x, start_y and duration '''
+    """Preprocess record array of eye-events.
+
+    A record array of the studyforrest eyemovement data is preprocessed in
+    the following way: Subset to only get fixation and pursuit data, disregard
+    out-of-frame gazes, subset to only keep x, y coordinates, duration, and onset.
+
+    Parameters
+    ------------
+    data: recordarray
+        remodnav output of eye events from movie data
+    sz: list of float
+        screen measurements in px
+
+    Returns
+    -----------
+    fixations: array-like
+        nx4 fixation vectors (onset, x, y, duration)
+
+    """
+
     #only fixations and pursuits
     Filterevents = data[np.logical_or(data['label']=='FIXA',
     data['label']=='PURS')]
@@ -279,14 +298,22 @@ def preprocess(data, sz=[1280, 720]):
 
 
 
-def longshot(shots, group_shots, ldur = 4.92):
-    """
-    group movie shots without a cut together to obtain longer movie
-    segments. This way, fewer but longer scanpaths are obtained. Example: use
+def longshot(shots,
+             group_shots,
+             ldur = 4.92):
+    """Group movie shots without a cut together to obtain longer segments.
+    Note: This way, fewer but longer scanpaths are obtained. Example: use
     median shotlength of 4.92s.
-    If dur = None, no shotgrouping will be performed.
-    :param shots: dataframe, contains movie location annotation
-    :param dur: length in seconds for movie shot
+
+    Parameters
+    ------------
+    shots: dataframe
+        contains movie location annotation
+    group_shots: boolean
+        if True, grouping of movie shots is performed
+    dur: float
+        length in seconds for movie shot. An attempt is made to group short
+        shots without a cut together to form longer shots of ldur length
     :return:
     """
     #turn pandas dataframe shots into record array
@@ -324,20 +351,41 @@ def doComparisonForrest(shots,
                         TAmp = 0,
                         grouping = False
                         ):
-    """
-    Compare the scanpaths evoked by the same movie-segment of the Forrest Gump movie
-    in two subjects.
+    """Compare two scanpaths on five similarity dimensions.
 
-    :param shots: pandas dataframe with locaction annotation
-    :param data1: eyemovement data of subject 1
-    :param data2: eyemovement data of subject 2
-    :param sz: screen measurements. Default is 1280 x 720 px
-    :param dur: shot duration over which scanpaths should be compared in seconds,
-    default is 5 seconds.
-    :return: Returns a vector of five similarity measures: Vector (Shape), Direction
+     Parameters
+     ------------
+
+    data1, data2: recarray
+        eyemovement information of forrest gump studyforrest dataset
+    sz: list
+        screen dimensions in px.
+    ldur: float
+        duration in seconds. An attempt is made to group short shots
+        together to form shots of ldur length
+    grouping: boolean
+        if True, simplification is performed based on thresholds TAmp,
+        TDir, and TDur
+    TDir: float
+        Direction threshold, angle in degrees.
+    TDur: float
+        Duration threshold, duration in seconds.
+    TAmp: float
+        Amplitude threshold, length in px.
+
+    Returns
+    ------------
+    scanpathcomparisons: array
+        array of 5 scanpath similarity measures
+    durations: array-like
+        durations of extracted scanpaths. Vector (Shape), Direction
     (Angle), Length, Position, and Duration. 1 means absolute similarity, 0 means
-    lowest similarity possible. Also returns durations and onset times of the scanpath.
+    lowest similarity possible.
+    onsets: array-like
+        onset times of the scanpaths
 
+    Examples
+    ------------
     """
     #determine whether short shots should be grouped together
     if ldur != 0:
