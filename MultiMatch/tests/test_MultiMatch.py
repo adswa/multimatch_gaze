@@ -7,11 +7,17 @@ from .. import multimatch_forrest as M
 
 
 def test_same_real_data_forrest(run = 1, subj = 1):
-    """
+    """Test identical forrest scanpaths
+
     Tests the studyforrest-specific functionality: are two identical scanpaths
     from the movie identical in all scanpath dimensions? (no grouping)
-    :param run: specify the run (choose between 1 - 8)
-    :param subj: specify the subject (example data of lab subject (1) or mri subject (2) available)
+
+    Parameters
+    -----------
+    run: int
+        specify the run (choose between 1 - 8)
+    subj: int
+        specify the subject (example data of lab subject (1) or mri subject (2) available)
     """
     data1, data2, shots = ut.same_sample(run, subj)
     segments, onset, duration = M.doComparisonForrest(shots, data1, data2)
@@ -19,8 +25,9 @@ def test_same_real_data_forrest(run = 1, subj = 1):
     assert np.all(segmentfinal.all(1))
 
 def test_same_real_data():
-    """
-    Tests the pure MultiMatch functionality: are two identical scanpaths supplied as fixation
+    """Test identical scanpaths
+
+    Tests the pure multimatch functionality: are two identical scanpaths supplied as fixation
     vectors identical in all scanpath dimensions?
     """
     import os
@@ -73,7 +80,8 @@ def test_simplification(run=1, subj=1):
 def test_StructureGeneration(length = 5):
     """
     Tests whether the fixation vector is transformed into data of expected dimensions.
-    :param length: Specify the length of the fixation vector to be transformed
+    length: int
+        length of the fixation vector to be transformed
     """
     fix_vector = ut.mk_fix_vector(length)
     results = Mp.gen_scanpath_structure(fix_vector)
@@ -90,7 +98,8 @@ def test_StructureGeneration(length = 5):
 def test_calVectorDifferences(length = 5):
     """
     Tests whether vector difference calculation results in matrix of expected dimensions.
-    :param length: specify the length of the structured array to be used
+    length: int
+       specify the length of the structured array to be used
     """
     data1, data2 = ut.mk_strucArray(length=5)
     Matrix = Mp.cal_vectordifferences(data1, data2)
@@ -152,13 +161,15 @@ def test_closestleft():
             assert res == i-1
 
 
-def test_createChunks(run=1, subj=1):
+def test_createchunks(run=1, subj=1):
     """
     Tests chunking of studyforrest data into scenes based on shot annotation.
     Are start and end ids of shots the same length?
     Does no endid preceed a start id?
-    :param run: specify the run (choose between 1 - 8)
-    :param subj: specify the subject (example data of lab subject (1) or mri subject (2) available)
+    run: int
+        specify the run (choose between 1 - 8)
+    subj: int
+        specify the subject (example data of lab subject (1) or mri subject (2) available)
     """
     data1, data2, shots = ut.same_sample(run, subj)
     onsets = M.create_onsets(shots, 3)
@@ -192,7 +203,6 @@ def test_compare2matlab():
     """
     compares whether analysis with given inputs yields the same results as a
     calculation with the matlab toolbox
-    :return:
     """
     testfile = os.path.abspath('MultiMatch/tests/testdata/segment_10_sub-19.tsv')
     testfile2 = os.path.abspath('MultiMatch/tests/testdata/segment_10_sub-01.tsv')

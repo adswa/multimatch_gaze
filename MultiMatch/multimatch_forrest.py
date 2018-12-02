@@ -120,7 +120,7 @@ def create_offsets(data, dur):
 
 
 def create_chunks(onsets, fixations, dur):
-    """Chunk eyetracking data into scanpaths.
+    """Chunk eyetracking data into scanpaths
 
     Use onset data to obtain indices of full eyetracking data
     for chunking.
@@ -156,7 +156,7 @@ def create_chunks(onsets, fixations, dur):
 #createOffsetChunks changes to **last** seconds of shot!!
 
 def create_offsetchunks(offsets, fixations, dur):
-    """Chunk eyetracking data into scanpaths.
+    """Chunk eyetracking data into scanpaths
 
     Use offset data to obtain indices of full eyetracking data
     for chunking.
@@ -189,7 +189,7 @@ def create_offsetchunks(offsets, fixations, dur):
 
 
 def fixations_chunks(fixations, startid, endid):
-    """Chunk eyemovement data into scanpaths.
+    """Chunk eyemovement data into scanpaths
 
     Parameters
     -----------
@@ -257,7 +257,7 @@ def pursuits_to_fixations(npdata):
 
 
 def preprocess(data, sz=[1280, 720]):
-    """Preprocess record array of eye-events.
+    """Preprocess record array of eye-events
 
     A record array of the studyforrest eyemovement data is preprocessed in
     the following way: Subset to only get fixation and pursuit data, disregard
@@ -301,7 +301,8 @@ def preprocess(data, sz=[1280, 720]):
 def longshot(shots,
              group_shots,
              ldur = 4.92):
-    """Group movie shots without a cut together to obtain longer segments.
+    """Group movie shots without a cut together to obtain longer segments
+
     Note: This way, fewer but longer scanpaths are obtained. Example: use
     median shotlength of 4.92s.
 
@@ -351,7 +352,7 @@ def doComparisonForrest(shots,
                         TAmp = 0,
                         grouping = False
                         ):
-    """Compare two scanpaths on five similarity dimensions.
+    """Compare two scanpaths on five similarity dimensions
 
      Parameters
      ------------
