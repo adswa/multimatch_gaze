@@ -62,12 +62,12 @@ def mk_strucArray(length=5):
 
 
 def mk_angles():
-    '''creates vectors with predefined angular relations. angles1 and angles2
-    contain the following properties: 1. same 0°, 2. 60° diff, 3. 90° diff,
-    4.120° diff,4. 180° diff (max. dissimilar). They are in sectors (0,1) and
+    """creates vectors with predefined angular relations. angles1 and angles2
+    contain the following properties: 1. same 0, 2. 60 diff, 3. 90 diff,
+    4.120 diff,4. 180 diff (max. dissimilar). They are in sectors (0,1) and
     (0, -1).
     Angles3 and angles4 contain the same properties reversed and lie in sectors
-    (-1, 0) and (-1, -1)'''
+    (-1, 0) and (-1, -1)"""
     angles1 = [[],[],[],[],[],[],[],[0, 0.523, 0.785, 1.04, 1.57],[]]
     angles2 = [[],[],[],[],[],[],[],[0, -0.523, -0.785, -1.04, -1.57],[]]
     angles3 = [[],[],[],[],[],[],[],[1.57, 2.093, 2.356, 2.617, 3.14],[]]

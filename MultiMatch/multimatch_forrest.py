@@ -492,7 +492,7 @@ if __name__ == '__main__':
     #derive simple boolean variable to
     if (TDir != 0) and (TAmp != 0):
         grouping = True
-        print('Scanpath comparison is done with grouping saccades shorter than {}px and with an angle smaller than {}°'
+        print('Scanpath comparison is done with grouping saccades shorter than {}px and with an angle smaller than {} degrees'
               ' if consecutive fixation are shorter than {} seconds.'.format(TAmp, TDir, TDur))
     else:
         grouping = False
