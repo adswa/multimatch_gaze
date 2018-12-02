@@ -2,8 +2,8 @@ import sys, os
 sys.path.insert(0, os.path.abspath('./'))
 import numpy as np
 from . import utils as ut
-from .. import MultiMatch as M
-from .. import MultiMatch_pure as Mp
+from .. import multimatch as Mp
+from .. import multimatch_forrest as M
 
 
 def test_same_real_data_forrest(run = 1, subj = 1):

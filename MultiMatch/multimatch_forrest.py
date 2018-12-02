@@ -8,7 +8,7 @@ from bisect import bisect_right
 from bisect import bisect_left
 import sys, os
 sys.path.insert(0, os.path.abspath('./'))
-import MultiMatch.MultiMatch_pure as Mp
+import MultiMatch.multimatch as Mp
 
 #Functions specifically for the data at hand
 
