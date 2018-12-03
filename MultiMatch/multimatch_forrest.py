@@ -402,6 +402,7 @@ def doComparisonForrest(shots,
     # transform pursuits into fixations
     newdata1 = pursuits_to_fixations(data1)
     newdata2 = pursuits_to_fixations(data2)
+    print('Loaded data.')
     # preprocess input files
     fixations1 = preprocess(newdata1, sz)
     fixations2 = preprocess(newdata2, sz)
@@ -417,6 +418,7 @@ def doComparisonForrest(shots,
         startid2, endid2 = create_chunks(onset, fixations2, dur)
     fixation_vectors1 = fixations_chunks(fixations1, startid1, endid1)
     fixation_vectors2 = fixations_chunks(fixations2, startid2, endid2)
+    print('Split fixation data into {} scanpaths.'.format(len(startid1)))
     # save onset and duration times, if valid ones can be calculated
     onset_times = []
     exact_durations = []
@@ -429,15 +431,19 @@ def doComparisonForrest(shots,
             exact_durations.append(exact_duration)
         else:
             exact_durations.append(np.nan)
+        if i == len(startid1):
+            print('Captured onsets and duration times of all scanpath pairs.')
     # loop over all fixation vectors/scanpaths and calculate similarity
     for i in range(0, len(onset)):
         # check if fixation vectors/scanpaths are long enough
         if (len(fixation_vectors1[i]) >= 3) & (len(fixation_vectors2[i]) >= 3):
+            print('Computing similarity for comparison {}.'.format(i+1))
             subj1 = Mp.gen_scanpath_structure(fixation_vectors1[i])
             subj2 = Mp.gen_scanpath_structure(fixation_vectors2[i])
             if grouping:
                 subj1 = Mp.simplify_scanpath(subj1, TAmp, TDir, TDur)
                 subj2 = Mp.simplify_scanpath(subj2, TAmp, TDir, TDur)
+                print('Simplification of pair {} completed.'.format(i))
             M = Mp.cal_vectordifferences(subj1, subj2)
             szM = np.shape(M)
             M_assignment = np.arange(szM[0] * szM[1]).reshape(szM[0], szM[1])
@@ -446,9 +452,12 @@ def doComparisonForrest(shots,
             unnormalised = Mp.getunnormalised(subj1, subj2, path, M_assignment)
             normal = Mp.normaliseresults(unnormalised, sz)
             scanpathcomparisons.append(normal)
+            print('Done.')
         # return nan as result if at least one scanpath it too short
         else:
             scanpathcomparisons.append(np.repeat(np.nan, 5))
+            print('Scanpath {} had a length of {}, however, a minimal '
+                  'length of 3 is required. Appending nan.'.format(i, min(len(fixation_vectors1), len(fixation_vectors2))))
     return scanpathcomparisons, onset_times, exact_durations
 
 def main():
