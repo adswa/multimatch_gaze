@@ -559,27 +559,3 @@ if __name__ == '__main__':
 
     # Execution
     main()
-
-#    segment, onset, duration = doComparisonForrest(shots,
-#                                                   data1,
-#                                                   data2,
-#                                                   sz,
-#                                                   dur,
-#                                                   ldur,
-#                                                   offset,
-#                                                   TDur,
-#                                                   TDir,
-#                                                   TAmp,
-#                                                   grouping)
-#    segmentfinal = np.array(segment)
-#    results = np.column_stack((onset, duration, segmentfinal))
-#    # save
-#    if not os.path.isdir(os.path.dirname(args.output)):
-#        os.makedirs(os.path.dirname(args.output))
-#    np.savetxt(args.output,
-#               results,
-#               fmt='%f\t%f\t%f\t%f\t%f\t%f\t%f',
-#               delimiter='\t',
-#               header="onset\tduration\tvector_sim\tdirection_sim\tlength_sim\tposition_sim\tduration_sim",
-#               comments=''
-#               )

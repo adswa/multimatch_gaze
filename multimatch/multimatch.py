@@ -991,16 +991,3 @@ if __name__ == '__main__':
 
     # execution
     main()
-#    result = docomparison(data1,
-#                          data2,
-#                          sz,
-#                          grouping,
-#                          TDir,
-#                          TDur,
-#                          TAmp)
-
-#    print('Vector similarity = ', result[0][0])
-#    print('Direction similarity = ', result[0][1])
-#    print('Length similarity = ', result[0][2])
-#    print('Position similarity = ', result[0][3])
-#    print('Duration similarity = ', result[0][4])
