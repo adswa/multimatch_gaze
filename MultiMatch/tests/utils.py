@@ -96,3 +96,15 @@ def mk_durs():
     path = [0, 6, 12, 18, 24]
     M_assignment = np.arange(5 * 5).reshape(5, 5)
     return (M_assignment, path, durations1, durations2)
+
+
+def mk_supershort_shots():
+    data = {'onset': np.arange(0, 20), 'duration': np.repeat(1, 20), 'locale': np.repeat('somewhere', 20)}
+    shots=pd.DataFrame(data)
+    return shots
+
+
+def mk_longershots():
+    data = {'onset': np.arange(0, 20), 'duration': np.repeat(5, 20), 'locale': np.repeat('somewhere', 20)}
+    shots=pd.DataFrame(data)
+    return shots
