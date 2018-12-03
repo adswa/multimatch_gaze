@@ -22,6 +22,8 @@ after success:
     #stole this from mih as well
     - codecov
 
+git:
+    submodules: false
 
 codecov:
   token: 44656c54-250a-4f8b-bd58-688056318912
