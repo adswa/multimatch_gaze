@@ -8,7 +8,7 @@ from os.path import dirname
 def get_version():
     """Load version only
     """
-    with open(opj(dirname(__file__), 'MultiMatch_pure', '__init__.py')) as f:
+    with open(opj(dirname(__file__), 'MultiMatch', '__init__.py')) as f:
         version_lines = list(filter(lambda x: x.startswith('__version__'), f))
     assert (len(version_lines) == 1)
     return version_lines[0].split('=')[1].strip(" '\"\t\n")
@@ -55,6 +55,11 @@ setup(
         'console_scripts': [
             'multimatch=MultiMatch.multimatch:main',
             'multimatch_forrest=MultiMatch.multimatch_forrest:main'],
-    }
+    },
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: MIT License",
+        "Operating System :: OS Independent",
+    ],
 )
 
