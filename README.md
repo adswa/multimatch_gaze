@@ -1,7 +1,5 @@
-[![Build Status](https://travis-ci.com/AdinaWagner/MultiMatch.svg?branch=master)](https://travis-ci.com/AdinaWagner/MultiMatch)
-
-
-[![codecov](https://codecov.io/gh/AdinaWagner/MultiMatch/branch/master/graph/badge.svg)](https://codecov.io/gh/AdinaWagner/MultiMatch)
+[![Build Status](https://travis-ci.com/AdinaWagner/multimatch.svg?branch=master)](https://travis-ci.com/AdinaWagner/multimatch)
+[![codecov](https://codecov.io/gh/AdinaWagner/multimatch/branch/master/graph/badge.svg)](https://codecov.io/gh/AdinaWagner/multimatch)
 
 
 
@@ -108,11 +106,11 @@ if grouping should be performed (optional), please specify in addition
 
 Example usage with grouping:
 
-``` MultiMatch/MultiMatch_pure.py -i 'data/fixvectors/segment_10_sub-19.tsv' -j 'data/fixvectors/segment_10_sub-01.tsv' -di 45.0 -du 0.3 -am 147.0 ```
+``` multimatch/multimatch.py -i 'data/fixvectors/segment_10_sub-19.tsv' -j 'data/fixvectors/segment_10_sub-01.tsv' -di 45.0 -du 0.3 -am 147.0 ```
 
 Example usage without grouping:
 
-``` MultiMatch/MultiMatch_pure.py -i 'data/fixvectors/segment_10_sub-19.tsv' -j 'data/fixvectors/segment_10_sub-01.tsv' ```
+``` multimatch/multimatch.py -i 'data/fixvectors/segment_10_sub-19.tsv' -j 'data/fixvectors/segment_10_sub-01.tsv' ```
 
 
 ## multimatch_forrest

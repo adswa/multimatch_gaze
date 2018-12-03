@@ -9,7 +9,7 @@ import sys
 import os
 
 sys.path.insert(0, os.path.abspath('./'))
-import MultiMatch.multimatch as Mp
+import multimatch.multimatch as Mp
 
 
 # Functions specifically for the data at hand
@@ -344,7 +344,7 @@ def longshot(shots,
     return aggregated
 
 
-def doComparisonForrest(shots,
+def docomparison_forrest(shots,
                         data1,
                         data2,
                         sz=[1280, 720],
@@ -462,7 +462,7 @@ def doComparisonForrest(shots,
 
 def main():
     print('Attempting to simplify scanpaths')
-    segment, onset, duration = doComparisonForrest(shots,
+    segment, onset, duration = docomparison_forrest(shots,
                                                    data1,
                                                    data2,
                                                    sz,

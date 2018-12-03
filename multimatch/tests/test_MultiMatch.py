@@ -23,7 +23,7 @@ def test_same_real_data_forrest(run=1, subj=1):
         or mri subject (2) available)
     """
     data1, data2, shots = ut.same_sample(run, subj)
-    segments, onset, duration = M.doComparisonForrest(shots, data1, data2)
+    segments, onset, duration = M.docomparison_forrest(shots, data1, data2)
     segmentfinal = np.array(segments)
     assert np.all(segmentfinal.all(1))
 
@@ -35,7 +35,7 @@ def test_same_real_data():
     supplied as fixation vectors identical in all scanpath dimensions?
     """
     import os
-    testfile = os.path.abspath('MultiMatch/tests/testdata/segment_5_sub-19.tsv')
+    testfile = os.path.abspath('multimatch/tests/testdata/segment_5_sub-19.tsv')
     data1 = np.recfromcsv(testfile,
                           delimiter='\t',
                           dtype={'names': ('start_x', 'start_y', 'duration'),
@@ -56,7 +56,7 @@ def test_simplification(run=1, subj=1):
     Smoketest to see whether simplification blows up and whether identical
     scanpaths are still identical after grouping.
     """
-    testfile = os.path.abspath('MultiMatch/tests/testdata/segment_5_sub-19.tsv')
+    testfile = os.path.abspath('multimatch/tests/testdata/segment_5_sub-19.tsv')
     data1 = np.recfromcsv(testfile,
                           delimiter='\t',
                           dtype={'names': ('start_x', 'start_y', 'duration'),
@@ -69,7 +69,7 @@ def test_simplification(run=1, subj=1):
                               TDur=0.05,
                               TAmp=100.0)
     Mdata1, Mdata2, shots = ut.same_sample(run, subj)
-    segments, onset, duration = M.doComparisonForrest(shots,
+    segments, onset, duration = M.docomparison_forrest(shots,
                                                       Mdata1,
                                                       Mdata2,
                                                       sz=[1280, 720],
@@ -83,7 +83,7 @@ def test_simplification(run=1, subj=1):
     assert np.all(resultsfinal_M.all(1))
 
 
-def test_StructureGeneration(length=5):
+def test_structure_generation(length=5):
     """
     Tests whether the fixation vector is transformed into data of
     expected dimensions.
@@ -106,7 +106,7 @@ def test_StructureGeneration(length=5):
     assert len(results[8]) == len(fix_vector) - 1
 
 
-def test_calVectorDifferences(length=5):
+def test_cal_vectordifferences(length=5):
     """
     Tests whether vector difference calculation results in matrix of
     expected dimensions.
@@ -116,7 +116,7 @@ def test_calVectorDifferences(length=5):
     length: int
        specify the length of the structured array to be used
     """
-    data1, data2 = ut.mk_strucArray(length=5)
+    data1, data2 = ut.mk_strucarray(length=5)
     Matrix = Mp.cal_vectordifferences(data1, data2)
     assert Matrix.shape[0] == length - 1
     assert Matrix.shape[1] == 2 * length - 2
@@ -250,8 +250,8 @@ def test_compare2matlab():
     compares whether analysis with given inputs yields the same results as a
     calculation with the matlab toolbox
     """
-    testfile = os.path.abspath('MultiMatch/tests/testdata/segment_10_sub-19.tsv')
-    testfile2 = os.path.abspath('MultiMatch/tests/testdata/segment_10_sub-01.tsv')
+    testfile = os.path.abspath('multimatch/tests/testdata/segment_10_sub-19.tsv')
+    testfile2 = os.path.abspath('multimatch/tests/testdata/segment_10_sub-01.tsv')
     data1 = np.recfromcsv(testfile,
                           delimiter='\t',
                           dtype={'names': ('start_x', 'start_y', 'duration'),

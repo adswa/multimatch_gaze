@@ -11,9 +11,9 @@ def same_sample(run=1, subj=1):
         sub = "sub-30"
     else:
         sub = "sub-10"
-    path = os.path.join("MultiMatch/tests/testdata",
+    path = os.path.join("multimatch/tests/testdata",
                         "{}_task-movie_run-{}_events.tsv".format(sub, run))
-    loc = os.path.join("MultiMatch/tests/testdata",
+    loc = os.path.join("multimatch/tests/testdata",
                        "locations_run-{}_events.tsv".format(run))
     data = np.recfromcsv(path,
                          delimiter='\t',
@@ -31,7 +31,7 @@ def same_sample(run=1, subj=1):
 
 def short_shots(run=3):
     '''create a shortened shots location annotation to test longshots()'''
-    loc = os.path.join("MultiMatch/tests/testdata",
+    loc = os.path.join("multimatch/tests/testdata",
                        "locations_run-{}_events.tsv".format(run))
     shots = pd.read_csv(loc, sep='\t')
     shortshots = shots[0:20]
@@ -53,7 +53,7 @@ def mk_fix_vector(length=5):
     return fix
 
 
-def mk_strucArray(length=5):
+def mk_strucarray(length=5):
     '''create a random scanpath in the data format generateScanpathStructureArray
     would output'''
     fixation_x = random.sample(range(700), length)
@@ -99,12 +99,14 @@ def mk_durs():
 
 
 def mk_supershort_shots():
-    data = {'onset': np.arange(0, 20), 'duration': np.repeat(1, 20), 'locale': np.repeat('somewhere', 20)}
+    data = {'onset': np.arange(0, 20), 'duration': np.repeat(1, 20),
+            'locale': np.repeat('somewhere', 20)}
     shots=pd.DataFrame(data)
     return shots
 
 
 def mk_longershots():
-    data = {'onset': np.arange(0, 20), 'duration': np.repeat(5, 20), 'locale': np.repeat('somewhere', 20)}
+    data = {'onset': np.arange(0, 20), 'duration': np.repeat(5, 20),
+            'locale': np.repeat('somewhere', 20)}
     shots=pd.DataFrame(data)
     return shots

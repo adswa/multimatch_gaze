@@ -8,7 +8,7 @@ from os.path import dirname
 def get_version():
     """Load version only
     """
-    with open(opj(dirname(__file__), 'MultiMatch', '__init__.py')) as f:
+    with open(opj(dirname(__file__), 'multimatch', '__init__.py')) as f:
         version_lines = list(filter(lambda x: x.startswith('__version__'), f))
     assert (len(version_lines) == 1)
     return version_lines[0].split('=')[1].strip(" '\"\t\n")
@@ -37,8 +37,8 @@ setup(
     long_description=long_description,
     author='Adina Wagner',
     author_email='adina.wagner@t-online.de',
-    url='https://github.com/AdinaWagner/MultiMatch',
-    packages=[pkg for pkg in find_packages('.') if pkg.startswith('MultiMatch')],
+    url='https://github.com/AdinaWagner/multimatch',
+    packages=[pkg for pkg in find_packages('.') if pkg.startswith('multimatch')],
     install_requires=[
         'numpy',
         'pandas',
@@ -53,8 +53,8 @@ setup(
         ]},
     entry_points={
         'console_scripts': [
-            'multimatch=MultiMatch.multimatch:main',
-            'multimatch_forrest=MultiMatch.multimatch_forrest:main'],
+            'multimatch=multimatch.multimatch:main',
+            'multimatch_forrest=multimatch.multimatch_forrest:main'],
     },
     classifiers=[
         "Programming Language :: Python :: 3",
