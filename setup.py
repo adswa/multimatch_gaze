@@ -52,7 +52,9 @@ setup(
             'pypandoc',
         ]},
     entry_points={
-        'console_scripts': ['MultiMatch=MultiMatch:main']
+        'console_scripts': [
+            'multimatch=MultiMatch.multimatch:main',
+            'multimatch_forrest=MultiMatch.multimatch_forrest:main'],
     }
 )
 

@@ -932,6 +932,20 @@ def docomparison(fixation_vectors1,
         scanpathcomparisons.append(np.repeat(np.nan, 5))
     return scanpathcomparisons
 
+def main():
+    print('Im executing main().')
+    result = docomparison(data1,
+                          data2,
+                          sz,
+                          grouping,
+                          TDir,
+                          TDur,
+                          TAmp)
+    print('Vector similarity = ', result[0][0])
+    print('Direction similarity = ', result[0][1])
+    print('Length similarity = ', result[0][2])
+    print('Position similarity = ', result[0][3])
+    print('Duration similarity = ', result[0][4])
 
 if __name__ == '__main__':
     import argparse
@@ -976,16 +990,17 @@ if __name__ == '__main__':
         print('Scanpath comparison is done without any grouping')
 
     # execution
-    result = docomparison(data1,
-                          data2,
-                          sz,
-                          grouping,
-                          TDir,
-                          TDur,
-                          TAmp)
+    main()
+#    result = docomparison(data1,
+#                          data2,
+#                          sz,
+#                          grouping,
+#                          TDir,
+#                          TDur,
+#                          TAmp)
 
-    print('Vector similarity = ', result[0][0])
-    print('Direction similarity = ', result[0][1])
-    print('Length similarity = ', result[0][2])
-    print('Position similarity = ', result[0][3])
-    print('Duration similarity = ', result[0][4])
+#    print('Vector similarity = ', result[0][0])
+#    print('Direction similarity = ', result[0][1])
+#    print('Length similarity = ', result[0][2])
+#    print('Position similarity = ', result[0][3])
+#    print('Duration similarity = ', result[0][4])

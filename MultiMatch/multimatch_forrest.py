@@ -451,6 +451,34 @@ def doComparisonForrest(shots,
             scanpathcomparisons.append(np.repeat(np.nan, 5))
     return scanpathcomparisons, onset_times, exact_durations
 
+def main():
+    print('Attempting to simplify scanpaths')
+    segment, onset, duration = doComparisonForrest(shots,
+                                                   data1,
+                                                   data2,
+                                                   sz,
+                                                   dur,
+                                                   ldur,
+                                                   offset,
+                                                   TDur,
+                                                   TDir,
+                                                   TAmp,
+                                                   grouping)
+    segmentfinal = np.array(segment)
+    results = np.column_stack((onset, duration, segmentfinal))
+    # save
+    print('Saving results at {}.'.format(args.output))
+    if not os.path.isdir(os.path.dirname(args.output)):
+        os.makedirs(os.path.dirname(args.output))
+    np.savetxt(args.output,
+               results,
+               fmt='%f\t%f\t%f\t%f\t%f\t%f\t%f',
+               delimiter='\t',
+               header="onset\tduration\tvector_sim\tdirection_sim\tlength_sim\tposition_sim\tduration_sim",
+               comments=''
+               )
+
+
 
 if __name__ == '__main__':
     import argparse
@@ -521,26 +549,28 @@ if __name__ == '__main__':
         print('Scanpath comparison is done without any grouping')
 
     # Execution
-    segment, onset, duration = doComparisonForrest(shots,
-                                                   data1,
-                                                   data2,
-                                                   sz,
-                                                   dur,
-                                                   ldur,
-                                                   offset,
-                                                   TDur,
-                                                   TDir,
-                                                   TAmp,
-                                                   grouping)
-    segmentfinal = np.array(segment)
-    results = np.column_stack((onset, duration, segmentfinal))
-    # save
-    if not os.path.isdir(os.path.dirname(args.output)):
-        os.makedirs(os.path.dirname(args.output))
-    np.savetxt(args.output,
-               results,
-               fmt='%f\t%f\t%f\t%f\t%f\t%f\t%f',
-               delimiter='\t',
-               header="onset\tduration\tvector_sim\tdirection_sim\tlength_sim\tposition_sim\tduration_sim",
-               comments=''
-               )
+    main()
+
+#    segment, onset, duration = doComparisonForrest(shots,
+#                                                   data1,
+#                                                   data2,
+#                                                   sz,
+#                                                   dur,
+#                                                   ldur,
+#                                                   offset,
+#                                                   TDur,
+#                                                   TDir,
+#                                                   TAmp,
+#                                                   grouping)
+#    segmentfinal = np.array(segment)
+#    results = np.column_stack((onset, duration, segmentfinal))
+#    # save
+#    if not os.path.isdir(os.path.dirname(args.output)):
+#        os.makedirs(os.path.dirname(args.output))
+#    np.savetxt(args.output,
+#               results,
+#               fmt='%f\t%f\t%f\t%f\t%f\t%f\t%f',
+#               delimiter='\t',
+#               header="onset\tduration\tvector_sim\tdirection_sim\tlength_sim\tposition_sim\tduration_sim",
+#               comments=''
+#               )
