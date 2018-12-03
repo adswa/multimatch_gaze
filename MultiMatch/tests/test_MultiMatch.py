@@ -169,13 +169,15 @@ def test_closestleft():
     Tests whether closestright function works as intended and does not
     unexpectedly return a number right to the reference.
     """
-    mylist = np.arange(0, 25)
+    mylist = np.arange(-1, 25)
     for i in range(0, len(mylist)):
         res = M.takeclosestleft(mylist, i)
         if i == 0:
-            assert res == 0
+            assert res == mylist[0]
         elif i == len(mylist) - 1:
-            assert res == 23
+            assert res == 24
+        elif i == len(mylist):
+            assert res == 25
         else:
             assert res == i - 1
 
@@ -195,6 +197,28 @@ def test_createchunks(run=1, subj=1):
     onsets = M.create_onsets(shots, 3)
     fixations = M.preprocess(data1)
     startid, endid = M.create_chunks(onsets, fixations, 3)
+    assert len(startid) == len(endid)
+    trues = []
+    for i in range(0, len(startid)):
+        trues.append(startid[i] <= endid[i])
+    assert all(trues)
+
+
+def test_createoffsetchunks(run=1, subj=1):
+    """
+    Tests chunking of studyforrest data into scenes based on shot annotation.
+    Are start and end ids of shots the same length?
+    Does no endid preceed a start id?
+    run: int
+        specify the run (choose between 1 - 8)
+    subj: int
+        specify the subject (example data of lab subject (1)
+        or mri subject (2) available)
+    """
+    data1, data2, shots = ut.same_sample(run, subj)
+    offsets = M.create_offsets(shots, 3)
+    fixations = M.preprocess(data1)
+    startid, endid = M.create_offsetchunks(offsets, fixations, 3)
     assert len(startid) == len(endid)
     trues = []
     for i in range(0, len(startid)):
@@ -255,3 +279,28 @@ def test_compare2matlab():
     from pytest import approx
     assert matlab_grouping == approx(res_grouping[0], abs=1e-5, rel=1e-5)
     assert matlab_no_grouping == approx(res_no_grouping[0], abs=1e-5, rel=1e-5)
+
+
+def test_offsets():
+    """
+    Tests offset length on example dataset with known results.
+    """
+    shots = ut.short_shots()
+    offsets=M.create_offsets(shots, dur=5)
+    assert len(offsets)==13
+
+    shots_short = ut.mk_supershort_shots()
+    offsets2 = M.create_offsets(shots_short, dur=2)
+    assert len(offsets2)==0
+    shots_long = ut.mk_longershots()
+    offsets3 = M.create_offsets(shots_long, dur=3)
+    assert len(offsets3)==len(shots_long)
+
+def test_too_short_scanpaths():
+    """
+    if at least one scanpath is too short results should be nan.
+    """
+    fixvector1 = ut.mk_fix_vector(2)
+    fixvector2 = ut.mk_fix_vector(5)
+    results=Mp.docomparison(fixvector1, fixvector2, sz=[1280, 720], grouping=True, TAmp=8, TDir=8, TDur=8)
+    assert ([results[i]==np.nan for i in range(0, len(results))])
