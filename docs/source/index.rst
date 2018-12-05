@@ -6,18 +6,24 @@
 multimatch: Multidimensional scanpath comparison in python
 ==========================================================
 
-
-Guide
-^^^^^
-
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
 
+   overview
+   gettingstarted
+   acknowledgements
+
+Commands and functions
+^^^^^^^^^^^^^^^^^^^^^^
+   :maxdepth: 1
+
+   multimatch
+   multimatch_forrest
 
 
 Indices and tables
-==================
+^^^^^^^^^^^^^^^^^^
 
 * :ref:`genindex`
 * :ref:`modindex`
