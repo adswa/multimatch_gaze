@@ -1,7 +1,6 @@
 [![Build Status](https://travis-ci.com/AdinaWagner/multimatch.svg?branch=master)](https://travis-ci.com/AdinaWagner/multimatch)
 [![codecov](https://codecov.io/gh/AdinaWagner/multimatch/branch/master/graph/badge.svg)](https://codecov.io/gh/AdinaWagner/multimatch)
-
-
+[![Documentation](https://readthedocs.org/projects/multimatch/badge/?version=latest)](https://multimatch.readthedocs.io/en/latest/)
 
 # multimatch
 ## Reimplementation of MultiMatch toolbox (Dewhurst et al., 2012) in Python.
