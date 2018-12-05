@@ -15,7 +15,7 @@ five dimensions **vector shape**, **vector length** (saccadic amplitude), **vect
 position**, **vector direction** and **fixation duration** for a multidimensional
 similarity evaluation.
 
- .. figure:: dimensions.png
+ .. figure:: ../img/dimensions.png
    :scale: 100%
    :alt: scanpath dimensions
 
