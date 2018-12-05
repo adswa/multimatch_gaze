@@ -11,5 +11,4 @@ from __future__ import absolute_import
 from .multimatch import docomparison
 from .multimatch_forrest import docomparison_forrest
 
-__version__ = '0.1'
-
+__version__ = '0.0.5'

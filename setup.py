@@ -42,9 +42,9 @@ setup(
     install_requires=[
         'numpy',
         'pandas',
-        'math',
-        'bisect',
-        'os',
+        #'math',
+        #'os',
+        #'bisect,       #all of these requirements fail with testpypi?
     ],
     extras_require={
         'devel-docs': [
