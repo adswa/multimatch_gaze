@@ -1,5 +1,5 @@
 *********
-Overview
+overview
 *********
 
 multimatch is a python-based reimplementation of Dewhursts and colleagues (2012)

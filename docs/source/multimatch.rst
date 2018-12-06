@@ -5,8 +5,10 @@ multimatch
 The ``multimatch`` command is the standalone equivalent of the MultiMatch
 toolbox and is easiest executed directly from the command line.
 
-.. autofunction:: multimatch.mulitmatch
+.. autofunction:: multimatch.multimatch
+    :members:
 
+.. automodule:: multimatch.multimatch
 
 lets see where this gets us.
 

@@ -1,5 +1,5 @@
 ****************
-Acknowledgements
+acknowledgements
 ****************
 
 We thank Dr. Richard Dewhurst for kindly and swiftly providing the original

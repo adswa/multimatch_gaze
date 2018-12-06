@@ -16,6 +16,9 @@ automatically install multimatch with all dependencies type::
 
 .. _pip: https://pip.pypa.io
 
+.. TODO: section on virtualenvs, steal that from datalad
+
+
 Via Github
 ----------
 
