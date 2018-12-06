@@ -11,9 +11,10 @@ multimatch: Multidimensional scanpath comparison in python
    :caption: Contents:
 
    overview
-   readme
+   method
    gettingstarted
    acknowledgements
+   support
 
 Commands and functions
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -23,7 +24,7 @@ Commands and functions
 
    multimatch
    multimatch_forrest
-
+   multimatch.tests
 
 Indices and tables
 ^^^^^^^^^^^^^^^^^^
