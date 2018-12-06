@@ -11,6 +11,7 @@ multimatch: Multidimensional scanpath comparison in python
    :caption: Contents:
 
    overview
+   readme
    gettingstarted
    acknowledgements
 
