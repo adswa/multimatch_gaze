@@ -26,7 +26,7 @@ and the method was ported into Python with the intent of providing an open sourc
 alternative to the matlab toolbox.
 
 The module provides the possibility to compute the similarity of two scanpaths
-with a terminal command or within a python instance (see section multimatch__).
+with a terminal command or within a python instance (see section multimatch_).
 
  .. _multimatch: https://multimatch.readthedocs.io/en/latest/multimatch.html
 
@@ -45,3 +45,14 @@ on how to use this functionality, see section multimatch_forrest_.
 
  .. _multimatch_forrest: https://multimatch.readthedocs.io/en/latest/multimatch_forrest.html
 
+
+References
+^^^^^^^^^^
+Dewhurst, R., Nyström, M., Jarodzka, H., Foulsham, T., Johansson, R. &
+Holmqvist, K. (2012). It depends on how you look at it: scanpath comparison in
+multiple dimensions with MultiMatch, a vector-based approach. Behaviour Research
+Methods, 44(4), 1079-1100.
+
+Jarodzka, H., Holmqvist, K., & Nyström, M. (eds.) (2010). A vector-based,
+multidimensional scanpath similarity measure. In Proceedings of the 2010
+symposium on eye-tracking research & applications (pp. 211-218). ACM.
