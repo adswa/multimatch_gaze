@@ -26,10 +26,9 @@ and the method was ported into Python with the intent of providing an open sourc
 alternative to the matlab toolbox.
 
 The module provides the possibility to compute the similarity of two scanpaths
-with a terminal command or within a python instance (see section
-gettingstarted_).
+with a terminal command or within a python instance (see section multimatch__).
 
- .. _gettingstarted: https://multimatch.readthedocs.io/en/latest/gettingstarted.html
+ .. _multimatch: https://multimatch.readthedocs.io/en/latest/multimatch.html
 
 Additionally, the reimplementation contains
 options to compute scanpath similarities from the studyforrest phase 2
@@ -41,5 +40,8 @@ containing eye-tracking event files by user-defined rules. Inputs for the
 studyforrest-version stem from remodnav1 (Dar, Wagner & Hanke, in preparation),
 an adaptive eye-event classification algorithm used on the studyforrest
 eye-tracking data and publicly available from
-github.com/psychoinformatics-de/studyforrest-data-eyemovementlabels.
+github.com/psychoinformatics-de/studyforrest-data-eyemovementlabels. For details
+on how to use this functionality, see section multimatch_forrest_.
+
+ .. _multimatch_forrest: https://multimatch.readthedocs.io/en/latest/multimatch_forrest.html
 

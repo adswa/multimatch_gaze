@@ -16,6 +16,8 @@ multimatch: Multidimensional scanpath comparison in python
 
 Commands and functions
 ^^^^^^^^^^^^^^^^^^^^^^
+
+.. toctree::
    :maxdepth: 1
 
    multimatch
