@@ -770,11 +770,11 @@ def normaliseresults(unnormalised, sz=[1280, 720]):
 
 def docomparison(fixation_vectors1,
                  fixation_vectors2,
-                 sz,
-                 grouping,
-                 TDir,
-                 TDur,
-                 TAmp
+                 sz = [1280, 720],
+                 grouping = False,
+                 TDir = 0.0,
+                 TDur = 0.0,
+                 TAmp = 0.0
                  ):
     """Compare two scanpaths on five similarity dimensions.
 
