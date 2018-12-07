@@ -375,18 +375,20 @@ def docomparison_forrest(shots,
     return scanpathcomparisons, onset_times, exact_durations
 
 def main():
+        #shots=shots, data1=data1, data2=data2, sz=sz, dur=dur, ldur=ldur, offset=offset, TDir=TDir, TDur=TDur,
+        # TAmp=TAmp):
     print('Attempting to simplify scanpaths')
     segment, onset, duration = docomparison_forrest(shots,
                                                    data1,
                                                    data2,
-                                                   sz,
-                                                   dur,
-                                                   ldur,
-                                                   offset,
-                                                   TDur,
-                                                   TDir,
-                                                   TAmp,
-                                                   grouping)
+                                                   sz = [1280, 720],
+                                                   dur = 4.92,
+                                                   ldur = 0.0,
+                                                   offset = False,
+                                                   TDur = 0.0,
+                                                   TDir = 0.0,
+                                                   TAmp = 0.0,
+                                                   grouping = False)
     segmentfinal = np.array(segment)
     results = np.column_stack((onset, duration, segmentfinal))
     # save
@@ -465,11 +467,23 @@ if __name__ == '__main__':
     if (TDir != 0) and (TAmp != 0):
         grouping = True
         print(
-            'Scanpath comparison is done with grouping saccades shorter than {}px and with an angle smaller than {} degrees'
-            ' if consecutive fixation are shorter than {} seconds.'.format(TAmp, TDir, TDur))
+            'Scanpath comparison is done with simplification. Two consecutive saccades shorter than {}px and with an '
+            'angle smaller than {} degrees are grouped together if intermediate fixation durations are shorter than {} '
+            'seconds.'.format(TAmp, TDir, TDur))
     else:
         grouping = False
-        print('Scanpath comparison is done without any grouping')
+        print('Scanpath comparison is done without any simplification.')
 
     # Execution
-    main()
+    main(shots = shots,
+         data1 = data1,
+         data2 = data2,
+         sz = sz,
+         dur = dur,
+         ldur = ldur,
+         offset = offset,
+         TDir = TDir,
+         TDur = TDur,
+         TAmp = TAmp)
+
+    # TODO: check whether I might need kwargs for this
