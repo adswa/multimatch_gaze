@@ -820,7 +820,6 @@ def docomparison(fixation_vectors1,
     return scanpathcomparisons
 
 def main():
-    print('Im executing main().')
     result = docomparison(data1,
                           data2,
                           sz,
@@ -839,9 +838,9 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     # define arguments
-    parser.add_argument('-i', '--input1', nargs='+', help='Eyemovement data of scanpath 1. Should be a tab separated file with columns "start_x", "start_y", "duration".',
+    parser.add_argument('-i', '--input1', nargs='+', help='<Required> Eyemovement data of scanpath 1. Should be a tab separated file with columns "start_x", "start_y", "duration".',
                         metavar='PATH', required=True)
-    parser.add_argument('-j', '--input2', nargs='+', help='Eyemovement data of scanpath 2. Should be a tab separated file with columns "start_x", "start_y", "duration".',
+    parser.add_argument('-j', '--input2', nargs='+', help='<Required> Eyemovement data of scanpath 2. Should be a tab separated file with columns "start_x", "start_y", "duration".',
                         metavar='PATH', required=True)
     parser.add_argument('-di', '--direction_threshold',
                         help='Threshold for direction based grouping in degree (example: 45.0). Two consecutive saccades with an angle below TDir and short fixations will be grouped together to reduce scanpath complexity. If 0: no grouping will be performed.',
@@ -870,11 +869,12 @@ if __name__ == '__main__':
     if (TDir != 0) and (TAmp != 0):
         grouping = True
         print(
-            'Scanpath comparison is done with grouping saccades shorter than {}px and with an angle smaller than {} degrees'
-            ' if consecutive fixation are shorter than {} seconds.'.format(TAmp, TDir, TDur))
+            'Scanpath comparison is done with simplification. Two consecutive saccades shorter than {}px and '
+            'with an angle smaller than {} degrees are grouped together if intermediate fixations are shorter '
+            'than {} seconds.'.format(TAmp, TDir, TDur))
     else:
         grouping = False
-        print('Scanpath comparison is done without any grouping')
+        print('Scanpath comparison is done without any simplification.')
 
     # execution
     main()
