@@ -15,24 +15,13 @@ import multimatch.multimatch as Mp
 # Functions specifically for the data at hand
 
 def takeclosestright(mylist, mynumber):
-    """Return integer closest right to 'myNumber' in an ordered list
 
-    Parameters
-    ------------
-    mylist: int
-    mynumber: array
+    """Return integer closest right to 'myNumber' in an ordered list.
 
-    Returns
-    ------------
-    after: float
-        number within mylist closest to the right of mynumber
+    :param: mylist: int
+    :param: mynumber: array
 
-    References
-    -----------
-
-    I stole this from
-    https://stackoverflow.com/questions/12141150/from-list-of-integers-get-number-
-    closest-to-a-given-value
+    :return: after: float, number within mylist closest to the right of mynumber
 
     """
 
@@ -46,19 +35,12 @@ def takeclosestright(mylist, mynumber):
 
 
 def takeclosestleft(myList, myNumber):
-    """Return integer closest left to 'myNumber' in an ordered list
+    """Return integer closest left to 'myNumber' in an ordered list.
 
-    Parameters
-    ------------
-    mylist: int
-    mynumber: array
+    :param: mylist: int
+    :param: mynumber: array
 
-    Returns
-    ------------
-    after: float
-        number within mylist closest to the left of mynumber
-
-
+    :return: after: float, number within mylist closest to the left of mynumber
     """
 
     pos = bisect_left(myList, myNumber)
@@ -71,22 +53,16 @@ def takeclosestleft(myList, myNumber):
 
 
 def create_onsets(data, dur):
-    """Create shot onsets from studyforrests location annotation
+    """Create shot onsets from studyforrests location annotation.
 
-    Create onset times of all shots of at least 'dur' seconds of length
+    Create onset times of all shots of at least 'dur' seconds of length.
 
-    Parameters
-    -----------
-
-    data: dataframe
+    :param: data: dataframe
         location annotation from studyforrest
-    dur: float
+    :param: dur: float
         time in seconds a shot should at least be long
 
-    Returns
-    ----------
-    onsets: array-like
-        list of shot onset times
+    :return: onsets: array-like, list of shot onset times
     """
     onsets = []
     for index, row in data.iterrows():
@@ -96,22 +72,15 @@ def create_onsets(data, dur):
 
 
 def create_offsets(data, dur):
-    """Create shot offsets from studyforrests location annotation
+    """Create shot offsets from studyforrests location annotation.
 
     Create offset times of all shots of at least 'dur' seconds of length
 
-    Parameters
-    -----------
 
-    data: dataframe
-        location annotation from studyforrest
-    dur: float
-        time in seconds a shot should at least be long
+    :param: data: dataframe, location annotation from studyforrest
+    :param: dur: float, time in seconds a shot should at least be long
 
-    Returns
-    ----------
-    onsets: array-like
-        list of shot offset times
+    :return: onsets: array-like, list of shot offset times
     """
 
     offsets = []
@@ -124,26 +93,18 @@ def create_offsets(data, dur):
 
 
 def create_chunks(onsets, fixations, dur):
-    """Chunk eyetracking data into scanpaths
+    """Chunk eyetracking data into scanpaths.
 
     Use onset data to obtain indices of full eyetracking data
     for chunking.
 
-    Parameters
-    -----------
-
-    onsets:  array-like
-        onset times of movie shots
-    fixations: record array
-        nx4 fixation vector (onset, x, y, duration),
+    :param: onsets:  array-like, onset times of movie shots
+    :param: fixations: record array, nx4 fixation vector (onset, x, y, duration),
         output of preprocess() function
-    dur: float
-        desired duration of segment length
+    :param: dur: float, desired duration of segment length
 
-    Returns
-    -----------
-    startidx, endix: array
-        start and end ids of eyemovement data to chunk into segments
+    :return: startidx, endix: array, start and end ids of eyemovement data
+            to chunk into segments
     """
     # initialize empty lists
     startidx, endidx = [], []
@@ -158,28 +119,18 @@ def create_chunks(onsets, fixations, dur):
     return startidx, endidx
 
 
-# createOffsetChunks changes to **last** seconds of shot!!
-
 def create_offsetchunks(offsets, fixations, dur):
-    """Chunk eyetracking data into scanpaths
+    """Chunk eyetracking data into scanpaths.
 
     Use offset data to obtain indices of full eyetracking data
     for chunking.
 
-    Parameters
-    -----------
+    :param: offsets:  array-like, offset times of movie shots
+    :param: fixations: record array, nx4 fixation vector (onset, x, y, duration), output of preprocess()
+    :param: dur: float, desired duration of segment length
 
-    offsets:  array-like
-        offset times of movie shots
-    fixations: record array
-        nx4 fixation vector (onset, x, y, duration), output of preprocess()
-    dur: float
-        desired duration of segment length
-
-    Returns
-    -----------
-    startidx, endix: array
-        start and end ids of eyemovement data to chunk into segments
+    :return: startidx, endix: array start and end ids of eyemovement data to
+            chunk into segments
     """
     startidx, endidx = [], []
     for shotoffset in offsets:
@@ -194,20 +145,13 @@ def create_offsetchunks(offsets, fixations, dur):
 
 
 def fixations_chunks(fixations, startid, endid):
-    """Chunk eyemovement data into scanpaths
+    """Chunk eyemovement data into scanpaths.
 
-    Parameters
-    -----------
-    fixations: record array
-        nx4 fixation vector (onset, x, y, duration), output of preprocess()
-    startid, endid: array
-        start- and end-ids of the scanpaths, output from either create_chunks()
+    :param: fixations: record array, nx4 fixation vector (onset, x, y, duration), output of preprocess()
+    :param: startid, endid: array, start- and end-ids of the scanpaths, output from either create_chunks()
         or create_offsetchunks()
 
-    Returns
-    -----------
-    fixation_vector: array-like
-        a nx3 fixation vector (x, y, duration)
+    :return: fixation_vector: array-like, a nx3 fixation vector (x, y, duration)
     """
 
     fixation_vector = []
@@ -222,19 +166,16 @@ def fixations_chunks(fixations, startid, endid):
 
 
 def pursuits_to_fixations(npdata):
-    """Transform start and endpoints of pursuits to fixations
+    """Transform start and endpoints of pursuits to fixations.
 
     Uses the output of a record array created by the remodnav algorithm for eye-
-    movement classification to transform pursuit data into fixations.
+    movement classification to transform pursuit data into fixations. This is
+    done because the stimulus material is a moving image - a fixation on a moving
+    object in the movie resembles hence a pursuit.
 
-    Parameters
-    ------------
-    npdata: recordarray
-        remodnav output of eyemovement data
+    :param: npdata: recordarray, remodnav output of eyemovement data
 
-    Returns
-    -----------
-    newdata: recordarray
+    :return: newdata: recordarray
     """
     # initialize empty rec array of the same shape
     newdata = np.recarray((0,), dtype=[('onset', '<f8'),
@@ -266,24 +207,17 @@ def pursuits_to_fixations(npdata):
 
 
 def preprocess(data, sz=[1280, 720]):
-    """Preprocess record array of eye-events
+    """Preprocess record array of eye-events.
 
     A record array of the studyforrest eyemovement data is preprocessed
     in the following way: Subset to only get fixation and pursuit data,
     disregard out-of-frame gazes, subset to only keep x, y coordinates,
     duration, and onset.
 
-    Parameters
-    ------------
-    data: recordarray
-        remodnav output of eye events from movie data
-    sz: list of float
-        screen measurements in px
+    :param: data: recordarray, remodnav output of eye events from movie data
+    :param: sz: list of float, screen measurements in px
 
-    Returns
-    -----------
-    fixations: array-like
-        nx4 fixation vectors (onset, x, y, duration)
+    :return: fixations: array-like nx4 fixation vectors (onset, x, y, duration)
 
     """
 
@@ -305,21 +239,16 @@ def preprocess(data, sz=[1280, 720]):
 def longshot(shots,
              group_shots,
              ldur=4.92):
-    """Group movie shots without a cut together to obtain longer segments
+    """Group movie shots without a cut together to obtain longer segments.
 
     Note: This way, fewer but longer scanpaths are obtained. Example: use
     median shotlength of 4.92s.
 
-    Parameters
-    ------------
-    shots: dataframe
-        contains movie location annotation
-    group_shots: boolean
-        if True, grouping of movie shots is performed
-    dur: float
-        length in seconds for movie shot. An attempt is made to group short
+    :param: shots: dataframe, contains movie location annotation
+    :param: group_shots: boolean, if True, grouping of movie shots is performed
+    :param: dur: float, length in seconds for movie shot. An attempt is made to group short
         shots without a cut together to form longer shots of ldur length
-    :return:
+    :return: aggregated, dataframe of aggregated movie shots
     """
     # turn pandas dataframe shots into record array
     structshots = shots.to_records()
@@ -356,41 +285,26 @@ def docomparison_forrest(shots,
                         TAmp=0,
                         grouping=False
                         ):
-    """Compare two scanpaths on five similarity dimensions
+    """Compare two scanpaths on five similarity dimensions.
 
-     Parameters
-     ------------
-
-    data1, data2: recarray
-        eyemovement information of forrest gump studyforrest dataset
-    sz: list
-        screen dimensions in px.
-    ldur: float
-        duration in seconds. An attempt is made to group short shots
+    :param: data1, data2: recarray, eyemovement information of forrest gump studyforrest dataset
+    :param: sz: list, screen dimensions in px.
+    :param: ldur: float, duration in seconds. An attempt is made to group short shots
         together to form shots of ldur length
-    grouping: boolean
-        if True, simplification is performed based on thresholds TAmp,
+    :param: grouping: boolean, if True, simplification is performed based on thresholds TAmp,
         TDir, and TDur
-    TDir: float
-        Direction threshold, angle in degrees.
-    TDur: float
-        Duration threshold, duration in seconds.
-    TAmp: float
-        Amplitude threshold, length in px.
+    :param: TDir: float, Direction threshold, angle in degrees.
+    :param: TDur: float, Duration threshold, duration in seconds.
+    :param: TAmp: float, Amplitude threshold, length in px.
 
-    Returns
-    ------------
-    scanpathcomparisons: array
+    :return: scanpathcomparisons: array
         array of 5 scanpath similarity measures
-    durations: array-like
+    :return: durations: array-like
         durations of extracted scanpaths. Vector (Shape), Direction
         (Angle), Length, Position, and Duration. 1 = absolute
         similarity, 0 = lowest similarity possible.
-    onsets: array-like
+    :return: onsets: array-like
         onset times of the scanpaths
-
-    Examples
-    ------------
     """
     # determine whether short shots should be grouped together
     if ldur != 0:
@@ -494,13 +408,13 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     # define arguments
-    parser.add_argument('-i', '--input1', nargs='+', help='Eyemovement data of one studyforrest subject. Should be a tab separated file from remodnav (publication in preparation).',
+    parser.add_argument('-i', '--input1', nargs='+', help='<Required> Eyemovement data of one studyforrest subject. Should be a tab separated file from remodnav (publication in preparation).',
                         metavar='PATH', required=True)
-    parser.add_argument('-j', '--input2', nargs='+', help='Eyemovement data of the studyforrest subject. Should be a tab separated file from remodnav (publication in preparation).',
+    parser.add_argument('-j', '--input2', nargs='+', help='<Required> Eyemovement data of the studyforrest subject. Should be a tab separated file from remodnav (publication in preparation).',
                         metavar='PATH', required=True)
-    parser.add_argument('-k', '--input3', help='Location annotation of the movie segment (https://github.com/psychoinformatics-de/studyforrest-data-annotations).',
+    parser.add_argument('-k', '--input3', help='<Required> Location annotation of the movie segment (https://github.com/psychoinformatics-de/studyforrest-data-annotations).',
                         metavar='PATH', required=True)
-    parser.add_argument('-o', '--output', help='Specify path where output should be saved. If it does not exists, it will be created.',
+    parser.add_argument('-o', '--output', help='<Required> Specify path where output should be saved. If it does not exists, it will be created.',
                         metavar='PATH', required=True)
     parser.add_argument('-d', '--duration',
                         help='The approx. desired duration for a scanpath in seconds, e.g. 3.0. Note: Scanpaths are extracted within a shot, not across shots! Long durations will lead to a few scanpath. Median shot length (default): 4.92s.',
