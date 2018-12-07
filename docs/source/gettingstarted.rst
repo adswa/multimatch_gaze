@@ -5,7 +5,7 @@ gettingstarted
 Installation
 ============
 
-It is recommended to use a dedicated virtualenv_
+It is recommended to use a dedicated virtualenv_.
 
 .. _virtualenv: https://virtualenv.pypa.io
 
@@ -31,7 +31,7 @@ automatically install multimatch with all dependencies type::
 Via Github
 ----------
 
-The source code for multimatch can be found here on Github_.
+The source code for multimatch can be found on Github_.
 
 .. _Github: https://github.com/AdinaWagner/multimatch
 

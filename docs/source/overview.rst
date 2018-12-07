@@ -35,6 +35,10 @@ The original Matlab toolbox was kindly provided via email by Dr. Richard Dewhurs
 and the method was ported into Python with the intent of providing an open source
 alternative to the matlab toolbox.
 
+
+Functionality
+^^^^^^^^^^^^^
+
 The module provides the possibility to compute the similarity of two scanpaths
 with a terminal command or within a python instance (see section multimatch_).
 

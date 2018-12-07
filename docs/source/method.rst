@@ -41,7 +41,7 @@ like can be found here_.
     diagonal (Jarodzka, Holmqvist & Nyström, 2010).
 
 
-- **Step 3: Temporal Alignment**
+- **Step 3: Temporal alignment**
 
         Two simplified scanpaths are temporally aligned in order to find
         pairings of saccade vectors to compare. The aim is not necessarily to
@@ -67,14 +67,14 @@ like can be found here_.
         each connection.
 
 
--   **Step 4: Scanpath Selection**
+-   **Step 4: Scanpath selection**
 
         A Dijkstra algorithm (Dijksta, 1959) is used to find the shortest path from
         the the first two saccade vectors to the last two saccade vectors.
         “Shortest” path is defined as the connection between nodes with the lowest
         possible sum of weights.
 
--  **Step 5: Similarity Calculation**
+-  **Step 5: Similarity calculation**
 
         Five measures of scanpath similarity are computed on the aligned
         scanpaths. This is done by performing simple vector arithmetic on all
