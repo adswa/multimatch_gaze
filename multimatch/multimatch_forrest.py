@@ -475,15 +475,6 @@ if __name__ == '__main__':
         print('Scanpath comparison is done without any simplification.')
 
     # Execution
-    main(shots = shots,
-         data1 = data1,
-         data2 = data2,
-         sz = sz,
-         dur = dur,
-         ldur = ldur,
-         offset = offset,
-         TDir = TDir,
-         TDur = TDur,
-         TAmp = TAmp)
+    main()
 
     # TODO: check whether I might need kwargs for this
