@@ -1,21 +1,17 @@
 #!/usr/bin/python3
-
-
 import numpy as np
 import pandas as pd
 from bisect import bisect_right
 from bisect import bisect_left
 import sys
 import os
-
 sys.path.insert(0, os.path.abspath('./'))
-import multimatch.multimatch as Mp
+import multimatch.multimatch as mp
 
 
 # Functions specifically for the data at hand
 
 def takeclosestright(mylist, mynumber):
-
     """Return integer closest right to 'myNumber' in an ordered list.
 
     :param: mylist: int
@@ -34,7 +30,7 @@ def takeclosestright(mylist, mynumber):
     return after
 
 
-def takeclosestleft(myList, myNumber):
+def takeclosestleft(mylist, mynumber):
     """Return integer closest left to 'myNumber' in an ordered list.
 
     :param: mylist: int
@@ -43,12 +39,12 @@ def takeclosestleft(myList, myNumber):
     :return: after: float, number within mylist closest to the left of mynumber
     """
 
-    pos = bisect_left(myList, myNumber)
+    pos = bisect_left(mylist, mynumber)
     if pos == 0:
-        return myList[0]
-    if pos == len(myList):
-        return myList[-1]
-    before = myList[pos - 1]
+        return mylist[0]
+    if pos == len(mylist):
+        return mylist[-1]
+    before = mylist[pos - 1]
     return before
 
 
@@ -222,16 +218,16 @@ def preprocess(data, sz=[1280, 720]):
     """
 
     # only fixations and pursuits
-    Filterevents = data[np.logical_or(data['label'] == 'FIXA',
+    filterevents = data[np.logical_or(data['label'] == 'FIXA',
                                       data['label'] == 'PURS')]
     # within x coordinates?
-    Filterxbounds = Filterevents[np.logical_and(Filterevents['start_x'] >= 0,
-                                                Filterevents['start_x'] <= sz[0])]
+    filterxbounds = filterevents[np.logical_and(filterevents['start_x'] >= 0,
+                                                filterevents['start_x'] <= sz[0])]
     # within y coordinates?
-    Filterybounds = Filterxbounds[np.logical_and(Filterxbounds['start_y'] >= 0,
-                                                 Filterxbounds['end_y'] <= sz[1])]
+    filterybounds = filterxbounds[np.logical_and(filterxbounds['start_y'] >= 0,
+                                                 filterxbounds['end_y'] <= sz[1])]
     # give me onset times, start_x, start_y and duration
-    fixations = Filterybounds[["onset", "start_x", "start_y",
+    fixations = filterybounds[["onset", "start_x", "start_y",
                                "duration"]]
     return fixations
 
