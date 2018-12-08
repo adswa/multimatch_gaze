@@ -4,8 +4,8 @@ import os
 sys.path.insert(0, os.path.abspath('./'))
 import numpy as np
 from . import utils as ut
-from .. import multimatch as Mp
-from .. import multimatch_forrest as M
+from .. import multimatch as mp
+from .. import multimatch_forrest as m
 
 
 def test_same_real_data_forrest(run=1, subj=1):
@@ -23,7 +23,18 @@ def test_same_real_data_forrest(run=1, subj=1):
         or mri subject (2) available)
     """
     data1, data2, shots = ut.same_sample(run, subj)
-    segments, onset, duration = M.docomparison_forrest(shots, data1, data2)
+    segments, onset, duration = m.docomparison_forrest(shots,
+                                                       data1,
+                                                       data2,
+                                                       sz=[1280, 720],
+                                                       dur=3,
+                                                       ldur=0,
+                                                       offset=False,
+                                                       TDur=0.0,
+                                                       TDir=0.0,
+                                                       TAmp=0.0,
+                                                       grouping=False
+                                                       )
     segmentfinal = np.array(segments)
     assert np.all(segmentfinal.all(1))
 
@@ -40,7 +51,7 @@ def test_same_real_data():
                           delimiter='\t',
                           dtype={'names': ('start_x', 'start_y', 'duration'),
                                  'formats': ('f8', 'f8', 'f8')})
-    results = Mp.docomparison(data1,
+    results = mp.docomparison(data1,
                               data1,
                               sz=[720, 1280],
                               grouping=False,
@@ -61,22 +72,25 @@ def test_simplification(run=1, subj=1):
                           delimiter='\t',
                           dtype={'names': ('start_x', 'start_y', 'duration'),
                                  'formats': ('f8', 'f8', 'f8')})
-    results = Mp.docomparison(data1,
+    results = mp.docomparison(data1,
                               data1,
-                              sz=[720, 1280],
+                              sz=[1280, 720],
                               grouping=True,
                               TDir=30.0,
                               TDur=0.05,
                               TAmp=100.0)
     Mdata1, Mdata2, shots = ut.same_sample(run, subj)
-    segments, onset, duration = M.docomparison_forrest(shots,
-                                                      Mdata1,
-                                                      Mdata2,
-                                                      sz=[1280, 720],
-                                                      grouping=True,
-                                                      TDir=30.0,
-                                                      TDur=0.05,
-                                                      TAmp=100.0)
+    segments, onset, duration = m.docomparison_forrest(shots,
+                                                        Mdata1,
+                                                        Mdata2,
+                                                        dur=3,
+                                                        ldur=0.0,
+                                                        offset=False,
+                                                        sz=[1280, 720],
+                                                        grouping=True,
+                                                        TDir=30.0,
+                                                        TDur=0.05,
+                                                        TAmp=100.0)
     resultsfinal = np.array(results)
     resultsfinal_M = np.array(segments)
     assert np.all(resultsfinal.all(1))
@@ -94,7 +108,7 @@ def test_structure_generation(length=5):
         length of the fixation vector to be transformed
     """
     fix_vector = ut.mk_fix_vector(length)
-    results = Mp.gen_scanpath_structure(fix_vector)
+    results = mp.gen_scanpath_structure(fix_vector)
     assert len(results[0]) == len(fix_vector)
     assert len(results[1]) == len(fix_vector)
     assert len(results[2]) == len(fix_vector)
@@ -117,7 +131,7 @@ def test_cal_vectordifferences(length=5):
        specify the length of the structured array to be used
     """
     data1, data2 = ut.mk_strucarray(length=5)
-    Matrix = Mp.cal_vectordifferences(data1, data2)
+    Matrix = mp.cal_vectordifferences(data1, data2)
     assert Matrix.shape[0] == length - 1
     assert Matrix.shape[1] == 2 * length - 2
 
@@ -128,8 +142,8 @@ def test_anglesim():
     yield the expected similarity results.
     """
     M_assignment, path, angles1, angles2, angles3, angles4 = ut.mk_angles()
-    a1a2 = Mp.cal_angulardifference(angles1, angles2, path, M_assignment)
-    a3a4 = Mp.cal_angulardifference(angles3, angles4, path, M_assignment)
+    a1a2 = mp.cal_angulardifference(angles1, angles2, path, M_assignment)
+    a3a4 = mp.cal_angulardifference(angles3, angles4, path, M_assignment)
     assert a1a2 == [0, 1.0459999999999994, 1.5700000000000003, 2.08,
                     3.1400000000000006]
     assert a3a4 == [3.1400000000000006, 2.0971853071795863, 1.5711853071795865,
@@ -142,7 +156,7 @@ def test_durationsim():
     similarities greater zero
     """
     M_assignment, path, duration1, duration2 = ut.mk_durs()
-    res = Mp.cal_durationdifference(duration1, duration2, path, M_assignment)
+    res = mp.cal_durationdifference(duration1, duration2, path, M_assignment)
     assert all(np.asarray(res) >= 0)
 
 
@@ -155,7 +169,7 @@ def test_closestright():
     """
     mylist = np.arange(0, 25)
     for i in range(0, len(mylist)):
-        res = M.takeclosestright(mylist, i)
+        res = m.takeclosestright(mylist, i)
         if i == 0:
             assert res == 1
         elif i == len(mylist) - 1:
@@ -171,7 +185,7 @@ def test_closestleft():
     """
     mylist = np.arange(-1, 25)
     for i in range(0, len(mylist)):
-        res = M.takeclosestleft(mylist, i)
+        res = m.takeclosestleft(mylist, i)
         if i == 0:
             assert res == mylist[0]
         elif i == len(mylist) - 1:
@@ -194,9 +208,9 @@ def test_createchunks(run=1, subj=1):
         or mri subject (2) available)
     """
     data1, data2, shots = ut.same_sample(run, subj)
-    onsets = M.create_onsets(shots, 3)
-    fixations = M.preprocess(data1)
-    startid, endid = M.create_chunks(onsets, fixations, 3)
+    onsets = m.create_onsets(shots, 3)
+    fixations = m.preprocess(data1)
+    startid, endid = m.create_chunks(onsets, fixations, 3)
     assert len(startid) == len(endid)
     trues = []
     for i in range(0, len(startid)):
@@ -216,9 +230,9 @@ def test_createoffsetchunks(run=1, subj=1):
         or mri subject (2) available)
     """
     data1, data2, shots = ut.same_sample(run, subj)
-    offsets = M.create_offsets(shots, 3)
-    fixations = M.preprocess(data1)
-    startid, endid = M.create_offsetchunks(offsets, fixations, 3)
+    offsets = m.create_offsets(shots, 3)
+    fixations = m.preprocess(data1)
+    startid, endid = m.create_offsetchunks(offsets, fixations, 3)
     assert len(startid) == len(endid)
     trues = []
     for i in range(0, len(startid)):
@@ -232,7 +246,7 @@ def test_longshot():
     correct number of shots.
     """
     shots = ut.short_shots()
-    newshots = M.longshot(shots, group_shots=True, ldur=4.92)
+    newshots = m.longshot(shots, group_shots=True, ldur=4.92)
     assert len(newshots) == len(shots) - 2
 
 
@@ -241,7 +255,7 @@ def test_longshot_nogrouping():
     Tests whether longshots will perform no grouping if dur = None.
     """
     shots = ut.short_shots()
-    newshots = M.longshot(shots, group_shots=False, ldur=0.0)
+    newshots = m.longshot(shots, group_shots=False, ldur=0.0)
     assert len(newshots) == len(shots)
 
 
@@ -260,14 +274,14 @@ def test_compare2matlab():
                           delimiter='\t',
                           dtype={'names': ('start_x', 'start_y', 'duration'),
                                  'formats': ('f8', 'f8', 'f8')})
-    res_grouping = Mp.docomparison(data1,
+    res_grouping = mp.docomparison(data1,
                                    data2,
                                    sz=[720, 1280],
                                    grouping=True,
                                    TDir=45.0,
                                    TDur=0.3,
                                    TAmp=146.8)
-    res_no_grouping = Mp.docomparison(data1,
+    res_no_grouping = mp.docomparison(data1,
                                       data2,
                                       sz=[720, 1280],
                                       grouping=False,
@@ -286,14 +300,14 @@ def test_offsets():
     Tests offset length on example dataset with known results.
     """
     shots = ut.short_shots()
-    offsets=M.create_offsets(shots, dur=5)
+    offsets=m.create_offsets(shots, dur=5)
     assert len(offsets)==13
 
     shots_short = ut.mk_supershort_shots()
-    offsets2 = M.create_offsets(shots_short, dur=2)
+    offsets2 = m.create_offsets(shots_short, dur=2)
     assert len(offsets2)==0
     shots_long = ut.mk_longershots()
-    offsets3 = M.create_offsets(shots_long, dur=3)
+    offsets3 = m.create_offsets(shots_long, dur=3)
     assert len(offsets3)==len(shots_long)
 
 def test_too_short_scanpaths():
@@ -302,5 +316,5 @@ def test_too_short_scanpaths():
     """
     fixvector1 = ut.mk_fix_vector(2)
     fixvector2 = ut.mk_fix_vector(5)
-    results=Mp.docomparison(fixvector1, fixvector2, sz=[1280, 720], grouping=True, TAmp=8, TDir=8, TDur=8)
+    results=mp.docomparison(fixvector1, fixvector2, sz=[1280, 720], grouping=True, TAmp=8, TDir=8, TDur=8)
     assert ([results[i]==np.nan for i in range(0, len(results))])
