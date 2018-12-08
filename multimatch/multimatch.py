@@ -886,7 +886,7 @@ def main(args=sys.argv):
 
     result = docomparison(data1,
                           data2,
-                          sz=,
+                          sz=sz,
                           grouping=grouping,
                           TDir=TDir,
                           TDur=TDur,
