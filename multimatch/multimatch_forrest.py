@@ -274,17 +274,17 @@ def longshot(shots,
 
 
 def docomparison_forrest(shots,
-                        data1,
-                        data2,
-                        sz=[1280, 720],
-                        dur=5,
-                        ldur=0.0,
-                        offset=False,
-                        TDur=0,
-                        TDir=0,
-                        TAmp=0,
-                        grouping=False
-                        ):
+                         data1,
+                         data2,
+                         sz,
+                         dur,
+                         ldur,
+                         offset,
+                         TDur,
+                         TDir,
+                         TAmp,
+                         grouping
+                         ):
     """Compare two scanpaths on five similarity dimensions.
 
     :param: data1, data2: recarray, eyemovement information of forrest gump studyforrest dataset
@@ -351,106 +351,97 @@ def docomparison_forrest(shots,
     for i in range(0, len(onset)):
         # check if fixation vectors/scanpaths are long enough
         if (len(fixation_vectors1[i]) >= 3) & (len(fixation_vectors2[i]) >= 3):
-            print('Computing similarity for comparison {}.'.format(i+1))
-            subj1 = Mp.gen_scanpath_structure(fixation_vectors1[i])
-            subj2 = Mp.gen_scanpath_structure(fixation_vectors2[i])
+            print('Computing similarity for comparison {}.'.format(i + 1))
+            subj1 = mp.gen_scanpath_structure(fixation_vectors1[i])
+            subj2 = mp.gen_scanpath_structure(fixation_vectors2[i])
             if grouping:
-                subj1 = Mp.simplify_scanpath(subj1, TAmp, TDir, TDur)
-                subj2 = Mp.simplify_scanpath(subj2, TAmp, TDir, TDur)
+                subj1 = mp.simplify_scanpath(subj1, TAmp, TDir, TDur)
+                subj2 = mp.simplify_scanpath(subj2, TAmp, TDir, TDur)
                 print('Simplification of pair {} completed.'.format(i))
-            M = Mp.cal_vectordifferences(subj1, subj2)
+            M = mp.cal_vectordifferences(subj1, subj2)
             szM = np.shape(M)
             M_assignment = np.arange(szM[0] * szM[1]).reshape(szM[0], szM[1])
-            weightedGraph = Mp.createdirectedgraph(szM, M, M_assignment)
-            path, dist = Mp.dijkstra(weightedGraph, 0, szM[0] * szM[1] - 1)
-            unnormalised = Mp.getunnormalised(subj1, subj2, path, M_assignment)
-            normal = Mp.normaliseresults(unnormalised, sz)
+            weightedGraph = mp.createdirectedgraph(szM, M, M_assignment)
+            path, dist = mp.dijkstra(weightedGraph, 0, szM[0] * szM[1] - 1)
+            unnormalised = mp.getunnormalised(subj1, subj2, path, M_assignment)
+            normal = mp.normaliseresults(unnormalised, sz)
             scanpathcomparisons.append(normal)
             print('Done.')
         # return nan as result if at least one scanpath it too short
         else:
             scanpathcomparisons.append(np.repeat(np.nan, 5))
             print('Scanpath {} had a length of {}, however, a minimal '
-                  'length of 3 is required. Appending nan.'.format(i, min(len(fixation_vectors1), len(fixation_vectors2))))
+                  'length of 3 is required. Appending nan.'.format(i,
+                                                                   min(len(fixation_vectors1), len(fixation_vectors2))))
     return scanpathcomparisons, onset_times, exact_durations
 
-def main():
-        #shots=shots, data1=data1, data2=data2, sz=sz, dur=dur, ldur=ldur, offset=offset, TDir=TDir, TDur=TDur,
-        # TAmp=TAmp):
-    print('Attempting to simplify scanpaths')
-    segment, onset, duration = docomparison_forrest(shots,
-                                                   data1,
-                                                   data2,
-                                                   sz = [1280, 720],
-                                                   dur = 4.92,
-                                                   ldur = 0.0,
-                                                   offset = False,
-                                                   TDur = 0.0,
-                                                   TDir = 0.0,
-                                                   TAmp = 0.0,
-                                                   grouping = False)
-    segmentfinal = np.array(segment)
-    results = np.column_stack((onset, duration, segmentfinal))
-    # save
-    print('Saving results at {}.'.format(args.output))
-    if not os.path.isdir(os.path.dirname(args.output)):
-        os.makedirs(os.path.dirname(args.output))
-    np.savetxt(args.output,
-               results,
-               fmt='%f\t%f\t%f\t%f\t%f\t%f\t%f',
-               delimiter='\t',
-               header="onset\tduration\tvector_sim\tdirection_sim\tlength_sim\tposition_sim\tduration_sim",
-               comments=''
-               )
 
-
-
-if __name__ == '__main__':
+def main(args=sys.argv):
     import argparse
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        prog='multimatch'
+    )
     # define arguments
-    parser.add_argument('-i', '--input1', nargs='+', help='<Required> Eyemovement data of one studyforrest subject. Should be a tab separated file from remodnav (publication in preparation).',
-                        metavar='PATH', required=True)
-    parser.add_argument('-j', '--input2', nargs='+', help='<Required> Eyemovement data of the studyforrest subject. Should be a tab separated file from remodnav (publication in preparation).',
-                        metavar='PATH', required=True)
-    parser.add_argument('-k', '--input3', help='<Required> Location annotation of the movie segment (https://github.com/psychoinformatics-de/studyforrest-data-annotations).',
-                        metavar='PATH', required=True)
-    parser.add_argument('-o', '--output', help='<Required> Specify path where output should be saved. If it does not exists, it will be created.',
-                        metavar='PATH', required=True)
-    parser.add_argument('-d', '--duration',
-                        help='The approx. desired duration for a scanpath in seconds, e.g. 3.0. Note: Scanpaths are extracted within a shot, not across shots! Long durations will lead to a few scanpath. Median shot length (default): 4.92s.',
-                        type=float, default=4.92)
-    parser.add_argument('-ld', '--lduration',
-                        help='Option to group short shots in the same locale (i.e. no change of setting between shots) together for longer scanpaths. Shots shorter than ldur will be attempted to be grouped together.',
-                        type=float, default=0.0)
-    parser.add_argument('-di', '--direction_threshold',
-                        help='Threshold for direction based grouping in degree (example: 45.0). Two consecutive saccades with an angle below TDir and short fixations will be grouped together to reduce scanpath complexity. If 0: no grouping will be performed.',
-                        type=float, default=0.0)
-    parser.add_argument('-am', '--amplitude_threshold',
-                        help='Threshold for amplitude based grouping in pixel (example: 140.0). Two consecutive saccades shorter than TAmp and short fixations will be grouped together to reduce scanpath complexity.  If 0: no grouping will be performed.',
-                        type=float, default=0.0)
-    parser.add_argument('-du', '--duration_threshold', help='Threshold for fixation duration during amplitude and direction based grouping.',
-                        type=float, default=0.0)
-    parser.add_argument('-sz', '--screensize', help='screensize: Resolution of screen in px, default is [1280, 720].',
-                        default=[1280, 720])
-    parser.add_argument('-pos', '--position_offset',
-                        help='If True, scanpaths of dur length stop at shotoffset (instead of starting at shotonset). Default: False.',
-                        default=False)
+    parser.add_argument(
+        'input1', metavar='<datafile>',
+        help="""Eyemovement data of one studyforrest subject. Should be a tab separated file from
+        remodnav.""")
+    parser.add_argument(
+        'input2', metavar='<datafile>',
+        help="""Eyemovement data of the studyforrest subject. Should be a tab separated file from
+         remodnav.""")
+    parser.add_argument(
+        'input3', metavar='<annotationfile>',
+        help="""Location annotation of the movie segment
+        (https://github.com/psychoinformatics-de/studyforrest-data-annotations).""")
+    parser.add_argument(
+        'output', metavar='<filename>',
+        help="""Specify path where output should be saved. If it does not exists,
+        it will be created.""")
+    parser.add_argument(
+        '--duration', type=float, default=4.92,
+        help="""The approx. desired duration for a scanpath in seconds, e.g. 3.0.
+        Note: Scanpaths are extracted within a shot, not across shots! Long durations
+        will lead to a few scanpath. Median shot length (default): 4.92s.""")
+    parser.add_argument(
+        '--lduration', type=float, default=0.0,
+        help="""Option to group short shots in the same locale (i.e. no change of setting
+        between shots) together for longer scanpaths. Shots shorter than ldur will be
+        attempted to be grouped together.""")
+    parser.add_argument(
+        '--direction_threshold', type=float, default=0.0,
+        help="""Threshold for direction based grouping in degree (example: 45.0). Two
+        consecutive saccades with an angle below TDir and short fixations will be grouped
+        together to reduce scanpath complexity. If 0: no grouping will be performed.""")
+    parser.add_argument(
+        '--amplitude_threshold', type=float, default=0.0,
+        help="""Threshold for amplitude based grouping in pixel (example: 140.0). Two
+         consecutive saccades shorter than TAmp and short fixations will be grouped together
+          to reduce scanpath complexity.  If 0: no grouping will be performed.""")
+    parser.add_argument(
+        '--duration_threshold', type=float, default=0.0,
+        help="""Threshold for fixation duration during amplitude and direction based grouping.""")
+    parser.add_argument(
+        '--screensize', type=float, default=[1280, 720],
+        help="""screensize: Resolution of screen in px, default is [1280, 720].""")
+    parser.add_argument('-pos', '--position_offset', type=bool, default=False,
+                        help="""If True, scanpaths of dur length stop at shotoffset (instead of starting
+        at shotonset). Default: False.""")
 
     args = parser.parse_args()
 
     # Data read in
-
-    shots = pd.read_csv(args.input3, sep='\t')
-    data1 = np.recfromcsv(args.input1[0],
+    shots = pd.read_csv(args.input3,
+                        sep='\t')
+    data1 = np.recfromcsv(args.input1,
                           delimiter='\t',
                           dtype={'names': ('onset', 'duration', 'label', 'start_x', 'start_y',
                                            'end_x', 'end_y', 'amp', 'peak_vel', 'med_vel', 'avg_vel'),
                                  'formats': ('f8', 'f8', 'U10', 'f8', 'f8', 'f8', 'f8', 'f8', 'f8',
                                              'f8', 'f8')})
 
-    data2 = np.recfromcsv(args.input2[0],
+    data2 = np.recfromcsv(args.input2,
                           delimiter='\t',
                           dtype={'names': ('onset', 'duration', 'label', 'start_x', 'start_y',
                                            'end_x', 'end_y', 'amp', 'peak_vel', 'med_vel', 'avg_vel'),
@@ -474,7 +465,35 @@ if __name__ == '__main__':
         grouping = False
         print('Scanpath comparison is done without any simplification.')
 
+        # shots=shots, data1=data1, data2=data2, sz=sz, dur=dur, ldur=ldur, offset=offset, TDir=TDir, TDur=TDur,
+        # TAmp=TAmp):
+    print('Attempting to simplify scanpaths')
+    segment, onset, duration = docomparison_forrest(shots,
+                                                    data1,
+                                                    data2,
+                                                    sz=sz,
+                                                    dur=dur,
+                                                    ldur=ldur,
+                                                    offset=offset,
+                                                    TDur=TDur,
+                                                    TDir=TDir,
+                                                    TAmp=TAmp,
+                                                    grouping=grouping)
+    segmentfinal = np.array(segment)
+    results = np.column_stack((onset, duration, segmentfinal))
+    # save
+    print('Saving results at {}.'.format(args.output))
+    if not os.path.isdir(os.path.dirname(args.output)):
+        os.makedirs(os.path.dirname(args.output))
+    np.savetxt(args.output,
+               results,
+               fmt='%f\t%f\t%f\t%f\t%f\t%f\t%f',
+               delimiter='\t',
+               header="onset\tduration\tvector_sim\tdirection_sim\tlength_sim\tposition_sim\tduration_sim",
+               comments=''
+               )
+
+
+if __name__ == '__main__':
     # Execution
     main()
-
-    # TODO: check whether I might need kwargs for this

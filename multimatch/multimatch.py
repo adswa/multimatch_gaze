@@ -3,6 +3,7 @@
 
 import numpy as np
 import math
+import sys
 
 
 def cart2pol(x, y):
@@ -819,47 +820,53 @@ def docomparison(fixation_vectors1,
         scanpathcomparisons.append(np.repeat(np.nan, 5))
     return scanpathcomparisons
 
-def main():
-    result = docomparison(data1,
-                          data2,
-                          sz = [1280, 720],
-                          grouping = False,
-                          TDir = 0.0,
-                          TDur = 0.0,
-                          TAmp = 0.0)
-    print('Vector similarity = ', result[0][0])
-    print('Direction similarity = ', result[0][1])
-    print('Length similarity = ', result[0][2])
-    print('Position similarity = ', result[0][3])
-    print('Duration similarity = ', result[0][4])
-
-if __name__ == '__main__':
+def main(args=sys.argv):
     import argparse
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        prog='multimatch',)
+
+
     # define arguments
-    parser.add_argument('-i', '--input1', nargs='+', help='<Required> Eyemovement data of scanpath 1. Should be a tab separated file with columns "start_x", "start_y", "duration".',
-                        metavar='PATH', required=True)
-    parser.add_argument('-j', '--input2', nargs='+', help='<Required> Eyemovement data of scanpath 2. Should be a tab separated file with columns "start_x", "start_y", "duration".',
-                        metavar='PATH', required=True)
-    parser.add_argument('-di', '--direction_threshold',
-                        help='Threshold for direction based grouping in degree (example: 45.0). Two consecutive saccades with an angle below TDir and short fixations will be grouped together to reduce scanpath complexity. If 0: no grouping will be performed.',
-                        type=float, default=0.0)
-    parser.add_argument('-am', '--amplitude_threshold',
-                        help='Threshold for amplitude based grouping in pixel (example: 140.0). Two consecutive saccades shorter than TAmp and short fixations will be grouped together to reduce scanpath complexity. If 0: no grouping will be performed.',
-                        type=float, default=0.0)
-    parser.add_argument('-du', '--duration_threshold', help='Threshold for fixation duration during amplitude and direction based grouping.',
-                        type=float, default=0.0)
-    parser.add_argument('-sz', '--screensize', help='screensize: Resolution of screen in px, should be supplied as a list. The default is [1280, 720].',
-                        default=[1280, 720])
+    parser.add_argument(
+        'input1', metavar='<datafile_1>',
+        help="""Eyemovement data of scanpath 1. Should be a tab separated
+         file with columns "start_x", "start_y", "duration".""")
+    parser.add_argument(
+        'input2', metavar='<datafile_2>',
+        help="""Eyemovement data of scanpath 2. Should be a tab separated file with
+              columns "start_x", "start_y", "duration".""")
+    parser.add_argument(
+        '--screensize', metavar='<screensize>', default=[1280, 720],
+        help="""screensize: Resolution of screen in px, should be supplied as a list.
+         The default is [1280, 720].""")
+    parser.add_argument(
+        '--direction_threshold', type=float, metavar='<TDir>', default=0.0,
+        help="""Threshold for direction based grouping in degree (example: 45.0).
+         Two consecutive saccades with an angle below TDir and short fixations will
+         be grouped together to reduce scanpath complexity. If 0: no grouping will
+         be performed.""")
+    parser.add_argument(
+        '--amplitude_threshold', type=float, metavar='<TAmp>', default=0.0,
+        help="""Threshold for amplitude based grouping in pixel (example: 140.0).
+        Two consecutive saccades shorter than TAmp and short fixations will be
+        grouped together to reduce scanpath complexity. If 0: no grouping will
+        be performed.""")
+    parser.add_argument(
+        '--duration_threshold', type=float, metavar='<TDur>', default=0.0,
+        help="""Threshold for fixation duration during amplitude and direction
+        based grouping.""")
 
     args = parser.parse_args()
 
-    # read in data
-    data1 = np.recfromcsv(args.input1[0], delimiter='\t',
-                          dtype={'names': ('start_x', 'start_y', 'duration'), 'formats': ('f8', 'f8', 'f8')})
-    data2 = np.recfromcsv(args.input2[0], delimiter='\t',
-                          dtype={'names': ('start_x', 'start_y', 'duration'), 'formats': ('f8', 'f8', 'f8')})
+    data1 = np.recfromcsv(args.input1,
+                          delimiter='\t',
+                          dtype={'names': ('start_x', 'start_y', 'duration'),
+                                 'formats': ('f8', 'f8', 'f8')})
+    data2 = np.recfromcsv(args.input2,
+                          delimiter='\t',
+                          dtype={'names': ('start_x', 'start_y', 'duration'),
+                                 'formats': ('f8', 'f8', 'f8')})
 
     TDir = args.direction_threshold
     TAmp = args.amplitude_threshold
@@ -875,6 +882,24 @@ if __name__ == '__main__':
     else:
         grouping = False
         print('Scanpath comparison is done without any simplification.')
+
+
+    result = docomparison(data1,
+                          data2,
+                          sz=,
+                          grouping=grouping,
+                          TDir=TDir,
+                          TDur=TDur,
+                          TAmp=TAmp)
+    print('Vector similarity = ', result[0][0])
+    print('Direction similarity = ', result[0][1])
+    print('Length similarity = ', result[0][2])
+    print('Position similarity = ', result[0][3])
+    print('Duration similarity = ', result[0][4])
+
+
+if __name__ == '__main__':
+    import argparse
 
     # execution
     main()
