@@ -822,11 +822,11 @@ def docomparison(fixation_vectors1,
 def main():
     result = docomparison(data1,
                           data2,
-                          sz,
-                          grouping,
-                          TDir,
-                          TDur,
-                          TAmp)
+                          sz = [1280, 720],
+                          grouping = False,
+                          TDir = 0.0,
+                          TDur = 0.0,
+                          TAmp = 0.0)
     print('Vector similarity = ', result[0][0])
     print('Direction similarity = ', result[0][1])
     print('Length similarity = ', result[0][2])
