@@ -25,8 +25,17 @@ fmri acquisition, n = 15 in lab) watched the movie 'Forrest Gump'.
 
 ### Installation instructions
 
-< This is a TODO >
+It is recommended to use a dedicated virtualenv:
 
+    # create and enter a new virtual environment (optional)
+    virtualenv --python=python3 ~/env/multimatch
+    . ~/env/multimatch/bin/activate
+
+multimatch can be installed via pip. To automatically install multimatch with all
+dependencies, use:
+
+    # install from pyPi
+    pip install multimatch
 
 
 ### Method overview
@@ -96,20 +105,29 @@ For more details on the original algorithm, please see Dewhurst et al. (2012).
 
 ### Examplary usage of multimatch in a terminal
 
-- --input1 (-i) and --input2 (-j), two nx3 fixation vectors (x, y, duration)
-- --screensize (-sz)
-if grouping should be performed (optional), please specify in addition
+**required inputs:**
+- two tab-separated files with nx3 fixation vectors (x, y, duration)
+
+`` multimatch data/fixvectors/segment_10_sub-19.tsv data/fixvectors/segment_10_sub-01.tsv ``
+
+
+
+**optional inputs:**
+- --screensize: in pixel, supply first x and then y dimension. The default size is 1280 x 720px
+
+`` multimatch data/fixvectors/segment_10_sub-19.tsv data/fixvectors/segment_10_sub-01.tsv --screensize 1280 720 ``
+
+if scanpath simplification should be performed, please specify in addition
 - --amplitude_threshold (-am) in px
-- --direction_threshold (-di) in degrees
+- --direction_threshold (-di) in degree
 - --duration_threshold (-du) in seconds
 
 Example usage with grouping:
 
-``` multimatch/multimatch.py -i 'data/fixvectors/segment_10_sub-19.tsv' -j 'data/fixvectors/segment_10_sub-01.tsv' -di 45.0 -du 0.3 -am 147.0 ```
+`` multimatch data/fixvectors/segment_10_sub-19.tsv data/fixvectors/segment_10_sub-01.tsv --direction_threshold 45.0 --duration_threshold 0.3 -amplitude_threshold 147.0 ``
 
 Example usage without grouping:
 
-``` multimatch/multimatch.py -i 'data/fixvectors/segment_10_sub-19.tsv' -j 'data/fixvectors/segment_10_sub-01.tsv' ```
 
 
 ## multimatch_forrest
@@ -126,7 +144,8 @@ and compute the necessary nx3 data structure on its own.
 
 ### Examplary usage of multimatch_forrest in a terminal:
 
-```./multimatch_forrest.py -i inputs/eyemovements/sub-01/sub-01_task-movie_run-1_events.tsv -j inputs/eyemovements/sub-02/sub-02_task-movie_run-1_events.tsv -k inputs/studyforrest-data-annotations/segments/avmovie/locations_run-1_events.tsv -o output/run-1/sub-01vssub-02```
+``multimatch_forrest
+multimatch/tests/testdata/sub-10_task-movie_run-1_events.tsv multimatch/tests/testdata/sub-30_task-movie_run-1_events.tsv multimatch/tests/testdata/studyforrest-data-annotations/segments/avmovie/locations_run-1_events.tsv -o output/run-1/sub-10vssub-30``
 
 
 ### References:
