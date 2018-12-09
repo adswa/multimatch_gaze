@@ -272,14 +272,14 @@ def longshot(shots,
 def docomparison_forrest(shots,
                          data1,
                          data2,
-                         sz,
-                         dur,
-                         ldur,
-                         offset,
-                         TDur,
-                         TDir,
-                         TAmp,
-                         grouping
+                         sz=[1280, 720],
+                         dur=4.92,
+                         ldur=0,
+                         offset=False,
+                         TDur=0,
+                         TDir=0,
+                         TAmp=0,
+                         grouping=False
                          ):
     """Compare two scanpaths on five similarity dimensions.
 
