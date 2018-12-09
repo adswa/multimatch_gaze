@@ -82,17 +82,39 @@ grouping will be performed!
 execution within a python instance
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-**maybe just have this as a command line call?**
-
-
 If you wish to use the functionality of multimatch within a running python
 instance such as ipython, you can import the module and use the function
 ``docomparison``. Here is an example:
 
 .. code::
 
+   import numpy as np
+   import pandas as pd
    import multimatch as m
-   
+
+   # read in necessary datafiles
+   # annotations (run 1)
+   shots = pd.read_csv('multimatch/tests/testdata/locations_run-1_events.tsv',
+   sep='\t')
+
+   # eyemovement data sub-10
+   remodnav_1 = np.recfromcsv('multimatch/tests/testdata/sub-10_task-movie_run-1_events.tsv',
+   delimiter='\t', dtype={'names': ('onset', 'duration', 'label', 'start_x',
+   'start_y', 'end_x', 'end_y', 'amp', 'peak_vel', 'med_vel', 'avg_vel'),
+   'formats': ('f8', 'f8', 'U10', 'f8', 'f8', 'f8','f8', 'f8', 'f8', 'f8', 'f8')})
+
+   # eyemovement data sub-30
+   remodnav_2 = np.recfromcsv('multimatch/tests/testdata/sub-30_task-movie_run-1_events.tsv',
+   delimiter='\t', dtype={'names': ('onset', 'duration', 'label', 'start_x',
+   'start_y', 'end_x', 'end_y', 'amp', 'peak_vel', 'med_vel', 'avg_vel'),
+   'formats': ('f8', 'f8', 'U10', 'f8', 'f8', 'f8','f8', 'f8', 'f8', 'f8', 'f8')})
+
+   # execute scanpath comparison
+   similarities, onsets, durations = m.docomparison_forrest(shots, remodnav_data1,
+   remodnav_data2, sz=[1280, 720], dur=3.0, ldur=0, offset=False,TDur=0, TAmp=0,
+   TDir=0, grouping=False)
+
+
 
 
 References
