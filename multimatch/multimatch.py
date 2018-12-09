@@ -836,9 +836,9 @@ def main(args=sys.argv):
         help="""Eyemovement data of scanpath 2. Should be a tab separated file with
               columns "start_x", "start_y", "duration".""")
     parser.add_argument(
-        '--screensize', metavar='<screensize>', default=[1280, 720],
+        '--screensize', nargs='+', metavar='<screensize>', default=[1280, 720],
         help="""screensize: Resolution of screen in px, should be supplied as a list.
-         The default is [1280, 720].""")
+         The default is 1280, 720.""")
     parser.add_argument(
         '--direction_threshold', type=float, metavar='<TDir>', default=0.0,
         help="""Threshold for direction based grouping in degree (example: 45.0).
@@ -870,7 +870,14 @@ def main(args=sys.argv):
     TDir = args.direction_threshold
     TAmp = args.amplitude_threshold
     TDur = args.duration_threshold
-    sz = args.screensize
+    if len(args.screensize) == 2:
+        sz = []
+        sz[0] = args.screensize[0]
+        sz[1] = args.screensize[1]
+    else:
+        print('I expected two floats after --screensize, such as --screensize 1280 720.'
+              'However, I got {}. I will default to a screensize of 1280 x 720.'.format(args.screensize))
+        sz = [1280, 720]
 
     if (TDir != 0) and (TAmp != 0):
         grouping = True
