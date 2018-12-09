@@ -1,6 +1,5 @@
 import sys
 import os
-
 sys.path.insert(0, os.path.abspath('./'))
 import numpy as np
 from . import utils as ut
@@ -81,16 +80,16 @@ def test_simplification(run=1, subj=1):
                               TAmp=100.0)
     Mdata1, Mdata2, shots = ut.same_sample(run, subj)
     segments, onset, duration = m.docomparison_forrest(shots,
-                                                        Mdata1,
-                                                        Mdata2,
-                                                        dur=3,
-                                                        ldur=0.0,
-                                                        offset=False,
-                                                        sz=[1280, 720],
-                                                        grouping=True,
-                                                        TDir=30.0,
-                                                        TDur=0.05,
-                                                        TAmp=100.0)
+                                                       Mdata1,
+                                                       Mdata2,
+                                                       dur=3,
+                                                       ldur=0.0,
+                                                       offset=False,
+                                                       sz=[1280, 720],
+                                                       grouping=True,
+                                                       TDir=30.0,
+                                                       TDur=0.05,
+                                                       TAmp=100.0)
     resultsfinal = np.array(results)
     resultsfinal_M = np.array(segments)
     assert np.all(resultsfinal.all(1))
@@ -300,15 +299,16 @@ def test_offsets():
     Tests offset length on example dataset with known results.
     """
     shots = ut.short_shots()
-    offsets=m.create_offsets(shots, dur=5)
-    assert len(offsets)==13
+    offsets = m.create_offsets(shots, dur=5)
+    assert len(offsets) == 13
 
     shots_short = ut.mk_supershort_shots()
     offsets2 = m.create_offsets(shots_short, dur=2)
-    assert len(offsets2)==0
+    assert len(offsets2) == 0
     shots_long = ut.mk_longershots()
     offsets3 = m.create_offsets(shots_long, dur=3)
-    assert len(offsets3)==len(shots_long)
+    assert len(offsets3) == len(shots_long)
+
 
 def test_too_short_scanpaths():
     """
@@ -316,5 +316,5 @@ def test_too_short_scanpaths():
     """
     fixvector1 = ut.mk_fix_vector(2)
     fixvector2 = ut.mk_fix_vector(5)
-    results=mp.docomparison(fixvector1, fixvector2, sz=[1280, 720], grouping=True, TAmp=8, TDir=8, TDur=8)
-    assert ([results[i]==np.nan for i in range(0, len(results))])
+    results = mp.docomparison(fixvector1, fixvector2, sz=[1280, 720], grouping=True, TAmp=8, TDir=8, TDur=8)
+    assert ([results[i] == np.nan for i in range(0, len(results))])

@@ -373,7 +373,6 @@ def simplify_scanpath(data, TAmp, TDir, TDur):
         looptime += 1
         if looptime == len(data[2]):
             return data
-            break
 
 
 def cal_vectordifferences(data1, data2):
