@@ -10,6 +10,7 @@ authors:
   - name: Adina Wagner
     orcid: 0000-0003-2917-3450
     affiliation: 1
+  - name: TODO: who else??
   - name: Michael Hanke
     orcid: ??
     affiliation: 1
@@ -31,11 +32,11 @@ and order of eye-movements, a comparison between them
 adds a useful dimension to the traditional analysis of
 eyetracking data.
 
-``MultiMatch in Python`` is a Python based
+``multimatch in Python`` is a Python based
 reimplementation of the MultiMatch toolbox for scanpath
 comparison, originally developed by [@Jarodzka] and
 implemented by [@Dewhurst] in Matlab.
-The MultiMatch method represents scanpaths as geometrical
+The multimatch method represents scanpaths as geometrical
 vectors in a two-dimensional space: Any scanpath is build
 up of a vector sequence in which the vectors represent
 saccades, and the start and end position of saccadic
@@ -51,11 +52,13 @@ contains optional functionality to compute scanpath
 similarities in the eyetracking data of the studyforrest
 dataset [@studyforrest].
 
-The software is available as a github repository under #TODO
+The software is available as a github repository [@multimatch].
 
 # Acknowledgements
 
-
+We thank Dr. Richard Dewhurst for kindly and swiftly providing
+the original matlab code for the MultiMatch toolbox via e-mail
+and being supportive of an open source implementation.
 
 # References
 
