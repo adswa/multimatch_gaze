@@ -347,13 +347,13 @@ def docomparison_forrest(shots,
     for i in range(0, len(onset)):
         # check if fixation vectors/scanpaths are long enough
         if (len(fixation_vectors1[i]) >= 3) & (len(fixation_vectors2[i]) >= 3):
-            print('Computing similarity for comparison {}.'.format(i + 1))
+            #print('Computing similarity for comparison {}.'.format(i + 1))
             subj1 = mp.gen_scanpath_structure(fixation_vectors1[i])
             subj2 = mp.gen_scanpath_structure(fixation_vectors2[i])
             if grouping:
                 subj1 = mp.simplify_scanpath(subj1, TAmp, TDir, TDur)
                 subj2 = mp.simplify_scanpath(subj2, TAmp, TDir, TDur)
-                print('Simplification of pair {} completed.'.format(i))
+                #print('Simplification of pair {} completed.'.format(i))
             M = mp.cal_vectordifferences(subj1, subj2)
             szM = np.shape(M)
             M_assignment = np.arange(szM[0] * szM[1]).reshape(szM[0], szM[1])
@@ -362,7 +362,7 @@ def docomparison_forrest(shots,
             unnormalised = mp.getunnormalised(subj1, subj2, path, M_assignment)
             normal = mp.normaliseresults(unnormalised, sz)
             scanpathcomparisons.append(normal)
-            print('Done.')
+            #print('Done.')
         # return nan as result if at least one scanpath it too short
         else:
             scanpathcomparisons.append(np.repeat(np.nan, 5))
