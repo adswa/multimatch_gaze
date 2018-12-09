@@ -124,7 +124,9 @@ if scanpath simplification should be performed, please specify in addition
 
 Example usage with grouping:
 
-`` multimatch data/fixvectors/segment_10_sub-19.tsv data/fixvectors/segment_10_sub-01.tsv --direction_threshold 45.0 --duration_threshold 0.3 -amplitude_threshold 147.0 ``
+`` multimatch data/fixvectors/segment_10_sub-19.tsv
+data/fixvectors/segment_10_sub-01.tsv --direction_threshold 45.0
+--duration_threshold 0.3 --amplitude_threshold 147.0 ``
 
 Example usage without grouping:
 
@@ -145,7 +147,7 @@ and compute the necessary nx3 data structure on its own.
 ### Examplary usage of multimatch_forrest in a terminal:
 
 ``multimatch_forrest
-multimatch/tests/testdata/sub-10_task-movie_run-1_events.tsv multimatch/tests/testdata/sub-30_task-movie_run-1_events.tsv multimatch/tests/testdata/studyforrest-data-annotations/segments/avmovie/locations_run-1_events.tsv -o output/run-1/sub-10vssub-30``
+multimatch/tests/testdata/sub-10_task-movie_run-1_events.tsv multimatch/tests/testdata/sub-30_task-movie_run-1_events.tsv multimatch/tests/testdata/studyforrest-data-annotations/segments/avmovie/locations_run-1_events.tsv output/run-1/sub-10vssub-30``
 
 
 ### References:

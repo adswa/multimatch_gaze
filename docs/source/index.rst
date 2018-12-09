@@ -24,7 +24,7 @@ Commands and functions
 
    multimatch
    multimatch_forrest
-   multimatch.tests
+
 
 Indices and tables
 ^^^^^^^^^^^^^^^^^^

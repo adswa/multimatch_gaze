@@ -9,25 +9,36 @@ execution via commandline
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The computation of the similarity between two scanpaths doesn't involve anything
-beyond the command line keyword ``multimatch`` followed by two inputs, flagged
-with -i and -j, corresponding to tabseparated files with a fixation vector, and
-the screensize in pixel, flagged with -sz:
+beyond the command line keyword ``multimatch`` followed by two inputs,
+corresponding to tabseparated files with a fixation vector:
+
 
 .. code::
 
-   multimatch -i path/to/scanpath_one -j path/to/scanpath_two --sz [1280, 720]
+   multimatch path/to/scanpath_one path/to/scanpath_two
+
+``multimatch`` needs the screensize of the presentation screen as an input. The
+default is 1280 x 720px. If this needs adjustment, use the optional --screensize
+flag:
+- ``--screensize``: in px. Specify first x, then y dimension. Default: 1280 x
+720.
+
+.. code::
+
+   multimatch path/to/scanpath_one path/to/scanpath_two --screensize 1280 720
 
 
 Optionally, scanpaths can be simplified to reduce their complexity. To simplify
 scanpaths, specify the following arguments:
 
-- ``--direction_threshold (-di)``: If two consecutive saccades have a small angle, they will be
+- ``--direction_threshold``: If two consecutive saccades have a small angle, they will be
   combined. Should be in degrees, such as ``45.0`` for 45°
-- ``--amplitude_threshold (-am)``: If two consecutive saccades are short, they will be
+- ``--amplitude_threshold``: If two consecutive saccades are short, they will be
   combines. Should be in pixel, such as ``100.0`` for 100px.
-- ``--duration_threshold (-du)``: Only if the intermediate fixation's durations are
+- ``--duration_threshold``: Only if the intermediate fixation's durations are
   shorter than this threshold the above simplification will be performed. Should
   be in seconds, such as ``0.1`` for 100ms.
+
 **Note**: If either direction- or amplitude threshold is specified as 0, no
 grouping will be performed!
 
@@ -37,8 +48,8 @@ this:
 
 .. code::
 
-   multimatch -i path/to/scanpath_one -j path/to/scanpath_two --sz [1280, 720]
-   -di 45.0 -am 100.0 -di 0.1
+   multimatch path/to/scanpath_one path/to/scanpath_two --screensize 1280 720
+   --direction_threshold 45.0 --amplitude_threshold 100.0 --direction_threshold 0.1
 
 
 There are no guidelines how much simplification is appropriate, and it is strongly dependent
@@ -77,11 +88,9 @@ instance such as ipython, you can import the module and use the function
 
 
 
-.. automodule:: multimatch.multimatch
+..  TODO .. automodule:: multimatch.multimatch
     :members:
     :undoc-members:
     :show-inheritance:
-
-.. automodule:: multimatch.multimatch
-
+..  TODO \n .. automodule:: multimatch.multimatch
 

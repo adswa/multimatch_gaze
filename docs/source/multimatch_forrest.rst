@@ -44,35 +44,37 @@ execution via commandline
 Just as multimatch_, ``multimatch_forrest`` also works easiest when executed
 in a terminal as a single command line. The comparison of all scanpaths of the
 default length (4.92 seconds, the median shot length of the movie) only needs the
-command line keyword ``multimatch_forrest``, followed by two inputs, flagged -i
-and -j, corresponding to the remodnav_ outputs of two subjects in the same run,
-the annotation file for the shots of the respecitve run (flagged with -k),
-an output path (flagged with -o), and the screensize (flagged with -sz).
+command line keyword ``multimatch_forrest``, followed by two inputs, corresponding
+to the remodnav_ outputs of two subjects in the same run,
+the annotation file for the shots of the respecitve run and an output path.
 
 .. code::
 
-   multimatch_forrest -i path/to/sub-a_run-x.tsv -j path/to/sub-b_run-x.tsv
-   -k path/to/shotannotation -o where/results/go -sz [1280, 720]
+   multimatch_forrest path/to/sub-a_run-x.tsv path/to/sub-b_run-x.tsv
+   path/to/shotannotation where/results/go
 
 Additionally, the following options can be specified:
 
-- ``--direction_threshold (-di)``: If two consecutive saccades have a small angle, they will be
-  combined. Should be in degrees, such as ``45.0`` for 45°
-- ``--amplitude_threshold (-am)``: If two consecutive saccades are short, they will be
+- ``--screensize``: in px, specify first x, than y dimensions. Default is 1280 x
+  720px.
+- ``--direction_threshold``: If two consecutive saccades have a small angle, they will be
+  combined. Should be in degrees, such as ``45.0`` for 45°.
+- ``--amplitude_threshold``: If two consecutive saccades are short, they will be
   combines. Should be in pixel, such as ``100.0`` for 100px.
-- ``--duration_threshold (-du)``: Only if the intermediate fixation's durations are
+- ``--duration_threshold``: Only if the intermediate fixation's durations are
   shorter than this threshold the above simplification will be performed. Should
   be in seconds, such as ``0.1`` for 100ms.
+
 **Note**: If either direction- or amplitude threshold is specified as 0, no
 grouping will be performed!
 
-- ``--duration (-d)``: The approximate desired duration for a scanpaths in
-  seconds, e.g. 3.5
-- ``--lduration (-ld)``: Option to group short shots in the same locale (i.e no
+- ``--duration``: The approximate desired duration for a scanpaths in
+  seconds, e.g. 3.5. Default: 4.92s (the median shotlength).
+- ``--lduration``: Option to group short shots in the same locale (i.e no
   change in setting) together for longer scanpaths. Shots shorter than ``ldur``
   will be attempted to be grouped together.
-- ``--position-offset (-pos)``: Boolean, if True, scanpaths of ``dur`` length 
-  stop at shotoffset (instead of beginning at shot onset)
+- ``--position-offset``: Boolean, if True, scanpaths of ``dur`` length
+  stop at shotoffset (instead of beginning at shot onset). Default: False.
 
 
 
