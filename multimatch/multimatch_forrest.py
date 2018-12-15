@@ -419,7 +419,7 @@ def main(args=sys.argv):
         '--duration_threshold', type=float, default=0.0,
         help="""Threshold for fixation duration during amplitude and direction based grouping.""")
     parser.add_argument(
-        '--screensize', type=float, default=[1280, 720],
+        '--screensize', nargs='+', type=float, default=[1280, 720],
         help="""screensize: Resolution of screen in px, default is [1280, 720].""")
     parser.add_argument('-pos', '--position_offset', type=bool, default=False,
                         help="""If True, scanpaths of dur length stop at shotoffset (instead of starting
@@ -447,7 +447,10 @@ def main(args=sys.argv):
     TDir = args.direction_threshold
     TAmp = args.amplitude_threshold
     TDur = args.duration_threshold
-    sz = args.screensize
+    sz = [float(i) for i in args.screensize]
+    if len(sz) != 2:
+        print("I expected two floats as a screensize, such as ' --screensize 1280 720 ' , but instead I got {}. The default screensize of 1280 x 720 px will be used.".format(args.screensize))
+        sz = [1280, 720]
     ldur = args.lduration
     offset = args.position_offset
     # derive simple boolean variable to

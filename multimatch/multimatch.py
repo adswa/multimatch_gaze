@@ -870,14 +870,12 @@ def main(args=sys.argv):
     TDir = args.direction_threshold
     TAmp = args.amplitude_threshold
     TDur = args.duration_threshold
-    if len(args.screensize) == 2:
-        sz = []
-        sz[0] = args.screensize[0]
-        sz[1] = args.screensize[1]
-    else:
-        print('I expected two floats after --screensize, such as --screensize 1280 720.'
-              'However, I got {}. I will default to a screensize of 1280 x 720.'.format(args.screensize))
-        sz = [1280, 720]
+    if args.screensize:
+        sz = [float(i) for i in args.screensize]
+        if len(sz)!= 2:
+            print('I expected two floats after --screensize, such as --screensize 1280 720.'
+                  'However, I got {}. I will default to a screensize of 1280 x 720.'.format(args.screensize))
+            sz = [1280, 720]
 
     if (TDir != 0) and (TAmp != 0):
         grouping = True
