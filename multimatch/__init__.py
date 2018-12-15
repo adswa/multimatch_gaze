@@ -7,8 +7,9 @@
 #
 # ## ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ##
 
-from __future__ import absolute_import
+__version__ = '0.0.8'
+
+#from __future__ import absolute_import
 from .multimatch import docomparison
 from .multimatch_forrest import docomparison_forrest
 
-__version__ = '0.0.5'
