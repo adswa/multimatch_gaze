@@ -71,19 +71,18 @@ instance such as ipython, you can import the module and use the function
    import numpy as np
 
    #read in data
-   fix_vector1 = np.recfromcsv('Repos/multimatch/data/fixvectors/segment_0_sub-01.tsv',
+   fix_vector1 = np.recfromcsv('data/fixvectors/segment_0_sub-01.tsv',
    delimiter='\t', dtype={'names': ('start_x', 'start_y', 'duration'),
    'formats': ('f8', 'f8', 'f8')})
-   fix_vector2 = np.recfromcsv('Repos/multimatch/data/fixvectors/segment_0_sub-19.tsv',
+   fix_vector2 = np.recfromcsv('data/fixvectors/segment_0_sub-19.tsv',
    delimiter='\t', dtype={'names': ('start_x', 'start_y', 'duration'),
    'formats': ('f8', 'f8', 'f8')})
 
    #execution with multimatch's docomparison() function without grouping
-   m.docomparison(data1, data2, sz=[1280, 720], grouping=False, TDir=0, TDur=0,
-   TAmp=0)
+   m.docomparison(fix_vector1, fix_vector2, sz=[1280, 720])
 
    #execution with multimatch's docomparison() function with grouping
-   m.docomparison(data1, data2, sz=[1280, 720], grouping=True, TDir=30.0,
+   m.docomparison(fix_vector1, fix_vector2, sz=[1280, 720], grouping=True, TDir=30.0,
    TDur=0.1, TAmp=100.1)
 
 

@@ -112,8 +112,8 @@ instance such as ipython, you can import the module and use the function
    'formats': ('f8', 'f8', 'U10', 'f8', 'f8', 'f8','f8', 'f8', 'f8', 'f8', 'f8')})
 
    # execute scanpath comparison
-   similarities, onsets, durations = m.docomparison_forrest(shots, remodnav_data1,
-   remodnav_data2, sz=[1280, 720], dur=3.0, ldur=0, offset=False,TDur=0, TAmp=0,
+   similarities, onsets, durations = m.docomparison_forrest(shots, remodnav_1,
+   remodnav_2, sz=[1280, 720], dur=3.0, ldur=0, offset=False,TDur=0, TAmp=0,
    TDir=0, grouping=False)
 
 
