@@ -159,8 +159,6 @@ def test_durationsim():
     assert all(np.asarray(res) >= 0)
 
 
-# TODO: position similarity test, vector length test, vector shape test
-
 def test_closestright():
     """
     Tests whether closestright function works as intended and does not

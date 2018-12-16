@@ -83,16 +83,16 @@ def gen_scanpath_structure(data):
         saccade_theta.append(theta)
     # append everything. Eyedata is a list of lists.
     eyedata = [
-               fixation_x,
-               fixation_y,
-               fixation_dur,
-               saccade_x,
-               saccade_y,
-               saccade_lenx,
-               saccade_leny,
-               saccade_theta,
-               saccade_rho
-               ]
+        fixation_x,
+        fixation_y,
+        fixation_dur,
+        saccade_x,
+        saccade_y,
+        saccade_lenx,
+        saccade_leny,
+        saccade_theta,
+        saccade_rho
+    ]
     return eyedata
 
 
@@ -215,16 +215,16 @@ def simlen(data, TAmp, TDur):
                     j += 1
     sim_dur.append(data[2][-1])
     eyedata = [
-               [],
-               [],
-               sim_dur,
-               sim_x,
-               sim_y,
-               sim_lenx,
-               sim_leny,
-               sim_theta,
-               sim_len
-               ]
+        [],
+        [],
+        sim_dur,
+        sim_x,
+        sim_y,
+        sim_lenx,
+        sim_leny,
+        sim_theta,
+        sim_len
+    ]
     return eyedata
 
 
@@ -340,16 +340,16 @@ def simdir(data, TDir, TDur):
     # now append the last fixation duration
     sim_dur.append(data[2][-1])
     eyedata = [
-               [],
-               [],
-               sim_dur,
-               sim_x,
-               sim_y,
-               sim_lenx,
-               sim_leny,
-               sim_theta,
-               sim_len
-               ]
+        [],
+        [],
+        sim_dur,
+        sim_x,
+        sim_y,
+        sim_lenx,
+        sim_leny,
+        sim_theta,
+        sim_len
+    ]
     return eyedata
 
 
@@ -770,11 +770,11 @@ def normaliseresults(unnormalised, sz=[1280, 720]):
 
 def docomparison(fixation_vectors1,
                  fixation_vectors2,
-                 sz = [1280, 720],
-                 grouping = False,
-                 TDir = 0.0,
-                 TDur = 0.0,
-                 TAmp = 0.0
+                 sz=[1280, 720],
+                 grouping=False,
+                 TDir=0.0,
+                 TDur=0.0,
+                 TAmp=0.0
                  ):
     """Compare two scanpaths on five similarity dimensions.
 
@@ -819,14 +819,13 @@ def docomparison(fixation_vectors1,
         scanpathcomparisons.append(np.repeat(np.nan, 5))
     return scanpathcomparisons
 
+
 def main(args=sys.argv):
     import argparse
 
     parser = argparse.ArgumentParser(
-        prog='multimatch',)
+        prog='multimatch', )
 
-
-    # define arguments
     parser.add_argument(
         'input1', metavar='<datafile>',
         help="""Eyemovement data of scanpath 1. Should be a tab separated
@@ -875,7 +874,7 @@ def main(args=sys.argv):
     TDur = args.duration_threshold
     if args.screensize:
         sz = [float(i) for i in args.screensize]
-        if len(sz)!= 2:
+        if len(sz) != 2:
             print('I expected two floats after --screensize, such as --screensize 1280 720.'
                   'However, I got {}. I will default to a screensize of 1280 x 720.'.format(args.screensize))
             sz = [1280, 720]
@@ -889,7 +888,6 @@ def main(args=sys.argv):
     else:
         grouping = False
         print('Scanpath comparison is done without any simplification.')
-
 
     result = docomparison(data1,
                           data2,

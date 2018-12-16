@@ -5,8 +5,8 @@ import random
 
 
 def same_sample(run=1, subj=1):
-    '''duplicate dataset to force exactly similar scanpaths. Choose the run
-    (integer between 1-8) and whether you want a lab (1) or mri (2) subject'''
+    """duplicate dataset to force exactly similar scanpaths. Choose the run
+    (integer between 1-8) and whether you want a lab (1) or mri (2) subject"""
     if subj == 1:
         sub = "sub-30"
     else:
@@ -30,7 +30,7 @@ def same_sample(run=1, subj=1):
 
 
 def short_shots(run=3):
-    '''create a shortened shots location annotation to test longshots()'''
+    """create a shortened shots location annotation to test longshots()"""
     loc = os.path.join("multimatch/tests/testdata",
                        "locations_run-{}_events.tsv".format(run))
     shots = pd.read_csv(loc, sep='\t')
@@ -39,23 +39,23 @@ def short_shots(run=3):
 
 
 def mk_fix_vector(length=5):
-    '''creates a random length x 3 fixation vector in form of a record array'''
+    """creates a random length x 3 fixation vector in form of a record array"""
     fix = np.recarray((0,), dtype=[('start_x', '<f8'), ('start_y', '<f8'),
                                    ('duration', '<f8')])
     for i in range(0, length):
         fixation = np.array((np.random.uniform(1, 720),
                              np.random.uniform(1, 720),
                              np.random.uniform(0.01, 5)),
-                             dtype=[('start_x', float),
-                                    ('start_y', float),
-                                    ('duration', float)])
+                            dtype=[('start_x', float),
+                                   ('start_y', float),
+                                   ('duration', float)])
         fix = np.append(fix, fixation)
     return fix
 
 
 def mk_strucarray(length=5):
-    '''create a random scanpath in the data format generateScanpathStructureArray
-    would output'''
+    """create a random scanpath in the data format generateScanpathStructureArray
+    would output"""
     fixation_x = random.sample(range(700), length)
     fixation_y = random.sample(range(700), length)
     fixation_dur = random.sample(range(5), length)
@@ -90,23 +90,23 @@ def mk_angles():
 
 
 def mk_durs():
-    '''create some example duration for test_durationsim()'''
+    """create some example duration for test_durationsim()"""
     durations1 = [[], [], [0.001, 20.0, 7, -18, -2.0], [], [], [], [], [], []]
     durations2 = [[], [], [0.008, 18.0, 7, -11, 3.0], [], [], [], [], [], []]
     path = [0, 6, 12, 18, 24]
     M_assignment = np.arange(5 * 5).reshape(5, 5)
-    return (M_assignment, path, durations1, durations2)
+    return M_assignment, path, durations1, durations2
 
 
 def mk_supershort_shots():
     data = {'onset': np.arange(0, 20), 'duration': np.repeat(1, 20),
             'locale': np.repeat('somewhere', 20)}
-    shots=pd.DataFrame(data)
+    shots = pd.DataFrame(data)
     return shots
 
 
 def mk_longershots():
     data = {'onset': np.arange(0, 20), 'duration': np.repeat(5, 20),
             'locale': np.repeat('somewhere', 20)}
-    shots=pd.DataFrame(data)
+    shots = pd.DataFrame(data)
     return shots
