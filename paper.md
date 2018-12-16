@@ -26,11 +26,11 @@ bibliography: paper.bib
 
 The similarity of scanpaths, the trace of eye-movements
 in space and time, offers insights into commonalities
-and differences of viewing behaviour within and between
+and differences of viewing behavior within and between
 participants. In addition to quantification of position
-and order of eye-movements, a comparison between them
-adds a useful dimension to the traditional analysis of
-eyetracking data.
+and order of as series of eye-movements, a comparison
+between them adds a useful dimension to the traditional
+analysis of eyetracking data.
 
 ``multimatch in Python`` is a Python based
 reimplementation of the MultiMatch toolbox for scanpath
@@ -52,7 +52,8 @@ contains optional functionality to compute scanpath
 similarities in the eyetracking data of the studyforrest
 dataset [@studyforrest].
 
-The software is available as a github repository [@multimatch].
+The software is available as a github repository [@multimatch]
+and as a python package via pip.
 
 # Acknowledgements
 

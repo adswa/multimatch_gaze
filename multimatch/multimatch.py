@@ -828,33 +828,36 @@ def main(args=sys.argv):
 
     # define arguments
     parser.add_argument(
-        'input1', metavar='<datafile_1>',
+        'input1', metavar='<datafile>',
         help="""Eyemovement data of scanpath 1. Should be a tab separated
-         file with columns "start_x", "start_y", "duration".""")
+         file with columns corresponding to x-coordinates, y-coordinates, and
+         fixation duration in seconds.""")
     parser.add_argument(
-        'input2', metavar='<datafile_2>',
-        help="""Eyemovement data of scanpath 2. Should be a tab separated file with
-              columns "start_x", "start_y", "duration".""")
+        'input2', metavar='<datafile>',
+        help="""Eyemovement data of scanpath 2. Should be a tab separated
+        file with columns corresponding to x-coordinates, y-coordinates, and
+        fixation duration in seconds.""")
     parser.add_argument(
         '--screensize', nargs='+', metavar='<screensize>', default=[1280, 720],
-        help="""screensize: Resolution of screen in px, should be supplied as a list.
-         The default is 1280, 720.""")
+        help="""screensize: Resolution of screen in px, should be supplied as
+        --screensize 1000 800 for a screen of resolution [1000, 800]. The
+        default is 1280 x 720px.""")
     parser.add_argument(
         '--direction_threshold', type=float, metavar='<TDir>', default=0.0,
         help="""Threshold for direction based grouping in degree (example: 45.0).
          Two consecutive saccades with an angle below TDir and short fixations will
-         be grouped together to reduce scanpath complexity. If 0: no grouping will
-         be performed.""")
+         be grouped together to reduce scanpath complexity. If 0: no
+         simplification will be performed.""")
     parser.add_argument(
         '--amplitude_threshold', type=float, metavar='<TAmp>', default=0.0,
         help="""Threshold for amplitude based grouping in pixel (example: 140.0).
         Two consecutive saccades shorter than TAmp and short fixations will be
-        grouped together to reduce scanpath complexity. If 0: no grouping will
-        be performed.""")
+        grouped together to reduce scanpath complexity. If 0: no simplification
+        will be performed.""")
     parser.add_argument(
         '--duration_threshold', type=float, metavar='<TDur>', default=0.0,
         help="""Threshold for fixation duration during amplitude and direction
-        based grouping.""")
+        based grouping, in seconds.""")
 
     args = parser.parse_args()
 

@@ -396,30 +396,30 @@ def main(args=sys.argv):
         help="""Specify path where output should be saved. If it does not exists,
         it will be created.""")
     parser.add_argument(
-        '--duration', type=float, default=4.92,
+        '--duration', metavar='<duration>', type=float, default=4.92,
         help="""The approx. desired duration for a scanpath in seconds, e.g. 3.0.
         Note: Scanpaths are extracted within a shot, not across shots! Long durations
         will lead to a few scanpath. Median shot length (default): 4.92s.""")
     parser.add_argument(
-        '--lduration', type=float, default=0.0,
+        '--lduration', metavar='<l_duration>', type=float, default=0.0,
         help="""Option to group short shots in the same locale (i.e. no change of setting
         between shots) together for longer scanpaths. Shots shorter than ldur will be
         attempted to be grouped together.""")
     parser.add_argument(
-        '--direction_threshold', type=float, default=0.0,
+        '--direction_threshold', metavar='<TDir>', type=float, default=0.0,
         help="""Threshold for direction based grouping in degree (example: 45.0). Two
         consecutive saccades with an angle below TDir and short fixations will be grouped
         together to reduce scanpath complexity. If 0: no grouping will be performed.""")
     parser.add_argument(
-        '--amplitude_threshold', type=float, default=0.0,
+        '--amplitude_threshold', metavar='<TAmp>', type=float, default=0.0,
         help="""Threshold for amplitude based grouping in pixel (example: 140.0). Two
          consecutive saccades shorter than TAmp and short fixations will be grouped together
           to reduce scanpath complexity.  If 0: no grouping will be performed.""")
     parser.add_argument(
-        '--duration_threshold', type=float, default=0.0,
+        '--duration_threshold', metavar='<TDur>', type=float, default=0.0,
         help="""Threshold for fixation duration during amplitude and direction based grouping.""")
     parser.add_argument(
-        '--screensize', nargs='+', type=float, default=[1280, 720],
+        '--screensize', nargs='+', metavar='<screensize>', type=float, default=[1280, 720],
         help="""screensize: Resolution of screen in px, default is [1280, 720].""")
     parser.add_argument('-pos', '--position_offset', type=bool, default=False,
                         help="""If True, scanpaths of dur length stop at shotoffset (instead of starting
