@@ -84,3 +84,18 @@ like can be found here_.
         given dimension.
 
 
+References
+----------
+Dewhurst, R., Nyström, M., Jarodzka, H., Foulsham, T., Johansson, R., &
+Holmqvist, K. (2012). It depends on how you look at it: Scanpath comparison in
+multiple dimensions with MultiMatch, a vector-based approach. Behavior research
+methods, 44(4), 1079-1100.
+
+Dijkstra, E. W. (1959). A note on two problems in connexion with graphs.
+Numerische Mathematik, 1(1), 269 - 271.
+
+Jarodzka, H., Holmqvist, K. & Nyström, M. (2010). A vector-based,
+multidimensional scanpath similarity measure. In ETRA '02: Proceedings of the 
+2010 symposium on eye tracking research and applications, ACM, New York.
+
+
