@@ -35,6 +35,16 @@ The source code for multimatch can be found on Github_.
 
 .. _Github: https://github.com/AdinaWagner/multimatch
 
+A short tutorial...
+-------------------
+... session to get a first hang on how to use multimatch can be
+conducted by cloning the Github repository and executing the
+examples provided in the multimatch_ and multimatch_forrest_
+sections. The data used in these examples corresponds to the
+data found in the repository.
+
+.. _multimatch: https://multimatch.readthedocs.io/en/latest/multimatch.html
+.. _multimatch_forrest: https://multimatch.readthedocs.io/en/latest/multimatch_forrest.html
 
 
 

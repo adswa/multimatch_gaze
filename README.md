@@ -128,9 +128,6 @@ Example usage with grouping:
 data/fixvectors/segment_10_sub-01.tsv --direction_threshold 45.0
 --duration_threshold 0.3 --amplitude_threshold 147.0 ``
 
-Example usage without grouping:
-
-
 
 ## multimatch_forrest
 

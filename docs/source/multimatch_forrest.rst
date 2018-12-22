@@ -46,7 +46,7 @@ in a terminal as a single command line. The comparison of all scanpaths of the
 default length (4.92 seconds, the median shot length of the movie) only needs the
 command line keyword ``multimatch_forrest``, followed by two inputs, corresponding
 to the remodnav_ outputs of two subjects in the same run,
-the annotation file for the shots of the respecitve run and an output path.
+the annotation file for the shots of the respective run and an output path.
 
 .. code::
 
@@ -84,9 +84,9 @@ grouping will be performed!
 execution within a python instance
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-If you wish to use the functionality of multimatch within a running python
+If you wish to use the functionality of multimatch_forrest within a running python
 instance such as ipython, you can import the module and use the function
-``docomparison``. Here is an example:
+``docomparison_forrest``. Here is an example:
 
 .. code::
 
