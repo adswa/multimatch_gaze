@@ -1,7 +1,8 @@
 [![Build Status](https://travis-ci.com/AdinaWagner/multimatch.svg?branch=master)](https://travis-ci.com/AdinaWagner/multimatch)
 [![codecov](https://codecov.io/gh/AdinaWagner/multimatch/branch/master/graph/badge.svg)](https://codecov.io/gh/AdinaWagner/multimatch)
 [![Documentation](https://readthedocs.org/projects/multimatch/badge/?version=latest)](https://multimatch.readthedocs.io/en/latest/)
-
+[![PyPIversion](https://badge.fury.io/py/multimatch.svg)](https://badge.fury.io/py/multimatch)
+ [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 # multimatch
 ## Reimplementation of MultiMatch toolbox (Dewhurst et al., 2012) in Python.
 
