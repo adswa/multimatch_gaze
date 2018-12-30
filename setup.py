@@ -27,7 +27,7 @@ except (ImportError, OSError) as exc:
         "WARNING: pypandoc failed to import or threw an error while converting"
         " README.md to RST: %r  .md version will be used as is" %exc
     )
-    long_description = open(README).read
+    long_description = open(README).read()
 
 # Metadata
 setup(
