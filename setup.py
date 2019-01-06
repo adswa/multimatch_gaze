@@ -54,7 +54,8 @@ setup(
     entry_points={
         'console_scripts': [
             'multimatch=multimatch.multimatch:main',
-            'multimatch_forrest=multimatch.multimatch_forrest:main'],
+            #'multimatch_forrest=multimatch.multimatch_forrest:main'
+            ],
     },
     classifiers=[
         "Programming Language :: Python :: 3",
