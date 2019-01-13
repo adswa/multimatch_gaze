@@ -96,6 +96,26 @@ def gen_scanpath_structure(data):
     return eyedata
 
 
+def keepsaccade(i, j, sim_lenx, sim_leny, sim_x, sim_y, sim_theta, sim_len, sim_dur, data):
+    """
+    Helper function for scanpath simplification. If no simplification can be
+    performed on a particular saccade, this functions stores the original data.
+    :param i, j: current indices
+    """
+
+    sim_lenx.insert(j, data[5][i])
+    sim_leny.insert(j, data[6][i])
+    sim_x.insert(j, data[3][i])
+    sim_y.insert(j, data[4][i])
+    sim_theta.insert(j, data[7][i])
+    sim_len.insert(j, data[8][i])
+    sim_dur.insert(j, data[2][i])
+    i += 1
+    j += 1
+
+    return sim_lenx, sim_leny, sim_x, sim_y, sim_theta, sim_len, sim_dur, i, j
+
+
 def simlen(data, TAmp, TDur):
     """Simplify scanpaths based on saccadic length.
 
