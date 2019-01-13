@@ -929,8 +929,8 @@ def main(args=sys.argv):
     parser.add_argument(
         'input1', metavar='<datafile>',
         help="""Eyemovement data of scanpath 1. Should be a tab separated
-         file with columns corresponding to x-coordinates (in px), y-coordinates
-         (in px), and fixation duration in seconds.""")
+         file with columns corresponding to x-coordinates, y-coordinates, and
+         fixation duration in seconds.""")
     parser.add_argument(
         'input2', metavar='<datafile>',
         help="""Eyemovement data of scanpath 2. Should be a tab separated
@@ -942,19 +942,19 @@ def main(args=sys.argv):
         --screensize 1000 800 for a screen of resolution [1000, 800]. The
         default is 1280 x 720px.""")
     parser.add_argument(
-        '--direction-threshold', type=float, metavar='<TDir>', default=0.0,
+        '--direction_threshold', type=float, metavar='<TDir>', default=0.0,
         help="""Threshold for direction based grouping in degree (example: 45.0).
          Two consecutive saccades with an angle below TDir and short fixations will
          be grouped together to reduce scanpath complexity. If 0: no
          simplification will be performed.""")
     parser.add_argument(
-        '--amplitude-threshold', type=float, metavar='<TAmp>', default=0.0,
+        '--amplitude_threshold', type=float, metavar='<TAmp>', default=0.0,
         help="""Threshold for amplitude based grouping in pixel (example: 140.0).
         Two consecutive saccades shorter than TAmp and short fixations will be
         grouped together to reduce scanpath complexity. If 0: no simplification
         will be performed.""")
     parser.add_argument(
-        '--duration-threshold', type=float, metavar='<TDur>', default=0.0,
+        '--duration_threshold', type=float, metavar='<TDur>', default=0.0,
         help="""Threshold for fixation duration during amplitude and direction
         based grouping, in seconds.""")
 
@@ -969,9 +969,9 @@ def main(args=sys.argv):
                           dtype={'names': ('start_x', 'start_y', 'duration'),
                                  'formats': ('f8', 'f8', 'f8')})
 
-    TDir = args.direction-threshold
-    TAmp = args.amplitude-threshold
-    TDur = args.duration-threshold
+    TDir = args.direction_threshold
+    TAmp = args.amplitude_threshold
+    TDur = args.duration_threshold
     if args.screensize:
         sz = [float(i) for i in args.screensize]
         if len(sz) != 2:
