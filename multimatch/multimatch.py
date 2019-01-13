@@ -9,7 +9,8 @@ import sys
 def cart2pol(x, y):
     """Transform cartesian into polar coordinates.
 
-    :param x, y : float
+    :param x: float
+    :param y : float
 
     :return: rho: float, length from (0,0)
     :return: theta: float, angle in radians
@@ -53,7 +54,6 @@ def gen_scanpath_structure(data):
     :return: eyedata: array-like, list of lists, vector-based scanpath representation
     """
 
-    # initialize empty lists
     fixation_x = []
     fixation_y = []
     fixation_dur = []
@@ -70,18 +70,18 @@ def gen_scanpath_structure(data):
         fixation_x.append(data[i]['start_x'])
         fixation_y.append(data[i]['start_y'])
         fixation_dur.append(data[i]['duration'])
-    # fixations as start coordinates for saccades (ignores PSOs and the like)
+    # fixations are the start coordinates for saccades
     for i in range(0, length - 1):
         saccade_x.append(data[i]['start_x'])
         saccade_y.append(data[i]['start_y'])
-    # calculate saccade length and angle
+    # calculate saccade length and angle from vector lengths between fixations
     for i in range(1, length):
         saccade_lenx.append(fixation_x[i] - saccade_x[i - 1])
         saccade_leny.append(fixation_y[i] - saccade_y[i - 1])
         rho, theta = cart2pol(saccade_lenx[i - 1], saccade_leny[i - 1])
         saccade_rho.append(rho)
         saccade_theta.append(theta)
-    # append everything. Eyedata is a list of lists.
+    # append everything. Eyedata is a list of lists with unequal length.
     eyedata = [
         fixation_x,
         fixation_y,
@@ -96,11 +96,30 @@ def gen_scanpath_structure(data):
     return eyedata
 
 
-def keepsaccade(i, j, sim_lenx, sim_leny, sim_x, sim_y, sim_theta, sim_len, sim_dur, data):
+def keepsaccade(i,
+                j,
+                sim_lenx,
+                sim_leny,
+                sim_x,
+                sim_y,
+                sim_theta,
+                sim_len,
+                sim_dur,
+                data
+                ):
     """
     Helper function for scanpath simplification. If no simplification can be
     performed on a particular saccade, this functions stores the original data.
-    :param i, j: current indices
+    :param i: current index
+    :param j: current index
+    :param sim_lenx: list
+    :param sim_leny: list
+    :param sim_x: list
+    :param sim_y: list
+    :param sim_theta: list
+    :param sim_len: list
+    :param sim_dur: list
+    :param data: eyedata, list of list
     """
 
     sim_lenx.insert(j, data[5][i])
@@ -136,7 +155,7 @@ def simlen(data, TAmp, TDur):
     else:
         i = 0
         j = 0
-        # initialize empty lists
+        # initialize new empty lists for simplified results
         sim_dur = []
         sim_x = []
         sim_y = []
@@ -146,13 +165,13 @@ def simlen(data, TAmp, TDur):
         sim_len = []
         # while we don't run into index errors
         while i <= len(data[3]) - 1:
-            # if saccade is the last saccade
+            # if saccade is the last one
             if i == len(data[3]) - 1:
-                # if saccade has short length:
+                # and if saccade has short length:
                 if data[8][i] < TAmp:
-                    # if fixation duration is short:
+                    # and if the fixation duration is short:
                     if (data[2][-1] < TDur) or (data[2][-2] < TDur):
-                        # calculate sum of local vectors
+                        # calculate sum of local vectors for simplification
                         v_x = data[5][-2] + data[5][-1]
                         v_y = data[6][-2] + data[6][-1]
                         rho, theta = cart2pol(v_x, v_y)
@@ -192,11 +211,11 @@ def simlen(data, TAmp, TDur):
                                                                                                       data)
             # if saccade is not the last one
             else:
-                # if saccade has short length
+                # and if saccade has short length
                 if (data[8][i] < TAmp) and (i < len(data[3]) - 1):
-                    # if fixation durations are short
+                    # and if fixation durations are short
                     if (data[2][i + 1] < TDur) or (data[2][i] < TDur):
-                        # calculate sum of local vectors in x and y length
+                        # calculate sum of local vectors in x and y length for simplification
                         v_x = data[5][i] + data[5][i + 1]
                         v_y = data[6][i] + data[6][i + 1]
                         rho, theta = cart2pol(v_x, v_y)
@@ -239,6 +258,8 @@ def simlen(data, TAmp, TDur):
                                                                                                       data)
     # append the last fixation duration
     sim_dur.append(data[2][-1])
+    # the returned datastructure does not contain fixation x- and y coordinates anymore
+    # but mimicks previous list structure with two empty lists
     eyedata = [
         [],
         [],
@@ -253,7 +274,10 @@ def simlen(data, TAmp, TDur):
     return eyedata
 
 
-def simdir(data, TDir, TDur):
+def simdir(data,
+           TDir,
+           TDur
+           ):
     """Simplify scanpaths based on angular relations between saccades (direction).
 
     Simplify consecutive saccades if the angle between them is smaller than the
@@ -367,6 +391,8 @@ def simdir(data, TDir, TDur):
                                                                                                   data)
     # now append the last fixation duration
     sim_dur.append(data[2][-1])
+    # the returned datastructure does not contain fixation x- and y coordinates anymore
+    # but mimicks previous list structure with two empty lists
     eyedata = [
         [],
         [],
@@ -381,7 +407,11 @@ def simdir(data, TDir, TDur):
     return eyedata
 
 
-def simplify_scanpath(data, TAmp, TDir, TDur):
+def simplify_scanpath(data,
+                      TAmp,
+                      TDir,
+                      TDur
+                      ):
     """Simplify scanpaths until no further simplification is possible.
 
     Loops over simplification functions simdir and simlen until no
@@ -403,7 +433,9 @@ def simplify_scanpath(data, TAmp, TDir, TDur):
             return data
 
 
-def cal_vectordifferences(data1, data2):
+def cal_vectordifferences(data1,
+                          data2
+                          ):
     """Create matrix of vector-length differences of all vector pairs
 
     Create M, a Matrix with all possible saccade-length differences between
@@ -434,13 +466,19 @@ def cal_vectordifferences(data1, data2):
     return M
 
 
-def createdirectedgraph(szM, M, M_assignment):
+def createdirectedgraph(szM,
+                        M,
+                        M_assignment
+                        ):
     """Create a directed graph:
     The data structure of the result is a dicitionary within a dictionary
     such as
     weightedGraph = {0 : {1:259.55, 15:48.19, 16:351.95},
     1 : {2:249.354, 16:351.951, 17:108.97},
     2 : {3:553.30, 17:108.97, 18:341.78}, ...}
+
+    It defines the possible nodes to reach from a particular node, and the weight that
+    is associated with the path to each of the possible nodes.
 
     :param: szM: list, shape of matrix M
     :param: M: array-like, matrix of vector length differences
@@ -479,13 +517,11 @@ def createdirectedgraph(szM, M, M_assignment):
                 weight[M_assignment[i, j]] = [M[i, j + 1],
                                               M[i + 1, j],
                                               M[i + 1, j + 1]]
-    # create list of all Nodes
-    # Nodes = np.hstack(list(adjacent.values()))
-    # create list of all associated distances (=weights)
-    # Distances = np.hstack(list(weight.values()))
-    # create ascending list ranging from first to last node
+    # create ascending list ranging from first to last node - this
+    #  will be the first key in the nested dict
     Startnodes = range(0, szM[0] * szM[1])
-    # initialize list with adjacent nodes and their weights
+    # initialize list with adjacent nodes (adjacent to each startnode)
+    # and the weights associated with the paths between them
     weightedEdges = []
     # zip Nodes and weights
     for i in range(0, len(adjacent)):
@@ -499,7 +535,10 @@ def createdirectedgraph(szM, M, M_assignment):
     return weightedGraph
 
 
-def dijkstra(weightedGraph, start, end):
+def dijkstra(weightedGraph,
+             start,
+             end
+             ):
     """Implementation of Dijkstra algorithm:
     Use the dijkstra algorithm to find the shortest path through a directed
     graph (weightedGraph) from start to end.
@@ -518,7 +557,7 @@ def dijkstra(weightedGraph, start, end):
     dist = {}
     # inialize list of vertices in the path to current vertex (predecessors)
     pred = {}
-    # where do I need to go?
+    # where do I need to go still?
     to_assess = weightedGraph.keys()
     for node in weightedGraph:
         # set inital distances to infinity
@@ -527,7 +566,7 @@ def dijkstra(weightedGraph, start, end):
         pred[node] = None
     # initialize list to be filled with final distances(weights) of nodes
     sp_set = []
-    # the starting node get a weight of 0 to make sure to start there
+    # the starting node gets a weight of 0 to make sure to start there
     dist[start] = 0
     # continue the algorithm as long as there are still unexplored nodes
     while len(sp_set) < len(to_assess):
@@ -549,7 +588,11 @@ def dijkstra(weightedGraph, start, end):
     return path[::-1], dist[end]
 
 
-def cal_angulardifference(data1, data2, path, M_assignment):
+def cal_angulardifference(data1,
+                          data2,
+                          path,
+                          M_assignment
+                          ):
     """Calculate angular similarity of two scanpaths:
 
     :param: data1: array-like, list of lists, contains vector-based scanpath representation of the
@@ -587,7 +630,11 @@ def cal_angulardifference(data1, data2, path, M_assignment):
     return anglediff
 
 
-def cal_durationdifference(data1, data2, path, M_assignment):
+def cal_durationdifference(data1,
+                           data2,
+                           path,
+                           M_assignment
+                           ):
     """Calculate similarity of two scanpaths fixation durations.
 
     :param: data1: array-like
@@ -624,7 +671,11 @@ def cal_durationdifference(data1, data2, path, M_assignment):
     return durdiff
 
 
-def cal_lengthdifference(data1, data2, path, M_assignment):
+def cal_lengthdifference(data1,
+                         data2,
+                         path,
+                         M_assignment
+                         ):
     """Calculate length similarity of two scanpaths.
 
     :param: data1: array-like
@@ -656,7 +707,11 @@ def cal_lengthdifference(data1, data2, path, M_assignment):
     return lendiff
 
 
-def cal_positiondifference(data1, data2, path, M_assignment):
+def cal_positiondifference(data1,
+                           data2,
+                           path,
+                           M_assignment
+                           ):
     """Calculate position similarity of two scanpaths.
 
     :param: data1: array-like
@@ -692,7 +747,11 @@ def cal_positiondifference(data1, data2, path, M_assignment):
     return posdiff
 
 
-def cal_vectordifferencealongpath(data1, data2, path, M_assignment):
+def cal_vectordifferencealongpath(data1,
+                                  data2,
+                                  path,
+                                  M_assignment
+                                  ):
     """Calculate vector similarity of two scanpaths.
 
     :param: data1: array-like
@@ -727,7 +786,11 @@ def cal_vectordifferencealongpath(data1, data2, path, M_assignment):
     return vectordiff
 
 
-def getunnormalised(data1, data2, path, M_assignment):
+def getunnormalised(data1,
+                    data2,
+                    path,
+                    M_assignment
+                    ):
     """Calculate unnormalised similarity measures.
 
     Calls the five functions to create unnormalised similarity measures for
@@ -762,7 +825,9 @@ def getunnormalised(data1, data2, path, M_assignment):
     return unnormalised
 
 
-def normaliseresults(unnormalised, sz=[1280, 720]):
+def normaliseresults(unnormalised,
+                     sz=[1280, 720]
+                     ):
     """Normalize similarity measures.
 
     Vector similarity is normalised against two times screen diagonal,
@@ -829,16 +894,23 @@ def docomparison(fixation_vectors1,
     scanpathcomparisons = []
     # check if fixation vectors/scanpaths are long enough
     if (len(fixation_vectors1) >= 3) & (len(fixation_vectors2) >= 3):
+        # get the data into a geometric representation
         subj1 = gen_scanpath_structure(fixation_vectors1)
         subj2 = gen_scanpath_structure(fixation_vectors2)
         if grouping:
+            # simplify the data
             subj1 = simplify_scanpath(subj1, TAmp, TDir, TDur)
             subj2 = simplify_scanpath(subj2, TAmp, TDir, TDur)
+        # create M, a matrix of all vector pairings length differences (weights)
         M = cal_vectordifferences(subj1, subj2)
+        # initialize a matrix of size M for a matrix of nodes
         szM = np.shape(M)
         M_assignment = np.arange(szM[0] * szM[1]).reshape(szM[0], szM[1])
+        # create a weighted graph of all possible connections per Node, and their weight
         weightedGraph = createdirectedgraph(szM, M, M_assignment)
+        # find the shortest path (= lowest sum of weights) through the graph
         path, dist = dijkstra(weightedGraph, 0, szM[0] * szM[1] - 1)
+        # compute similarities on alinged scanpaths and normalize them
         unnormalised = getunnormalised(subj1, subj2, path, M_assignment)
         normal = normaliseresults(unnormalised, sz)
         scanpathcomparisons.append(normal)
