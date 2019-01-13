@@ -166,28 +166,30 @@ def simlen(data, TAmp, TDur):
                         i += 1
                     # if fixation duration is long:
                     else:
-                        # insert original data in new list
-                        sim_lenx.insert(j, data[5][i])
-                        sim_leny.insert(j, data[6][i])
-                        sim_x.insert(j, data[3][i])
-                        sim_y.insert(j, data[4][i])
-                        sim_theta.insert(j, data[7][i])
-                        sim_len.insert(j, data[8][i])
-                        sim_dur.insert(j, data[2][i])
-                        i += 1
-                        j += 1
+                        # insert original data in new list -- no simplification
+                        sim_lenx, sim_leny, sim_x, sim_y, sim_theta, sim_len, sim_dur, i, j = keepsaccade(i,
+                                                                                                          j,
+                                                                                                          sim_lenx,
+                                                                                                          sim_leny,
+                                                                                                          sim_x,
+                                                                                                          sim_y,
+                                                                                                          sim_theta,
+                                                                                                          sim_len,
+                                                                                                          sim_dur,
+                                                                                                          data)
                 # if saccade doesn't have short length:
                 else:
-                    # insert original data in new list
-                    sim_lenx.insert(j, data[5][i])
-                    sim_leny.insert(j, data[6][i])
-                    sim_x.insert(j, data[3][i])
-                    sim_y.insert(j, data[4][i])
-                    sim_theta.insert(j, data[7][i])
-                    sim_len.insert(j, data[8][i])
-                    sim_dur.insert(j, data[2][i])
-                    i += 1
-                    j += 1
+                    # insert original data in new list -- no simplification
+                    sim_lenx, sim_leny, sim_x, sim_y, sim_theta, sim_len, sim_dur, i, j = keepsaccade(i,
+                                                                                                      j,
+                                                                                                      sim_lenx,
+                                                                                                      sim_leny,
+                                                                                                      sim_x,
+                                                                                                      sim_y,
+                                                                                                      sim_theta,
+                                                                                                      sim_len,
+                                                                                                      sim_dur,
+                                                                                                      data)
             # if saccade is not the last one
             else:
                 # if saccade has short length
@@ -211,28 +213,31 @@ def simlen(data, TAmp, TDur):
                         j += 1
                     # if fixation durations are long
                     else:
-                        # insert original data in new lists
-                        sim_lenx.insert(j, data[5][i])
-                        sim_leny.insert(j, data[6][i])
-                        sim_x.insert(j, data[3][i])
-                        sim_y.insert(j, data[4][i])
-                        sim_theta.insert(j, data[7][i])
-                        sim_len.insert(j, data[8][i])
-                        sim_dur.insert(j, data[2][i])
-                        j += 1
-                        i += 1
+                        # insert original data in new lists -- no simplification
+                        sim_lenx, sim_leny, sim_x, sim_y, sim_theta, sim_len, sim_dur, i, j = keepsaccade(i,
+                                                                                                          j,
+                                                                                                          sim_lenx,
+                                                                                                          sim_leny,
+                                                                                                          sim_x,
+                                                                                                          sim_y,
+                                                                                                          sim_theta,
+                                                                                                          sim_len,
+                                                                                                          sim_dur,
+                                                                                                          data)
                 # if saccade doesn't have short length
                 else:
-                    # insert original data in new list
-                    sim_lenx.insert(j, data[5][i])
-                    sim_leny.insert(j, data[6][i])
-                    sim_x.insert(j, data[3][i])
-                    sim_y.insert(j, data[4][i])
-                    sim_theta.insert(j, data[7][i])
-                    sim_len.insert(j, data[8][i])
-                    sim_dur.insert(j, data[2][i])
-                    i += 1
-                    j += 1
+                    # insert original data in new list -- no simplification
+                    sim_lenx, sim_leny, sim_x, sim_y, sim_theta, sim_len, sim_dur, i, j = keepsaccade(i,
+                                                                                                      j,
+                                                                                                      sim_lenx,
+                                                                                                      sim_leny,
+                                                                                                      sim_x,
+                                                                                                      sim_y,
+                                                                                                      sim_theta,
+                                                                                                      sim_len,
+                                                                                                      sim_dur,
+                                                                                                      data)
+    # append the last fixation duration
     sim_dur.append(data[2][-1])
     eyedata = [
         [],
@@ -307,16 +312,17 @@ def simdir(data, TDir, TDur):
                     i += 2
                     j += 1
                 else:
-                    # insert original data in new list
-                    sim_lenx.insert(j, data[5][i])
-                    sim_leny.insert(j, data[6][i])
-                    sim_x.insert(j, data[3][i])
-                    sim_y.insert(j, data[4][i])
-                    sim_theta.insert(j, data[7][i])
-                    sim_len.insert(j, data[8][i])
-                    sim_dur.insert(j, data[2][i])
-                    j += 1
-                    i += 1
+                    # insert original data in new list -- no simplification
+                    sim_lenx, sim_leny, sim_x, sim_y, sim_theta, sim_len, sim_dur, i, j = keepsaccade(i,
+                                                                                                      j,
+                                                                                                      sim_lenx,
+                                                                                                      sim_leny,
+                                                                                                      sim_x,
+                                                                                                      sim_y,
+                                                                                                      sim_theta,
+                                                                                                      sim_len,
+                                                                                                      sim_dur,
+                                                                                                      data)
             # elif the angle is small, but its the last saccade:
             elif (angle < TDir) & (i == len(data[3]) - 1):
                 # if the fixation duration is short:
@@ -335,28 +341,30 @@ def simdir(data, TDir, TDur):
                     i += 1
                 # if fixation duration is long:
                 else:
-                    # insert original data in new list
-                    sim_lenx.insert(j, data[5][i])
-                    sim_leny.insert(j, data[6][i])
-                    sim_x.insert(j, data[3][i])
-                    sim_y.insert(j, data[4][i])
-                    sim_theta.insert(j, data[7][i])
-                    sim_len.insert(j, data[8][i])
-                    sim_dur.insert(j, data[2][i])
-                    i += 1
-                    j += 1
+                    # insert original data in new list -- no simplification
+                    sim_lenx, sim_leny, sim_x, sim_y, sim_theta, sim_len, sim_dur, i, j = keepsaccade(i,
+                                                                                                      j,
+                                                                                                      sim_lenx,
+                                                                                                      sim_leny,
+                                                                                                      sim_x,
+                                                                                                      sim_y,
+                                                                                                      sim_theta,
+                                                                                                      sim_len,
+                                                                                                      sim_dur,
+                                                                                                      data)
             # else (the angle is too large
             else:
-                # insert original data in new list
-                sim_lenx.insert(j, data[5][i])
-                sim_leny.insert(j, data[6][i])
-                sim_x.insert(j, data[3][i])
-                sim_y.insert(j, data[4][i])
-                sim_theta.insert(j, data[7][i])
-                sim_len.insert(j, data[8][i])
-                sim_dur.insert(j, data[2][i])
-                i += 1
-                j += 1
+                # insert original data in new list -- no simplification
+                sim_lenx, sim_leny, sim_x, sim_y, sim_theta, sim_len, sim_dur, i, j = keepsaccade(i,
+                                                                                                  j,
+                                                                                                  sim_lenx,
+                                                                                                  sim_leny,
+                                                                                                  sim_x,
+                                                                                                  sim_y,
+                                                                                                  sim_theta,
+                                                                                                  sim_len,
+                                                                                                  sim_dur,
+                                                                                                  data)
     # now append the last fixation duration
     sim_dur.append(data[2][-1])
     eyedata = [
