@@ -7,8 +7,10 @@
 #
 # ## ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ##
 
-__version__ = '0.0.2'
+# this import is necessary for the tests to run without having multimatch installed
+# locally - else the modules can't be imported
+from __future__ import absolute_import
 
-#from __future__ import absolute_import
+
 from .multimatch import docomparison
 from .multimatch_forrest import docomparison_forrest
