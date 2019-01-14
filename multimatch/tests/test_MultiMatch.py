@@ -108,15 +108,15 @@ def test_structure_generation(length=5):
     """
     fix_vector = ut.mk_fix_vector(length)
     results = mp.gen_scanpath_structure(fix_vector)
-    assert len(results[0]) == len(fix_vector)
-    assert len(results[1]) == len(fix_vector)
-    assert len(results[2]) == len(fix_vector)
-    assert len(results[3]) == len(fix_vector) - 1
-    assert len(results[4]) == len(fix_vector) - 1
-    assert len(results[5]) == len(fix_vector) - 1
-    assert len(results[6]) == len(fix_vector) - 1
-    assert len(results[7]) == len(fix_vector) - 1
-    assert len(results[8]) == len(fix_vector) - 1
+    assert len(results['fixation_x']) == len(fix_vector)
+    assert len(results['fixation_y']) == len(fix_vector)
+    assert len(results['fixation_dur']) == len(fix_vector)
+    assert len(results['saccade_x']) == len(fix_vector) - 1
+    assert len(results['saccade_y']) == len(fix_vector) - 1
+    assert len(results['saccade_lenx']) == len(fix_vector) - 1
+    assert len(results['saccade_leny']) == len(fix_vector) - 1
+    assert len(results['saccade_theta']) == len(fix_vector) - 1
+    assert len(results['saccade_rho']) == len(fix_vector) - 1
 
 
 def test_cal_vectordifferences(length=5):
