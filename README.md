@@ -20,9 +20,6 @@ five dimensions **'vector shape'**, **'vector length'** (saccadic amplitude),
 multidimensional similarity evaluation. The original Matlab toolbox was kindly
 provided via email by Dr. Richard Dewhurst and the method was ported into Python
 with the intent of providing an open source alternative to the matlab toolbox.
-Additionally, it contains options to compute scanpath similarities from the
-studyforrest phase 2 eyetracking dataset, in which participants (n = 15 during
-fmri acquisition, n = 15 in lab) watched the movie 'Forrest Gump'.
 
 ### Installation instructions
 
@@ -128,24 +125,6 @@ Example usage with grouping:
 `` multimatch data/fixvectors/segment_10_sub-19.tsv
 data/fixvectors/segment_10_sub-01.tsv --direction_threshold 45.0
 --duration_threshold 0.3 --amplitude_threshold 147.0 ``
-
-
-## multimatch_forrest
-
-The package further contains an implementation of the method specifically for
-use with the studyforrest phase 2 eyetracking dataset. Inputs should be the
-eyetracking data classified into eye-movement events by remodnav
-(https://github.com/psychoinformatics-de/remodnav).
-As such, inputs are two eye-movement classified tsv-files of a given
-run of studyforrest and the respective location annotation
-(https://github.com/psychoinformatics-de/studyforrest-data-annotations) file as
-well an output path. It will create scanpaths from the shots of the movie stimlus
-and compute the necessary nx3 data structure on its own.
-
-### Examplary usage of multimatch_forrest in a terminal:
-
-``multimatch_forrest
-multimatch/tests/testdata/sub-10_task-movie_run-1_events.tsv multimatch/tests/testdata/sub-30_task-movie_run-1_events.tsv multimatch/tests/testdata/studyforrest-data-annotations/segments/avmovie/locations_run-1_events.tsv output/run-1/sub-10vssub-30``
 
 
 ### References:

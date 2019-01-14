@@ -23,7 +23,6 @@ Commands and functions
    :maxdepth: 1
 
    multimatch
-   multimatch_forrest
 
 
 Indices and tables

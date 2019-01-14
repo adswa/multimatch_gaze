@@ -44,24 +44,6 @@ with a terminal command or within a python instance (see section multimatch_).
 
  .. _multimatch: https://multimatch.readthedocs.io/en/latest/multimatch.html
 
-Additionally, the reimplementation contains
-options to compute scanpath similarities from the studyforrest_ phase 2
-eyetracking dataset, in which participants (n = 15 during fmri acquisition, n =
-15 in lab) watched the movie 'Forrest Gump'. These additional functions of the
-multimatch module are mainly concerned with automatic scanpath extraction from
-the approximately 15 minutes spanning and several eye-movement categories
-containing eye-tracking event files by user-defined rules. Inputs for the
-studyforrest-version stem from remodnav (Dar, Wagner & Hanke, in preparation),
-an adaptive eye-event classification algorithm used on the studyforrest
-eye-tracking data and publicly available here_. For details
-on how to use this functionality, see section multimatch_forrest_.
-
-.. _studyforrest: http://studyforrest.org/
-
-.. _here: github.com/psychoinformatics-de/studyforrest-data-eyemovementlabels
-
-.. _multimatch_forrest: https://multimatch.readthedocs.io/en/latest/multimatch_forrest.html
-
 
 References
 ^^^^^^^^^^
