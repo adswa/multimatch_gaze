@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import os.path
 import random
-
+import collections
 
 def same_sample(run=1, subj=1):
     """duplicate dataset to force exactly similar scanpaths. Choose the run
@@ -65,11 +65,26 @@ def mk_strucarray(length=5):
     saccade_leny = random.sample(range(700), length - 1)
     saccade_rho = random.sample(range(700), length - 1)
     saccade_theta = random.sample(range(4), length - 1)
-    eyedata = [fixation_x, fixation_y, fixation_dur, saccade_x, saccade_y,
-               saccade_lenx, saccade_leny, saccade_theta, saccade_rho]
-    eyedata2 = [fixation_x[::-1] * 2, fixation_y[::-1] * 2, fixation_dur[::-1] * 2,
-                saccade_x[::-1] * 2, saccade_y[::-1] * 2, saccade_lenx[::-1] * 2, saccade_leny[::-1] * 2,
-                saccade_theta[::-1] * 2, saccade_rho[::-1] * 2]
+    eyedata = collections.OrderedDict()
+    eyedata['fixation_x'] = fixation_x
+    eyedata['fixation_y'] = fixation_y
+    eyedata['fixation_dur'] = fixation_dur
+    eyedata['saccade_x'] = saccade_x
+    eyedata['saccade_y'] = saccade_y
+    eyedata['saccade_lenx'] = saccade_lenx
+    eyedata['saccade_leny'] = saccade_leny
+    eyedata['saccade_theta'] = saccade_theta
+    eyedata['saccade_rho'] = saccade_rho
+    eyedata2 = collections.OrderedDict()
+    eyedata2['fixation_x'] = fixation_x[::-1] * 2,
+    eyedata2['fixation_y'] = fixation_y[::-1] * 2
+    eyedata2['fixation_dur'] = fixation_dur[::-1] * 2
+    eyedata2['saccade_x'] = saccade_x[::-1] * 2
+    eyedata2['saccade_y'] = saccade_y[::-1] * 2
+    eyedata2['saccade_lenx'] = saccade_lenx[::-1] * 2
+    eyedata2['saccade_leny'] = saccade_leny[::-1] * 2
+    eyedata2['saccade_theta'] = saccade_theta[::-1] * 2
+    eyedata2['saccade_rho'] = saccade_rho[::-1] * 2
     return eyedata, eyedata2
 
 
@@ -80,10 +95,14 @@ def mk_angles():
     (0, -1).
     Angles3 and angles4 contain the same properties reversed and lie in sectors
     (-1, 0) and (-1, -1)"""
-    angles1 = [[], [], [], [], [], [], [], [0, 0.523, 0.785, 1.04, 1.57], []]
-    angles2 = [[], [], [], [], [], [], [], [0, -0.523, -0.785, -1.04, -1.57], []]
-    angles3 = [[], [], [], [], [], [], [], [1.57, 2.093, 2.356, 2.617, 3.14], []]
-    angles4 = [[], [], [], [], [], [], [], [-1.57, -2.093, -2.356, -2.617, -3.14], []]
+    angles1 = collections.OrderedDict()
+    angles2 = collections.OrderedDict()
+    angles3 = collections.OrderedDict()
+    angles4 = collections.OrderedDict()
+    angles1['saccade_theta'] = [0, 0.523, 0.785, 1.04, 1.57]
+    angles2['saccade_theta'] = [0, -0.523, -0.785, -1.04, -1.57]
+    angles3['saccade_theta'] = [1.57, 2.093, 2.356, 2.617, 3.14]
+    angles4['saccade_theta'] = [-1.57, -2.093, -2.356, -2.617, -3.14]
     path = [0, 6, 12, 18, 24]
     M_assignment = np.arange(5 * 5).reshape(5, 5)
     return M_assignment, path, angles1, angles2, angles3, angles4
@@ -91,8 +110,10 @@ def mk_angles():
 
 def mk_durs():
     """create some example duration for test_durationsim()"""
-    durations1 = [[], [], [0.001, 20.0, 7, -18, -2.0], [], [], [], [], [], []]
-    durations2 = [[], [], [0.008, 18.0, 7, -11, 3.0], [], [], [], [], [], []]
+    durations1 = collections.OrderedDict()
+    durations2 = collections.OrderedDict()
+    durations1['fixation_dur'] = [0.001, 20.0, 7, -18, -2.0]
+    durations2['fixation_dur'] = [0.008, 18.0, 7, -11, 3.0]
     path = [0, 6, 12, 18, 24]
     M_assignment = np.arange(5 * 5).reshape(5, 5)
     return M_assignment, path, durations1, durations2
