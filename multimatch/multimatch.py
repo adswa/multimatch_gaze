@@ -83,18 +83,17 @@ def gen_scanpath_structure(data):
         rho, theta = cart2pol(saccade_lenx[i - 1], saccade_leny[i - 1])
         saccade_rho.append(rho)
         saccade_theta.append(theta)
-    # append everything. Eyedata is a list of lists with unequal length.
-    eyedata = [
-        fixation_x,
-        fixation_y,
-        fixation_dur,
-        saccade_x,
-        saccade_y,
-        saccade_lenx,
-        saccade_leny,
-        saccade_theta,
-        saccade_rho
-    ]
+    # append everything into an ordered dict.
+    eyedata = collections.OrderedDict()
+    eyedata['fixation_x'] = fixation_x
+    eyedata['fixation_y'] = fixation_y
+    eyedata['fixation_dur'] = fixation_dur
+    eyedata['saccade_x'] = saccade_x
+    eyedata['saccade_y'] = saccade_y
+    eyedata['saccade_lenx'] = saccade_lenx
+    eyedata['saccade_leny'] = saccade_leny
+    eyedata['saccade_theta'] = saccade_theta
+    eyedata['saccade_rho'] = saccade_rho
     return eyedata
 
 
@@ -124,13 +123,13 @@ def keepsaccade(i,
     :param data: eyedata, list of list
     """
 
-    sim_lenx.insert(j, data[5][i])
-    sim_leny.insert(j, data[6][i])
-    sim_x.insert(j, data[3][i])
-    sim_y.insert(j, data[4][i])
-    sim_theta.insert(j, data[7][i])
-    sim_len.insert(j, data[8][i])
-    sim_dur.insert(j, data[2][i])
+    sim_lenx.insert(j, data['saccade_lenx'][i])
+    sim_leny.insert(j, data['saccade_leny'][i])
+    sim_x.insert(j, data['saccade_x'][i])
+    sim_y.insert(j, data['saccade_y'][i])
+    sim_theta.insert(j, data['saccade_theta'][i])
+    sim_len.insert(j, data['saccade_rho'][i])
+    sim_dur.insert(j, data['fixation_dur'][i])
     i += 1
     j += 1
 
@@ -259,20 +258,16 @@ def simlen(data, TAmp, TDur):
                                                                                                       sim_dur,
                                                                                                       data)
     # append the last fixation duration
-    sim_dur.append(data[2][-1])
-    # the returned datastructure does not contain fixation x- and y coordinates anymore
-    # but mimicks previous list structure with two empty lists
-    eyedata = [
-        [],
-        [],
-        sim_dur,
-        sim_x,
-        sim_y,
-        sim_lenx,
-        sim_leny,
-        sim_theta,
-        sim_len
-    ]
+    sim_dur.append(data['fixation_dur'][-1])
+    # append everything into an ordered dict.
+    eyedata = collections.OrderedDict()
+    eyedata['fixation_dur'] = sim_dur
+    eyedata['saccade_x'] = sim_x
+    eyedata['saccade_y'] = sim_y
+    eyedata['saccade_lenx'] = sim_lenx
+    eyedata['saccade_leny'] = sim_leny
+    eyedata['saccade_theta'] = sim_theta
+    eyedata['saccade_rho'] = sim_len
     return eyedata
 
 
@@ -392,20 +387,16 @@ def simdir(data,
                                                                                                   sim_dur,
                                                                                                   data)
     # now append the last fixation duration
-    sim_dur.append(data[2][-1])
-    # the returned datastructure does not contain fixation x- and y coordinates anymore
-    # but mimicks previous list structure with two empty lists
-    eyedata = [
-        [],
-        [],
-        sim_dur,
-        sim_x,
-        sim_y,
-        sim_lenx,
-        sim_leny,
-        sim_theta,
-        sim_len
-    ]
+    sim_dur.append(data['fixation_dur'][-1])
+    # append everything into an ordered dict.
+    eyedata = collections.OrderedDict()
+    eyedata['fixation_dur'] = sim_dur
+    eyedata['saccade_x'] = sim_x
+    eyedata['saccade_y'] = sim_y
+    eyedata['saccade_lenx'] = sim_lenx
+    eyedata['saccade_leny'] = sim_leny
+    eyedata['saccade_theta'] = sim_theta
+    eyedata['saccade_rho'] = sim_len
     return eyedata
 
 
