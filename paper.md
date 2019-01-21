@@ -18,7 +18,7 @@ affiliations:
   - name: Institute of Neuroscience and Medicine, Brain & Behaviour (INM-7),
     Research Centre Jülich
   - index: 1
-date: 15.12.2018
+date: 15.02.2019
 bibliography: paper.bib
 ---
 
