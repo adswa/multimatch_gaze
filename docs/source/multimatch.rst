@@ -31,11 +31,11 @@ flag:
 Optionally, scanpaths can be simplified to reduce their complexity. To simplify
 scanpaths, specify the following arguments:
 
-- ``--direction_threshold``: If two consecutive saccades have a small angle, they will be
+- ``--direction-threshold``: If two consecutive saccades have a small angle, they will be
   combined. Should be in degrees, such as ``45.0`` for 45°
-- ``--amplitude_threshold``: If two consecutive saccades are short, they will be
+- ``--amplitude-threshold``: If two consecutive saccades are short, they will be
   combines. Should be in pixel, such as ``100.0`` for 100px.
-- ``--duration_threshold``: Only if the intermediate fixation's durations are
+- ``--duration-threshold``: Only if the intermediate fixation's durations are
   shorter than this threshold the above simplification will be performed. Should
   be in seconds, such as ``0.1`` for 100ms.
 
@@ -49,7 +49,7 @@ this:
 .. code::
 
    multimatch path/to/scanpath_one path/to/scanpath_two --screensize 1280 720
-   --direction_threshold 45.0 --amplitude_threshold 100.0 --direction_threshold 0.1
+   --direction-threshold 45.0 --amplitude-threshold 100.0 --direction-threshold 0.1
 
 
 There are no guidelines how much simplification is appropriate, and it is strongly dependent

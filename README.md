@@ -116,15 +116,15 @@ For more details on the original algorithm, please see Dewhurst et al. (2012).
 `` multimatch data/fixvectors/segment_10_sub-19.tsv data/fixvectors/segment_10_sub-01.tsv --screensize 1280 720 ``
 
 if scanpath simplification should be performed, please specify in addition
-- --amplitude_threshold (-am) in px
-- --direction_threshold (-di) in degree
-- --duration_threshold (-du) in seconds
+- --amplitude-threshold (-am) in px
+- --direction-threshold (-di) in degree
+- --duration-threshold (-du) in seconds
 
 Example usage with grouping:
 
 `` multimatch data/fixvectors/segment_10_sub-19.tsv
-data/fixvectors/segment_10_sub-01.tsv --direction_threshold 45.0
---duration_threshold 0.3 --amplitude_threshold 147.0 ``
+data/fixvectors/segment_10_sub-01.tsv --direction-threshold 45.0
+--duration-threshold 0.3 --amplitude-threshold 147.0 ``
 
 
 ### References:
