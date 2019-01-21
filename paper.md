@@ -32,7 +32,7 @@ and order of a series of eye-movements, a comparison
 between them adds a useful dimension to the traditional
 analysis of eyetracking data.
 
-``multimatch in Python`` is a Python based
+``multimatch`` is a Python based
 reimplementation of the MultiMatch toolbox for scanpath
 comparison, originally developed by [@Jarodzka] and
 implemented by [@Dewhurst] in Matlab.
