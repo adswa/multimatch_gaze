@@ -47,10 +47,7 @@ and “fixation duration” for a multidimensional similarity
 evaluation.
 
 The implementation aims at providing an open source
-alternative to the existing MultiMatch toolbox. It further
-contains optional functionality to compute scanpath
-similarities in the eyetracking data of the studyforrest
-dataset [@studyforrest].
+alternative to the existing MultiMatch toolbox.
 
 The software is available as a github repository [@multimatch]
 and as a python package via pip.
