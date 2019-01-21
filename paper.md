@@ -15,8 +15,8 @@ authors:
     orcid: 0000-0001-6398-6370
     affiliation: 1
 affiliations:
-  - name: Psychoinformatics Lab, Institute of Psychology,
-    Otto-von-Guericke Universität Magdeburg
+  - name: Institute of Neuroscience and Medicine, Brain & Behaviour (INM-7),
+    Research Centre Jülich
   - index: 1
 date: 15.12.2018
 bibliography: paper.bib
