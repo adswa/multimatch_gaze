@@ -28,7 +28,7 @@ The similarity of scanpaths, the trace of eye-movements
 in space and time, offers insights into commonalities
 and differences of viewing behavior within and between
 participants. In addition to quantification of position
-and order of as series of eye-movements, a comparison
+and order of a series of eye-movements, a comparison
 between them adds a useful dimension to the traditional
 analysis of eyetracking data.
 
