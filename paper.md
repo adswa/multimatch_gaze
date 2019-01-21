@@ -50,7 +50,8 @@ The implementation aims at providing an open source
 alternative to the existing MultiMatch toolbox.
 
 The software is available as a github repository [@multimatch]
-and as a python package via pip.
+and as the python package multimatch via 'pip install
+multimatch'.
 
 # Acknowledgements
 
