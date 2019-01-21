@@ -12,7 +12,7 @@ authors:
     affiliation: 1
   - name: TODO: who else??
   - name: Michael Hanke
-    orcid: ??
+    orcid: 0000-0001-6398-6370
     affiliation: 1
 affiliations:
   - name: Psychoinformatics Lab, Institute of Psychology,
