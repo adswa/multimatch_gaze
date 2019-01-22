@@ -10,6 +10,6 @@ install:
 build: off
 
 test_script:
-  - "build.cmd %PYTHON%\\python.exe -m pytest -s -v multimatch/tests"
+  - "%PYTHON%\\python.exe -m pytest -s -v multimatch/tests"
 
 
