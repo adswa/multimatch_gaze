@@ -3,11 +3,22 @@ environment:
   matrix:
 
     - PYTHON: "C:\\Python35"
+    - MINICONDA: C:\Miniconda35
+
+init:
+- "set PATH=%MINICONDA%;%MINICONDA%\\Scripts;%MINICONDA%\\Library\\bin;%PATH%"
 
 install:
-  - "%PYTHON%\\python.exe -m pip install wheel"
+  - conda config --set always_yes yes --set changeps1 no
+  - conda config --add channels conda-forge
+  - conda update -q conda
+  - conda install pip numpy
+  - "pip install -q pytest"
+  - "pip install -qr requirements.txt"
+  - "pip install ."
+  - "echo done"
 
-build: off
+build: false
 
 test_script:
   - "%PYTHON%\\python.exe -m pytest -s -v multimatch/tests"
