@@ -1,0 +1,15 @@
+environment:
+
+  matrix:
+
+    - PYTHON: "C:\\Python35"
+
+install:
+  - "%PYTHON%\\python.exe -m pip install wheel"
+
+build: off
+
+test_script:
+  - "build.cmd %PYTHON%\\python.exe -m pytest -s -v multimatch/tests"
+
+
