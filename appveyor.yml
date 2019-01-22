@@ -23,6 +23,6 @@ install:
 build: false
 
 test_script:
-  - "%PYTHON%\\python.exe -m pytest -s -v multimatch/tests"
+  - "python -m pytest -s -v multimatch/tests"
 
 
