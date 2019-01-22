@@ -2,7 +2,6 @@ environment:
 
   matrix:
 
-    - PYTHON: "C:\\Python35"
     - MINICONDA: C:\Miniconda35
 
 init:
