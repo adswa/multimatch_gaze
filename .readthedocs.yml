@@ -3,5 +3,6 @@ formats: all
 sphinx:
     configuration: docs/source/conf.py
 python:
-    requirements: requirements.txt
+    install:
+        - requirements: requirements.txt
 
