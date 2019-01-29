@@ -49,8 +49,13 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
+            mkdir test-reports
+            pytest --junitxml=test-reports/junit.xml
             python -m pytest -s -v multimatch/tests
-
+      
+      - store_test_results:
+          path: test-reports
+      
       - store_artifacts:
           path: test-reports
           destination: test-reports
