@@ -5,8 +5,7 @@ from bisect import bisect_right
 from bisect import bisect_left
 import sys
 import os
-sys.path.insert(0, os.path.abspath('./'))
-import multimatch.multimatch as mp
+from . import multimatch as mp
 
 
 # Functions specifically for the data at hand
