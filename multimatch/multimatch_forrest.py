@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python
 import numpy as np
 import pandas as pd
 from bisect import bisect_right
