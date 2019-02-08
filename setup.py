@@ -42,9 +42,9 @@ setup(
     install_requires=[
         'numpy',
         'pandas',
-        #'math',
-        #'os',
-        #'bisect,       #all of these requirements fail with testpypi?
+        'math',
+        'os',
+        'bisect'
     ],
     extras_require={
         'devel-docs': [
@@ -53,8 +53,7 @@ setup(
         ]},
     entry_points={
         'console_scripts': [
-            'multimatch=multimatch.multimatch:main',
-            #'multimatch_forrest=multimatch.multimatch_forrest:main'
+            'multimatch=multimatch.multimatch:main'
             ],
     },
     classifiers=[
