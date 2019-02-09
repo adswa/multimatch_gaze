@@ -13,6 +13,7 @@ multimatch: Multidimensional scanpath comparison in python
    overview
    method
    gettingstarted
+   example
    acknowledgements
    support
 
