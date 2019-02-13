@@ -42,7 +42,6 @@ setup(
     install_requires=[
         'numpy',
         'pandas',
-        'math',
         'os',
         'bisect'
     ],
