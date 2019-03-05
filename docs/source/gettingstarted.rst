@@ -11,7 +11,7 @@ It is recommended to use a dedicated virtualenv_.
 
 .. code::
 
-   #create and enter a new virtual environment (optional)
+   # create and enter a new virtual environment (optional)
    virtualenv --python=python3 ~/env/multimatch
    . ~/env/multimatch/bin/activate
 

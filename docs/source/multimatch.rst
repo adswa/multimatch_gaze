@@ -17,7 +17,7 @@ corresponding to tabseparated files with a fixation vector:
 
    multimatch path/to/scanpath_one path/to/scanpath_two
 
-``multimatch`` needs the screensize of the presentation screen as an input. The
+``multimatch`` needs the screensize of the presentation screen in pixel as an input. The
 default is 1280 x 720px. If this needs adjustment, use the optional --screensize
 flag:
 - ``--screensize``: in px. Specify first x, then y dimension. Default: 1280 x
@@ -34,7 +34,7 @@ scanpaths, specify the following arguments:
 - ``--direction-threshold``: If two consecutive saccades have a small angle, they will be
   combined. Should be in degrees, such as ``45.0`` for 45°
 - ``--amplitude-threshold``: If two consecutive saccades are short, they will be
-  combines. Should be in pixel, such as ``100.0`` for 100px.
+  combined. Should be in pixel, such as ``100.0`` for 100px.
 - ``--duration-threshold``: Only if the intermediate fixation's durations are
   shorter than this threshold the above simplification will be performed. Should
   be in seconds, such as ``0.1`` for 100ms.
@@ -55,7 +55,7 @@ this:
 There are no guidelines how much simplification is appropriate, and it is strongly dependent
 on individual use case. The original matlab toolbox implements a default
 amplitude threshold of 10% of the screen diagonal as amplitude, 45° as angle, and 300ms as
-duation thresholds.
+duration thresholds.
 
 
 execution within a python instance
@@ -70,7 +70,7 @@ instance such as ipython, you can import the module and use the function
    import multimatch as m
    import numpy as np
 
-   #read in data
+   # read in data
    fix_vector1 = np.recfromcsv('data/fixvectors/segment_0_sub-01.tsv',
    delimiter='\t', dtype={'names': ('start_x', 'start_y', 'duration'),
    'formats': ('f8', 'f8', 'f8')})
@@ -78,10 +78,10 @@ instance such as ipython, you can import the module and use the function
    delimiter='\t', dtype={'names': ('start_x', 'start_y', 'duration'),
    'formats': ('f8', 'f8', 'f8')})
 
-   #execution with multimatch's docomparison() function without grouping
+   # execution with multimatch's docomparison() function without grouping
    m.docomparison(fix_vector1, fix_vector2, sz=[1280, 720])
 
-   #execution with multimatch's docomparison() function with grouping
+   # execution with multimatch's docomparison() function with grouping
    m.docomparison(fix_vector1, fix_vector2, sz=[1280, 720], grouping=True, TDir=30.0,
    TDur=0.1, TAmp=100.1)
 
