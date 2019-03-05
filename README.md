@@ -14,6 +14,9 @@ implemented in Matlab as the MultiMatch toolbox and validated by Dewhurst
 and colleagues (2012) is a vector-based, multi-dimensional approach to
 compute scanpath similarity.
 
+For a complete overview of this software, please take a look at the
+[Documentation](https://multimatch.readthedocs.io/en/latest)
+
 The method represents scanpaths as geometrical vectors in a two-dimensional
 space: Any scanpath is build up of a vector sequence in which the vectors
 represent saccades, and the start and end position of saccade vectors represent
