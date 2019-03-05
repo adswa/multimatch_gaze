@@ -174,3 +174,34 @@ If you have any questions about this example, please ask here_.
 
 
 
+References
+^^^^^^^^^^
+Dorr, M., Martinetz, T., Gegenfurtner, K. R., & Barth, E. (2010). Variability of eye
+movements when viewing dynamic natural scenes. Journal of vision , 10 (10), 28.
+
+Goldstein, R. B., Woods, R. L., & Peli, E. (2007). Where people look when watching
+movies: Do all viewers look at the same place? 37 (7), Computers in biology and medicine ,957 - 964.
+
+Hanke, M., Baumgartner, F. J., Ibe, P., Kaule, F. R., Pollmann, S., Speck, O., . . .
+Stadler, J. (2014). A high-resolution 7-tesla fmri dataset from complex natural
+stimulation with an audio movie. Scientific data , 1 ,140003.
+
+Hanke, M., Adelhöfer, N., Kottke, D., Iacovella, V., Sengupta, A., Kaule, F. R., . . .
+Stadler, J. (2016). A studyforrest extension, simultaneous fmri and eye gaze
+recordings during prolonged natural stimulation. Scientific data , 3 ,160092.
+
+Hasson, U., Landesman, O., Knappmeyer, B., Vallines, I., Rubin, N., & Heeger, D. J.
+(2008). Neurocinematics: The neuroscience of film. Projections , 2 (1), 1-26.
+
+Häusler, C. O., & Hanke, M. (2016). An annotation of cuts, depicted locations, and
+temporal progression in the motion picture" forrest gump". F1000Research , 5.
+
+Sengupta, A., Kaule, F. R., Guntupalli, J. S., Homann, M. B., Häusler, C., Stadler,
+J., & Hanke, M. (2016). A studyforrest extension, retinotopic mapping and lo-
+calization of higher visual areas. Scientific data , 3 , 160093.
+
+Smith, T. J. (2013). Watching you watch movies: Using eye tracking to inform film
+theory.
+
+Smith, T., & Henderson, J. (2008). Attentional synchrony in static and dynamic scenes.
+Journal of Vision , 8 (6), 773-773.
