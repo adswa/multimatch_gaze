@@ -22,18 +22,18 @@ def test_same_real_data_forrest(run=1,
         or mri subject (2) available)
     """
     data1, data2, shots = ut.same_sample(run, subj)
-    segments, onset, duration = m.docomparison_forrest(shots,
-                                                       data1,
-                                                       data2,
-                                                       sz=[1280, 720],
-                                                       dur=3,
-                                                       ldur=0,
-                                                       offset=False,
-                                                       TDur=0.0,
-                                                       TDir=0.0,
-                                                       TAmp=0.0,
-                                                       grouping=False
-                                                       )
+    segments, onset, duration = ut.docomparison_forrest(shots,
+                                                        data1,
+                                                        data2,
+                                                        sz=[1280, 720],
+                                                        dur=3,
+                                                        ldur=0,
+                                                        offset=False,
+                                                        TDur=0.0,
+                                                        TDir=0.0,
+                                                        TAmp=0.0,
+                                                        grouping=False
+                                                        )
     segmentfinal = np.array(segments)
     assert np.all(segmentfinal.all(1))
 
@@ -80,17 +80,17 @@ def test_simplification(run=1,
                               TDur=0.05,
                               TAmp=100.0)
     Mdata1, Mdata2, shots = ut.same_sample(run, subj)
-    segments, onset, duration = m.docomparison_forrest(shots,
-                                                       Mdata1,
-                                                       Mdata2,
-                                                       dur=3,
-                                                       ldur=0.0,
-                                                       offset=False,
-                                                       sz=[1280, 720],
-                                                       grouping=True,
-                                                       TDir=30.0,
-                                                       TDur=0.05,
-                                                       TAmp=100.0)
+    segments, onset, duration = ut.docomparison_forrest(shots,
+                                                        Mdata1,
+                                                        Mdata2,
+                                                        dur=3,
+                                                        ldur=0.0,
+                                                        offset=False,
+                                                        sz=[1280, 720],
+                                                        grouping=True,
+                                                        TDir=30.0,
+                                                        TDur=0.05,
+                                                        TAmp=100.0)
     resultsfinal = np.array(results)
     resultsfinal_M = np.array(segments)
     assert np.all(resultsfinal.all(1))
@@ -218,15 +218,15 @@ def test_offsets():
     Tests offset length on example dataset with known results.
     """
     shots = ut.short_shots()
-    offsets = m.create_offsets(shots, dur=5)
+    offsets = ut.create_offsets(shots, dur=5)
     assert len(offsets) == 13
 
     shots_short = ut.mk_supershort_shots()
-    offsets2 = m.create_offsets(shots_short, dur=2)
+    offsets2 = ut.create_offsets(shots_short, dur=2)
     assert len(offsets2) == 0
 
     shots_long = ut.mk_longershots()
-    offsets3 = m.create_offsets(shots_long, dur=3)
+    offsets3 = ut.create_offsets(shots_long, dur=3)
     assert len(offsets3) == len(shots_long)
 
 
@@ -244,9 +244,9 @@ def test_offsets():
 #         or mri subject (2) available)
 #     """
 #     data1, data2, shots = ut.same_sample(run, subj)
-#     onsets = m.create_onsets(shots, 3)
-#     fixations = m.preprocess(data1)
-#     startid, endid = m.create_chunks(onsets, fixations, 3)
+#     onsets = ut.create_onsets(shots, 3)
+#     fixations = ut.preprocess(data1)
+#     startid, endid = ut.create_chunks(onsets, fixations, 3)
 #     assert len(startid) == len(endid)
 #     assert np.all(startid[:-1] <= endid[1:])
 #
@@ -263,9 +263,9 @@ def test_offsets():
 #         or mri subject (2) available)
 #     """
 #     data1, data2, shots = ut.same_sample(run, subj)
-#     offsets = m.create_offsets(shots, 3)
-#     fixations = m.preprocess(data1)
-#     startid, endid = m.create_offsetchunks(offsets, fixations, 3)
+#     offsets = ut.create_offsets(shots, 3)
+#     fixations = ut.preprocess(data1)
+#     startid, endid = ut.create_offsetchunks(offsets, fixations, 3)
 #     assert len(startid) == len(endid)
 #     assert np.all(startid[:-1] <= endid[1:])
 
@@ -276,7 +276,7 @@ def test_longshot():
     correct number of shots.
     """
     shots = ut.short_shots()
-    newshots = m.longshot(shots, group_shots=True, ldur=4.92)
+    newshots = ut.longshot(shots, group_shots=True, ldur=4.92)
     assert len(newshots) == len(shots) - 2
 
 
@@ -285,7 +285,7 @@ def test_longshot_nogrouping():
     Tests whether longshots will perform no grouping if dur = None.
     """
     shots = ut.short_shots()
-    newshots = m.longshot(shots, group_shots=False, ldur=0.0)
+    newshots = ut.longshot(shots, group_shots=False, ldur=0.0)
     assert len(newshots) == len(shots)
 
 
@@ -296,7 +296,7 @@ def test_closestright():
     """
     mylist = np.arange(0, 25)
     for i in range(0, len(mylist)):
-        res = m.takeclosestright(mylist, i)
+        res = ut.takeclosestright(mylist, i)
         if i == 0:
             assert res == 1
         elif i == len(mylist) - 1:
@@ -312,7 +312,7 @@ def test_closestleft():
     """
     mylist = np.arange(-1, 25)
     for i in range(0, len(mylist)):
-        res = m.takeclosestleft(mylist, i)
+        res = ut.takeclosestleft(mylist, i)
         if i == 0:
             assert res == mylist[0]
         elif i == len(mylist) - 1:
