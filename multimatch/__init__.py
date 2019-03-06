@@ -15,4 +15,3 @@ __version__ = '0.0.4'
 
 
 from .multimatch import docomparison
-from .multimatch_forrest import docomparison_forrest
