@@ -1,3 +1,10 @@
-[paths]
-source = MultiMatch/
+[run]
+source = multimatch/
+
+[report]
+exclude_lines =
+    if __name__ == '__main__':
+
+omit =
+    tests/*
 

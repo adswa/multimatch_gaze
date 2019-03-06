@@ -22,11 +22,15 @@ install:
     - pip install pytest-cov
 #command to run tests
 script:
-    - python -m pytest -s -v --cov=MultiMatch/ --cov-report=term-missing
+    - PATH=$PWD/tools/coverage-bin:$PATH
+      python -m pytest -s -v --cov=multimatch/ --cov-report=xml:coverage.xml
+    # upload my python reports
+    - bash <(curl -s https://codecov.io/bash) -cF python
     - codecov
 
 after success:
     #stole this from mih as well
+    - coverage combine -a /tmp/.coverage-entrypoints-*
     - codecov
 
 git:
