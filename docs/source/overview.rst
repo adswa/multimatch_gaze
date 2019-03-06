@@ -50,8 +50,9 @@ References
 Dewhurst, R., Nyström, M., Jarodzka, H., Foulsham, T., Johansson, R. &
 Holmqvist, K. (2012). It depends on how you look at it: scanpath comparison in
 multiple dimensions with MultiMatch, a vector-based approach. *Behaviour Research
-Methods, 44* (4), 1079-1100.
+Methods, 44* (4), 1079-1100. https://doi.org/10.3758/s13428-012-0212-2
 
 Jarodzka, H., Holmqvist, K., & Nyström, M. (eds.) (2010). A vector-based,
 multidimensional scanpath similarity measure. In *Proceedings of the 2010
 symposium on eye-tracking research & applications* (pp. 211-218). ACM.
+https://doi.org/10.1145/1743666.1743718

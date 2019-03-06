@@ -145,7 +145,8 @@ perfectly similar on the dimensions vector length and vector position.
 This is likely at least partially due to the scanpath alignment based on the scanpath shape.
 Scanpaths were also highly similar on the position dimension, which demonstrates a strong
 gaze control of the movie stimulus. Subjects scanpaths differed more substantially on
-the dimensions direction and duration, which indicates differences in fixation dwelling times and saccadic angle. Thus, the general points of interest (as evident from high
+the dimensions direction and duration, which indicates differences in fixation dwelling
+times and saccadic angle. Thus, the general points of interest (as evident from high
 similarities in position, length and shape) were similar across subject, but dierences in
 direction and duration might indicate interindividually dierent exploration strategies.
 All dimensions show a remarkable consistency in similarity measures as evident from
@@ -178,30 +179,36 @@ References
 ^^^^^^^^^^
 Dorr, M., Martinetz, T., Gegenfurtner, K. R., & Barth, E. (2010). Variability of eye
 movements when viewing dynamic natural scenes. Journal of vision , 10 (10), 28.
+https://dx.doi.org/10.1167/10.10.28
 
 Goldstein, R. B., Woods, R. L., & Peli, E. (2007). Where people look when watching
 movies: Do all viewers look at the same place? 37 (7), Computers in biology and medicine ,957 - 964.
+https://doi.org/10.1016/j.compbiomed.2006.08.018
 
 Hanke, M., Baumgartner, F. J., Ibe, P., Kaule, F. R., Pollmann, S., Speck, O., . . .
 Stadler, J. (2014). A high-resolution 7-tesla fmri dataset from complex natural
-stimulation with an audio movie. Scientific data , 1 ,140003.
+stimulation with an audio movie. Scientific data , 1 ,140003. https://doi.org/10.1038/sdata.2014.3
 
 Hanke, M., Adelhöfer, N., Kottke, D., Iacovella, V., Sengupta, A., Kaule, F. R., . . .
 Stadler, J. (2016). A studyforrest extension, simultaneous fmri and eye gaze
 recordings during prolonged natural stimulation. Scientific data , 3 ,160092.
+https://doi.org/10.1038/sdata.2016.92
 
 Hasson, U., Landesman, O., Knappmeyer, B., Vallines, I., Rubin, N., & Heeger, D. J.
 (2008). Neurocinematics: The neuroscience of film. Projections , 2 (1), 1-26.
+https://doi.org/10.3167/proj.2008.020102
 
 Häusler, C. O., & Hanke, M. (2016). An annotation of cuts, depicted locations, and
 temporal progression in the motion picture" forrest gump". F1000Research , 5.
+https://doi.org/10.12688/f1000research.9536.1
 
 Sengupta, A., Kaule, F. R., Guntupalli, J. S., Homann, M. B., Häusler, C., Stadler,
 J., & Hanke, M. (2016). A studyforrest extension, retinotopic mapping and lo-
 calization of higher visual areas. Scientific data , 3 , 160093.
+https://doi.org/10.1038/sdata.2016.93
 
 Smith, T. J. (2013). Watching you watch movies: Using eye tracking to inform film
-theory.
+theory. http://dx.doi.org/10.1093/acprof:oso/9780199862139.003.0009
 
 Smith, T., & Henderson, J. (2008). Attentional synchrony in static and dynamic scenes.
-Journal of Vision , 8 (6), 773-773.
+Journal of Vision , 8 (6), 773-773. https://doi.org/10.1167/8.6.773
