@@ -3,7 +3,6 @@ import os
 import numpy as np
 from . import utils as ut
 from .. import multimatch as mp
-from .. import multimatch_forrest as m
 
 
 def test_same_real_data_forrest(run=1,
@@ -41,8 +40,9 @@ def test_same_real_data_forrest(run=1,
 def test_same_real_data():
     """Test identical scanpaths
 
-    smoketest reading in of fixation vectors, tests whether two identical scanpaths
-    supplied as fixation vectors identical in all scanpath dimensions?
+    smoketest reading in of fixation vectors, tests whether two identical
+    scanpaths supplied as fixation vectors identical in all scanpath
+    dimensions?
     """
     import os
     testfile = os.path.abspath('multimatch/tests/testdata/segment_5_sub-19.tsv')

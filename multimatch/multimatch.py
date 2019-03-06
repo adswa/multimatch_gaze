@@ -7,7 +7,6 @@ import sys
 import collections
 
 
-
 def cart2pol(x, y):
     """Transform cartesian into polar coordinates.
 
@@ -914,7 +913,6 @@ def docomparison(fixation_vectors1,
 
 
 def main(args=sys.argv):
-    import argparse
 
     parser = argparse.ArgumentParser(
         prog='multimatch', )
