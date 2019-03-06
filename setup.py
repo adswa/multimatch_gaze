@@ -41,9 +41,7 @@ setup(
     packages=[pkg for pkg in find_packages('.') if pkg.startswith('multimatch')],
     install_requires=[
         'numpy',
-        'pandas',
-        'os',
-        'bisect'
+        'pandas'
     ],
     extras_require={
         'devel-docs': [
