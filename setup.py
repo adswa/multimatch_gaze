@@ -37,7 +37,7 @@ setup(
     long_description=long_description,
     author='Adina Wagner',
     author_email='adina.wagner@t-online.de',
-    url='https://github.com/AdinaWagner/multimatch',
+    url='https://github.com/adswa/multimatch',
     packages=[pkg for pkg in find_packages('.') if pkg.startswith('multimatch')],
     install_requires=[
         'numpy',
