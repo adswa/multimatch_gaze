@@ -1,11 +1,11 @@
 ---
 title: 'MultiMatch in Python'
 tags:
-    - eyetracking
-    - scanpath
-    - fixation
-    - saccade
-    - Python
+  - eyetracking
+  - scanpath
+  - fixation
+  - saccade
+  - Python
 authors:
   - name: Adina Wagner
     orcid: 0000-0003-2917-3450
@@ -13,11 +13,13 @@ authors:
   - name: TODO: who else??
   - name: Michael Hanke
     orcid: 0000-0001-6398-6370
-    affiliation: 1
+    affiliation: "1, 2"
 affiliations:
   - name: Institute of Neuroscience and Medicine, Brain & Behaviour (INM-7),
-    Research Centre Jülich
-  - index: 1
+    Research Centre Jülich, Jülich, Germany
+    index: 1
+  - name: Institute of Systems Neuroscience, Medical Faculty, Heinrich Heine University Düsseldorf, Düsseldorf, Germany
+    index: 2
 date: 15.04.2019
 bibliography: paper.bib
 ---
