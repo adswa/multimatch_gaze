@@ -911,6 +911,7 @@ def docomparison(fixation_vectors1,
 
 
 def main(args=sys.argv):
+    import argparse
 
     parser = argparse.ArgumentParser(
         prog='multimatch', )
@@ -993,7 +994,6 @@ def main(args=sys.argv):
 
 
 if __name__ == '__main__':
-    import argparse
 
     # execution
     main()
