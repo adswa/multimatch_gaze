@@ -25,7 +25,7 @@ flag:
 
 .. code::
 
-   multimatch path/to/scanpath_one path/to/scanpath_two --screensize 1280 720
+   multimatch data/fixvectors/segment_0_sub-01.tsv data/fixvectors/segment_0_sub-19.tsv --screensize 1280 720
 
 
 Optionally, scanpaths can be simplified to reduce their complexity. To simplify
@@ -48,8 +48,8 @@ this:
 
 .. code::
 
-   multimatch path/to/scanpath_one path/to/scanpath_two --screensize 1280 720
-   --direction-threshold 45.0 --amplitude-threshold 100.0 --direction-threshold 0.1
+   multimatch data/fixvectors/segment_0_sub-01.tsv data/fixvectors/segment_0_sub-19.tsv --screensize 1280 720
+   --direction-threshold 45.0 --amplitude-threshold 100.0 --duration-threshold 0.1
 
 
 There are no guidelines how much simplification is appropriate, and it is strongly dependent
