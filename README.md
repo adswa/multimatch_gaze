@@ -1,9 +1,9 @@
-[![Build Status](https://travis-ci.com/AdinaWagner/multimatch.svg?branch=master)](https://travis-ci.com/AdinaWagner/multimatch)
-[![codecov](https://codecov.io/gh/AdinaWagner/multimatch/branch/master/graph/badge.svg)](https://codecov.io/gh/AdinaWagner/multimatch)
+[![Build Status](https://travis-ci.com/adswa/multimatch.svg?branch=master)](https://travis-ci.com/adswa/multimatch)
+[![codecov](https://codecov.io/gh/adswa/multimatch/branch/master/graph/badge.svg)](https://codecov.io/gh/adswa/multimatch)
 [![Documentation](https://readthedocs.org/projects/multimatch/badge/?version=latest)](https://multimatch.readthedocs.io/en/latest/)
 [![PyPIversion](https://badge.fury.io/py/multimatch.svg)](https://badge.fury.io/py/multimatch)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Build status](https://ci.appveyor.com/api/projects/status/wrphckxqjrfut703?svg=true)](https://ci.appveyor.com/project/AdinaWagner/multimatch)
+[![Build status](https://ci.appveyor.com/api/projects/status/wrphckxqjrfut703?svg=true)](https://ci.appveyor.com/project/adswa/multimatch)
 
 
 # multimatch

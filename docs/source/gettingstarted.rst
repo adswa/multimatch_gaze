@@ -33,7 +33,7 @@ Via Github
 
 The source code for multimatch can be found on Github_.
 
-.. _Github: https://github.com/AdinaWagner/multimatch
+.. _Github: https://github.com/adswa/multimatch
 
 A short tutorial...
 -------------------

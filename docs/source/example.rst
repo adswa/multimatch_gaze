@@ -87,7 +87,7 @@ represented the average similarity of scanpaths of all subjects on the given
 dimension.
 The results of this computation can be found on Github_.
 
-.. _Github: https://www.github.com/AdinaWagner/multimatch_forrest
+.. _Github: https://www.github.com/adswa/multimatch_forrest
 
 Results
 ^^^^^^^
@@ -171,7 +171,7 @@ during movie watching. This analysis has furthermore demonstrated one way of usi
 multimatchs scanpath comparison on a grouplevel similarity computation per segment.
 If you have any questions about this example, please ask here_.
 
- .. _here: https://github.com/AdinaWagner/multimatch/issues/new
+ .. _here: https://github.com/adswa/multimatch/issues/new
 
 
 
