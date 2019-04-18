@@ -38,7 +38,7 @@ def gen_scanpath_structure(data):
     """Transform a fixation vector into a vector based scanpath representation.
 
     Takes an nx3 fixation vector (start_x, start_y, duration) in the form of
-    of a record array and transforms it into appropriate vectorbased scanpath
+    of a record array and transforms it into appropriate vector-based scanpath
     representation. Indices are as follows:
     0: fixation_x
     1: fixation_y
@@ -52,7 +52,7 @@ def gen_scanpath_structure(data):
 
     :param: data: record array
 
-    :return: eyedata: array-like, list of lists, vector-based scanpath representation
+    :return: eyedata: OrderedDict, vector-based scanpath representation
     """
 
     fixation_x = []
@@ -64,7 +64,7 @@ def gen_scanpath_structure(data):
     saccade_leny = []
     saccade_theta = []
     saccade_rho = []
-    # get the number of rows
+    # get the number of rows (= fixations)
     length = np.shape(data)[0]
     # keep coordinates and durations of fixations
     for i in range(0, length):
@@ -146,7 +146,7 @@ def simlen(data, TAmp, TDur):
     :param: TAmp: float, length in px
     :param: TDur: float, time in seconds
 
-    :return: eyedata: list of lists, one iteration of length based simplification
+    :return: eyedata: OrderedDict; one iteration of length based simplification
     """
 
     if len(data['saccade_x']) < 1:
@@ -167,7 +167,7 @@ def simlen(data, TAmp, TDur):
         while i <= len(data['saccade_x']) - 1:
             # if saccade is the last one
             if i == len(data['saccade_x']) - 1:
-                # and if saccade has short length:
+                # and if saccade has a length shorter than the threshold:
                 if data['saccade_rho'][i] < TAmp:
                     # and if the fixation duration is short:
                     if (data['fixation_dur'][-1] < TDur) or (data['fixation_dur'][-2] < TDur):
@@ -183,9 +183,9 @@ def simlen(data, TAmp, TDur):
                         sim_dur.insert(j, data['fixation_dur'][i - 1])
                         j -= 1
                         i += 1
-                    # if fixation duration is long:
+                    # if fixation duration is longer than the threshold:
                     else:
-                        # insert original data in new list -- no simplification
+                        # insert original event data in new list -- no simplification
                         sim_lenx, sim_leny, sim_x, sim_y, sim_theta, sim_len, sim_dur, i, j = keepsaccade(i,
                                                                                                           j,
                                                                                                           sim_lenx,
@@ -196,7 +196,7 @@ def simlen(data, TAmp, TDur):
                                                                                                           sim_len,
                                                                                                           sim_dur,
                                                                                                           data)
-                # if saccade doesn't have short length:
+                # if saccade does NOT have a length shorter than the threshold:
                 else:
                     # insert original data in new list -- no simplification
                     sim_lenx, sim_leny, sim_x, sim_y, sim_theta, sim_len, sim_dur, i, j = keepsaccade(i,
@@ -211,7 +211,7 @@ def simlen(data, TAmp, TDur):
                                                                                                       data)
             # if saccade is not the last one
             else:
-                # and if saccade has short length
+                # and if saccade has a length shorter than the threshold
                 if (data['saccade_rho'][i] < TAmp) and (i < len(data['saccade_x']) - 1):
                     # and if fixation durations are short
                     if (data['fixation_dur'][i + 1] < TDur) or (data['fixation_dur'][i] < TDur):
@@ -230,7 +230,7 @@ def simlen(data, TAmp, TDur):
                         sim_dur.insert(j, data['fixation_dur'][i])
                         i += 2
                         j += 1
-                    # if fixation durations are long
+                    # if fixation durations longer than the threshold
                     else:
                         # insert original data in new lists -- no simplification
                         sim_lenx, sim_leny, sim_x, sim_y, sim_theta, sim_len, sim_dur, i, j = keepsaccade(i,
@@ -243,7 +243,7 @@ def simlen(data, TAmp, TDur):
                                                                                                           sim_len,
                                                                                                           sim_dur,
                                                                                                           data)
-                # if saccade doesn't have short length
+                # if saccade does NOT have a length shorter than the threshold:
                 else:
                     # insert original data in new list -- no simplification
                     sim_lenx, sim_leny, sim_x, sim_y, sim_theta, sim_len, sim_dur, i, j = keepsaccade(i,
@@ -284,7 +284,7 @@ def simdir(data,
     :param: TDir: float, angle in degrees
     :param: TDur: float, time in seconds
 
-    :return: eyedata: list of lists, one iteration of direction based simplification
+    :return: eyedata: OrderedDict, one iteration of direction based simplification
     """
 
     if len(data['saccade_x']) < 1:
@@ -311,11 +311,10 @@ def simdir(data,
             else:
                 # an angle of infinite size won't go into any further loop
                 angle = float('inf')
-            # if the angle is small and its not the last saccade
+            # if the angle is smaller than the threshold and its not the last saccade
             if (angle < TDir) & (i < len(data['saccade_x']) - 1):
                 # if the fixation duration is short:
                 if data['fixation_dur'][i + 1] < TDur:
-                    # if the fixation durations are short:
                     # calculate the sum of local vectors
                     v_x = data['saccade_lenx'][i] + data['saccade_lenx'][i + 1]
                     v_y = data['saccade_leny'][i] + data['saccade_leny'][i + 1]
@@ -343,7 +342,7 @@ def simdir(data,
                                                                                                       sim_len,
                                                                                                       sim_dur,
                                                                                                       data)
-            # elif the angle is small, but its the last saccade:
+            # elif the angle is smaller than the threshold, but its the LAST saccade:
             elif (angle < TDir) & (i == len(data['saccade_x']) - 1):
                 # if the fixation duration is short:
                 if data['fixation_dur'][i + 1] < TDur:
@@ -359,7 +358,7 @@ def simdir(data,
                     sim_dur.insert(j, data['fixation_dur'][-1] + (data['fixation_dur'][i] / 2))
                     j -= 1
                     i += 1
-                # if fixation duration is long:
+                # if fixation duration is longer than the threshold:
                 else:
                     # insert original data in new list -- no simplification
                     sim_lenx, sim_leny, sim_x, sim_y, sim_theta, sim_len, sim_dur, i, j = keepsaccade(i,
@@ -372,7 +371,7 @@ def simdir(data,
                                                                                                       sim_len,
                                                                                                       sim_dur,
                                                                                                       data)
-            # else (the angle is too large
+            # else (the angle is larger than the threshold)
             else:
                 # insert original data in new list -- no simplification
                 sim_lenx, sim_leny, sim_x, sim_y, sim_theta, sim_len, sim_dur, i, j = keepsaccade(i,
@@ -587,9 +586,9 @@ def cal_angulardifference(data1,
                           ):
     """Calculate angular similarity of two scanpaths:
 
-    :param: data1: array-like, list of lists, contains vector-based scanpath representation of the
+    :param: data1: OrderedDict; contains vector-based scanpath representation of the
         first scanpath
-    :param: data2: array-like, list of lists, contains vector-based scanpath representation of the
+    :param: data2: OrderedDict, contains vector-based scanpath representation of the
         second scanpath
     :param: path: array-like, array of indices for the best-fitting saccade pairings between scan-
         paths
@@ -630,10 +629,10 @@ def cal_durationdifference(data1,
     """Calculate similarity of two scanpaths fixation durations.
 
     :param: data1: array-like
-        list of lists, contains vector-based scanpath representation of the
+        OrderedDict, contains vector-based scanpath representation of the
         first scanpath
     :param: data2: array-like
-        list of lists, contains vector-based scanpath representation of the
+        OrderedDict, contains vector-based scanpath representation of the
         second scanpath
     :param: path: array-like
         array of indices for the best-fitting saccade pairings between scan-
@@ -671,10 +670,10 @@ def cal_lengthdifference(data1,
     """Calculate length similarity of two scanpaths.
 
     :param: data1: array-like
-        list of lists, contains vector-based scanpath representation of the
+        OrderedDict, contains vector-based scanpath representation of the
         first scanpath
     :param: data2: array-like
-        list of lists, contains vector-based scanpath representation of the
+        OrderedDict, contains vector-based scanpath representation of the
         second scanpath
     :param: path: array-like
         array of indices for the best-fitting saccade pairings between scan-
@@ -707,10 +706,10 @@ def cal_positiondifference(data1,
     """Calculate position similarity of two scanpaths.
 
     :param: data1: array-like
-        list of lists, contains vector-based scanpath representation of the
+        OrderedDict, contains vector-based scanpath representation of the
         first scanpath
     :param: data2: array-like
-        list of lists, contains vector-based scanpath representation of the
+        OrderedDict, contains vector-based scanpath representation of the
         second scanpath
     :param: path: array-like
         array of indices for the best-fitting saccade pairings between scan-
@@ -747,10 +746,10 @@ def cal_vectordifferencealongpath(data1,
     """Calculate vector similarity of two scanpaths.
 
     :param: data1: array-like
-        list of lists, contains vector-based scanpath representation of the
+        OrderedDict, contains vector-based scanpath representation of the
         first scanpath
     :param: data2: array-like
-        list of lists, contains vector-based scanpath representation of the
+        OrderedDict, contains vector-based scanpath representation of the
         second scanpath
     :param: path: array-like
         array of indices for the best-fitting saccade pairings between scan-
@@ -790,10 +789,10 @@ def getunnormalised(data1,
     similarity values per array.
 
     :param: data1: array-like
-        list of lists, contains vector-based scanpath representation of the
+        OrderedDict, contains vector-based scanpath representation of the
         first scanpath
     :param: data2: array-like
-        list of lists, contains vector-based scanpath representation of the
+        OrderedDict, contains vector-based scanpath representation of the
         second scanpath
     :param: path: array-like
         array of indices for the best-fitting saccade pairings between scan-
@@ -823,8 +822,7 @@ def normaliseresults(unnormalised,
     """Normalize similarity measures.
 
     Vector similarity is normalised against two times screen diagonal,
-    the maximum
-    theoretical distance.
+    the maximum theoretical distance.
     Direction similarity is normalised against pi.
     Length Similarity is normalised against screen diagonal.
     Position Similarity and Duration Similarity are already normalised.
