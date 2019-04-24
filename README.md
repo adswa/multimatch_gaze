@@ -44,7 +44,7 @@ dependencies, use:
     pip install multimatch
 
 
-## Support/Contributing
+### Support/Contributing
 
 Bug reports, feedback, or any other contribution are always appreciated. To
 report a bug, request a feature, or ask a question, please open an
