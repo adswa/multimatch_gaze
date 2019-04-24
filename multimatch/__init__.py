@@ -11,7 +11,7 @@
 # locally - else the modules can't be imported
 from __future__ import absolute_import
 
-__version__ = '0.0.4'
+__version__ = '0.1.0'
 
 
 from .multimatch import docomparison
