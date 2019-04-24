@@ -52,10 +52,12 @@ this:
    --direction-threshold 45.0 --amplitude-threshold 100.0 --duration-threshold 0.1
 
 
-There are no guidelines how much simplification is appropriate, and it is strongly dependent
+There are no guidelines whether and if so, how much,
+simplification is appropriate, and it is strongly dependent
 on individual use case. The original matlab toolbox implements a default
 amplitude threshold of 10% of the screen diagonal as amplitude, 45° as angle, and 300ms as
-duration thresholds.
+duration thresholds. ``multimatch`` has no defaults for simplification
+(i.e. simplification is not performed by default).
 
 
 execution within a python instance

@@ -4,7 +4,7 @@ overview
 
 **multimatch** is a python-based reimplementation of Dewhursts and colleagues (2012)
 implementation of the MultiMatch algorithm (Jarodzka, Holmqvist & Nyström, 2010)
-in a matlab toolbox. It is a vector-based, multi-dimensional approach to
+in a Matlab toolbox. It is a vector-based, multi-dimensional approach to
 compute scanpath similarity.
 
 The method represents scanpaths as geometrical vectors in a two-dimensional
@@ -36,7 +36,7 @@ and the method was ported into Python with the intent of providing an open sourc
 alternative to the matlab toolbox.
 
 
-Functionality
+functionality
 ^^^^^^^^^^^^^
 
 The module provides the possibility to compute the similarity of two scanpaths

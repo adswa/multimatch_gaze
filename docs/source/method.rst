@@ -3,7 +3,7 @@ the MultiMatch algorithm
 ************************
 
 
-Method overview
+method overview
 ^^^^^^^^^^^^^^^
 
 The method takes two n x 3 fixation vectors (x-coordinate, y-coordinate,

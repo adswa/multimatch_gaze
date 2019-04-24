@@ -1,5 +1,5 @@
 **********************
-An example compuation
+an example computation
 **********************
 The following section shows a multimatch use case to compute the scanpath
 similarities of participants that watched the Hollywood movie Forrest Gump
@@ -53,7 +53,7 @@ The eye events are reported together with their start and end coordinates, their
 and durations in seconds, their velocity, and the average pupil size.
 Fixation vectors as input for multimatch were derived from the REMoDNaV output.
 As the stimulus was dynamic with moving targets that evoke smooth pursuit movements,
-such pusuit events are categorized to be
+such pursuit events are categorized to be
 an eye movement category of 'visual intake', just as fixation. Therefore, in a first step,
 the start and end of pursuit movements were included in scanpaths to compare as well.
 In a second step, the continuous eye movement data (~15 min per run) was split into shots
@@ -70,7 +70,7 @@ began maximally distant to the snippet onset.
 
 
 .. _REmoDNaV: https://github.com/psychoinformatics-de/remodnav
-.. _publication: pathtoourpublication.de
+.. _publication: https://github.com/psychoinformatics-de/paper-remodnav/
 
 multimatch application
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -147,8 +147,8 @@ Scanpaths were also highly similar on the position dimension, which demonstrates
 gaze control of the movie stimulus. Subjects scanpaths differed more substantially on
 the dimensions direction and duration, which indicates differences in fixation dwelling
 times and saccadic angle. Thus, the general points of interest (as evident from high
-similarities in position, length and shape) were similar across subject, but dierences in
-direction and duration might indicate interindividually dierent exploration strategies.
+similarities in position, length and shape) were similar across subject, but differences in
+direction and duration might indicate interindividually different exploration strategies.
 All dimensions show a remarkable consistency in similarity measures as evident from
 the small standard deviations. This might indicate a consistently high level of exogenous
 attentional control by the movie stimulus. This finding is consistent with research on
