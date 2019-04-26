@@ -948,8 +948,10 @@ def main(args=sys.argv):
     if (TDir != 0) and (TAmp != 0):
         grouping = True
         print(
-            'Scanpath comparison is done with simplification. Two consecutive saccades shorter than {}px and '
-            'with an angle smaller than {} degrees are grouped together if intermediate fixations are shorter '
+            'Scanpath comparison is done with simplification. Two consecutive '
+            'saccades shorter than {}px and '
+            'with an angle smaller than {} degrees are grouped together if '
+            'intermediate fixations are shorter '
             'than {} seconds.'.format(TAmp, TDir, TDur))
     else:
         grouping = False
