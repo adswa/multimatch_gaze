@@ -151,56 +151,41 @@ def simlen(data, TAmp, TDur):
 
     if len(data['saccade_x']) < 1:
         return data
-    # if the scanpath is long enough
-    else:
-        i = 0
-        j = 0
-        # initialize new empty lists for simplified results
-        sim_dur = []
-        sim_x = []
-        sim_y = []
-        sim_lenx = []
-        sim_leny = []
-        sim_theta = []
-        sim_len = []
-        # while we don't run into index errors
-        while i <= len(data['saccade_x']) - 1:
-            # if saccade is the last one
-            if i == len(data['saccade_x']) - 1:
-                # and if saccade has a length shorter than the threshold:
-                if data['saccade_rho'][i] < TAmp:
-                    # and if the fixation duration is short:
-                    if (data['fixation_dur'][-1] < TDur) or (data['fixation_dur'][-2] < TDur):
-                        # calculate sum of local vectors for simplification
-                        v_x = data['saccade_lenx'][-2] + data['saccade_lenx'][-1]
-                        v_y = data['saccade_leny'][-2] + data['saccade_leny'][-1]
-                        rho, theta = cart2pol(v_x, v_y)
-                        # save them in the new vectors
-                        sim_lenx[j - 1] = v_x
-                        sim_leny[j - 1] = v_y
-                        sim_theta[j - 1] = theta
-                        sim_len[j - 1] = rho
-                        sim_dur.insert(j, data['fixation_dur'][i - 1])
-                        j -= 1
-                        i += 1
-                    # if fixation duration is longer than the threshold:
-                    else:
-                        # insert original event data in new list -- no
-                        # simplification
-                        i, j = keepsaccade(
-                            i,
-                            j,
-                            sim_lenx,
-                            sim_leny,
-                            sim_x,
-                            sim_y,
-                            sim_theta,
-                            sim_len,
-                            sim_dur,
-                            data)
-                # if saccade does NOT have a length shorter than the threshold:
+    # the scanpath is long enough
+    i = 0
+    j = 0
+    # initialize new empty lists for simplified results
+    sim_dur = []
+    sim_x = []
+    sim_y = []
+    sim_lenx = []
+    sim_leny = []
+    sim_theta = []
+    sim_len = []
+    # while we don't run into index errors
+    while i <= len(data['saccade_x']) - 1:
+        # if saccade is the last one
+        if i == len(data['saccade_x']) - 1:
+            # and if saccade has a length shorter than the threshold:
+            if data['saccade_rho'][i] < TAmp:
+                # and if the fixation duration is short:
+                if (data['fixation_dur'][-1] < TDur) or (data['fixation_dur'][-2] < TDur):
+                    # calculate sum of local vectors for simplification
+                    v_x = data['saccade_lenx'][-2] + data['saccade_lenx'][-1]
+                    v_y = data['saccade_leny'][-2] + data['saccade_leny'][-1]
+                    rho, theta = cart2pol(v_x, v_y)
+                    # save them in the new vectors
+                    sim_lenx[j - 1] = v_x
+                    sim_leny[j - 1] = v_y
+                    sim_theta[j - 1] = theta
+                    sim_len[j - 1] = rho
+                    sim_dur.insert(j, data['fixation_dur'][i - 1])
+                    j -= 1
+                    i += 1
+                # if fixation duration is longer than the threshold:
                 else:
-                    # insert original data in new list -- no simplification
+                    # insert original event data in new list -- no
+                    # simplification
                     i, j = keepsaccade(
                         i,
                         j,
@@ -212,44 +197,44 @@ def simlen(data, TAmp, TDur):
                         sim_len,
                         sim_dur,
                         data)
-            # if saccade is not the last one
+            # if saccade does NOT have a length shorter than the threshold:
             else:
-                # and if saccade has a length shorter than the threshold
-                if (data['saccade_rho'][i] < TAmp) and (i < len(data['saccade_x']) - 1):
-                    # and if fixation durations are short
-                    if (data['fixation_dur'][i + 1] < TDur) or (data['fixation_dur'][i] < TDur):
-                        # calculate sum of local vectors in x and y length for simplification
-                        v_x = data['saccade_lenx'][i] + data['saccade_lenx'][i + 1]
-                        v_y = data['saccade_leny'][i] + data['saccade_leny'][i + 1]
-                        rho, theta = cart2pol(v_x, v_y)
-                        # save them in the new vectors
-                        sim_lenx.insert(j, v_x)
-                        sim_leny.insert(j, v_y)
-                        sim_x.insert(j, data['saccade_x'][i])
-                        sim_y.insert(j, data['saccade_y'][i])
-                        sim_theta.insert(j, theta)
-                        sim_len.insert(j, rho)
-                        # add the old fixation duration
-                        sim_dur.insert(j, data['fixation_dur'][i])
-                        i += 2
-                        j += 1
-                    # if fixation durations longer than the threshold
-                    else:
-                        # insert original data in new lists -- no simplification
-                        i, j = keepsaccade(
-                            i,
-                            j,
-                            sim_lenx,
-                            sim_leny,
-                            sim_x,
-                            sim_y,
-                            sim_theta,
-                            sim_len,
-                            sim_dur,
-                            data)
-                # if saccade does NOT have a length shorter than the threshold:
+                # insert original data in new list -- no simplification
+                i, j = keepsaccade(
+                    i,
+                    j,
+                    sim_lenx,
+                    sim_leny,
+                    sim_x,
+                    sim_y,
+                    sim_theta,
+                    sim_len,
+                    sim_dur,
+                    data)
+        # if saccade is not the last one
+        else:
+            # and if saccade has a length shorter than the threshold
+            if (data['saccade_rho'][i] < TAmp) and (i < len(data['saccade_x']) - 1):
+                # and if fixation durations are short
+                if (data['fixation_dur'][i + 1] < TDur) or (data['fixation_dur'][i] < TDur):
+                    # calculate sum of local vectors in x and y length for simplification
+                    v_x = data['saccade_lenx'][i] + data['saccade_lenx'][i + 1]
+                    v_y = data['saccade_leny'][i] + data['saccade_leny'][i + 1]
+                    rho, theta = cart2pol(v_x, v_y)
+                    # save them in the new vectors
+                    sim_lenx.insert(j, v_x)
+                    sim_leny.insert(j, v_y)
+                    sim_x.insert(j, data['saccade_x'][i])
+                    sim_y.insert(j, data['saccade_y'][i])
+                    sim_theta.insert(j, theta)
+                    sim_len.insert(j, rho)
+                    # add the old fixation duration
+                    sim_dur.insert(j, data['fixation_dur'][i])
+                    i += 2
+                    j += 1
+                # if fixation durations longer than the threshold
                 else:
-                    # insert original data in new list -- no simplification
+                    # insert original data in new lists -- no simplification
                     i, j = keepsaccade(
                         i,
                         j,
@@ -261,6 +246,20 @@ def simlen(data, TAmp, TDur):
                         sim_len,
                         sim_dur,
                         data)
+            # if saccade does NOT have a length shorter than the threshold:
+            else:
+                # insert original data in new list -- no simplification
+                i, j = keepsaccade(
+                    i,
+                    j,
+                    sim_lenx,
+                    sim_leny,
+                    sim_x,
+                    sim_y,
+                    sim_theta,
+                    sim_len,
+                    sim_dur,
+                    data)
     # append the last fixation duration
     sim_dur.append(data['fixation_dur'][-1])
     # append everything into an ordered dict.
@@ -294,91 +293,46 @@ def simdir(data,
 
     if len(data['saccade_x']) < 1:
         return data
-    # if the scanpath is long enough
-    else:
-        i = 0
-        j = 0
-        # initialize empty lists
-        sim_dur = []
-        sim_x = []
-        sim_y = []
-        sim_lenx = []
-        sim_leny = []
-        sim_theta = []
-        sim_len = []
-        # while we don't run into index errors
-        while i <= len(data['saccade_x']) - 1:
-            if i < len(data['saccade_x']) - 1:
-                # lets check angles
-                v1 = [data['saccade_lenx'][i], data['saccade_leny'][i]]
-                v2 = [data['saccade_lenx'][i + 1], data['saccade_leny'][i + 1]]
-                angle = calcangle(v1, v2)
-            else:
-                # an angle of infinite size won't go into any further loop
-                angle = float('inf')
-            # if the angle is smaller than the threshold and its not the last saccade
-            if (angle < TDir) & (i < len(data['saccade_x']) - 1):
-                # if the fixation duration is short:
-                if data['fixation_dur'][i + 1] < TDur:
-                    # calculate the sum of local vectors
-                    v_x = data['saccade_lenx'][i] + data['saccade_lenx'][i + 1]
-                    v_y = data['saccade_leny'][i] + data['saccade_leny'][i + 1]
-                    rho, theta = cart2pol(v_x, v_y)
-                    # save them in the new vectors
-                    sim_lenx.insert(j, v_x)
-                    sim_leny.insert(j, v_y)
-                    sim_x.insert(j, data['saccade_x'][i])
-                    sim_y.insert(j, data['saccade_y'][i])
-                    sim_theta.insert(j, theta)
-                    sim_len.insert(j, rho)
-                    # add the fixation duration
-                    sim_dur.insert(j, data['fixation_dur'][i])
-                    i += 2
-                    j += 1
-                else:
-                    # insert original data in new list -- no simplification
-                    i, j = keepsaccade(
-                        i,
-                        j,
-                        sim_lenx,
-                        sim_leny,
-                        sim_x,
-                        sim_y,
-                        sim_theta,
-                        sim_len,
-                        sim_dur,
-                        data)
-            # elif the angle is smaller than the threshold, but its the LAST saccade:
-            elif (angle < TDir) & (i == len(data['saccade_x']) - 1):
-                # if the fixation duration is short:
-                if data['fixation_dur'][i + 1] < TDur:
-                    # calculate sum of local vectors
-                    v_x = data['saccade_lenx'][i - 2] + data['saccade_lenx'][i - 1]
-                    v_y = data['saccade_leny'][i - 2] + data['saccade_leny'][i - 1]
-                    rho, theta = cart2pol(v_x, v_y)
-                    # save them in new vectors
-                    sim_lenx[j - 1] = v_x
-                    sim_leny[j - 1] = v_y
-                    sim_theta[j - 1] = theta
-                    sim_len[j - 1] = rho
-                    sim_dur.insert(j, data['fixation_dur'][-1] + (data['fixation_dur'][i] / 2))
-                    j -= 1
-                    i += 1
-                # if fixation duration is longer than the threshold:
-                else:
-                    # insert original data in new list -- no simplification
-                    i, j = keepsaccade(
-                        i,
-                        j,
-                        sim_lenx,
-                        sim_leny,
-                        sim_x,
-                        sim_y,
-                        sim_theta,
-                        sim_len,
-                        sim_dur,
-                        data)
-            # else (the angle is larger than the threshold)
+    # the scanpath is long enough
+    i = 0
+    j = 0
+    # initialize empty lists
+    sim_dur = []
+    sim_x = []
+    sim_y = []
+    sim_lenx = []
+    sim_leny = []
+    sim_theta = []
+    sim_len = []
+    # while we don't run into index errors
+    while i <= len(data['saccade_x']) - 1:
+        if i < len(data['saccade_x']) - 1:
+            # lets check angles
+            v1 = [data['saccade_lenx'][i], data['saccade_leny'][i]]
+            v2 = [data['saccade_lenx'][i + 1], data['saccade_leny'][i + 1]]
+            angle = calcangle(v1, v2)
+        else:
+            # an angle of infinite size won't go into any further loop
+            angle = float('inf')
+        # if the angle is smaller than the threshold and its not the last saccade
+        if (angle < TDir) & (i < len(data['saccade_x']) - 1):
+            # if the fixation duration is short:
+            if data['fixation_dur'][i + 1] < TDur:
+                # calculate the sum of local vectors
+                v_x = data['saccade_lenx'][i] + data['saccade_lenx'][i + 1]
+                v_y = data['saccade_leny'][i] + data['saccade_leny'][i + 1]
+                rho, theta = cart2pol(v_x, v_y)
+                # save them in the new vectors
+                sim_lenx.insert(j, v_x)
+                sim_leny.insert(j, v_y)
+                sim_x.insert(j, data['saccade_x'][i])
+                sim_y.insert(j, data['saccade_y'][i])
+                sim_theta.insert(j, theta)
+                sim_len.insert(j, rho)
+                # add the fixation duration
+                sim_dur.insert(j, data['fixation_dur'][i])
+                i += 2
+                j += 1
             else:
                 # insert original data in new list -- no simplification
                 i, j = keepsaccade(
@@ -392,6 +346,50 @@ def simdir(data,
                     sim_len,
                     sim_dur,
                     data)
+        # elif the angle is smaller than the threshold, but its the LAST saccade:
+        elif (angle < TDir) & (i == len(data['saccade_x']) - 1):
+            # if the fixation duration is short:
+            if data['fixation_dur'][i + 1] < TDur:
+                # calculate sum of local vectors
+                v_x = data['saccade_lenx'][i - 2] + data['saccade_lenx'][i - 1]
+                v_y = data['saccade_leny'][i - 2] + data['saccade_leny'][i - 1]
+                rho, theta = cart2pol(v_x, v_y)
+                # save them in new vectors
+                sim_lenx[j - 1] = v_x
+                sim_leny[j - 1] = v_y
+                sim_theta[j - 1] = theta
+                sim_len[j - 1] = rho
+                sim_dur.insert(j, data['fixation_dur'][-1] + (data['fixation_dur'][i] / 2))
+                j -= 1
+                i += 1
+            # if fixation duration is longer than the threshold:
+            else:
+                # insert original data in new list -- no simplification
+                i, j = keepsaccade(
+                    i,
+                    j,
+                    sim_lenx,
+                    sim_leny,
+                    sim_x,
+                    sim_y,
+                    sim_theta,
+                    sim_len,
+                    sim_dur,
+                    data)
+        # else (the angle is larger than the threshold)
+        else:
+            # insert original data in new list -- no simplification
+            i, j = keepsaccade(
+                i,
+                j,
+                sim_lenx,
+                sim_leny,
+                sim_x,
+                sim_y,
+                sim_theta,
+                sim_len,
+                sim_dur,
+                data)
     # now append the last fixation duration
     sim_dur.append(data['fixation_dur'][-1])
     # append everything into an ordered dict.
