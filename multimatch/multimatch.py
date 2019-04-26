@@ -865,14 +865,14 @@ def docomparison(fixation_vectors1,
     # check if fixation vectors/scanpaths are long enough
     if (len(fixation_vectors1) >= 3) & (len(fixation_vectors2) >= 3):
         # get the data into a geometric representation
-        subj1 = gen_scanpath_structure(fixation_vectors1)
-        subj2 = gen_scanpath_structure(fixation_vectors2)
+        path1 = gen_scanpath_structure(fixation_vectors1)
+        path2 = gen_scanpath_structure(fixation_vectors2)
         if grouping:
             # simplify the data
-            subj1 = simplify_scanpath(subj1, TAmp, TDir, TDur)
-            subj2 = simplify_scanpath(subj2, TAmp, TDir, TDur)
+            path1 = simplify_scanpath(path1, TAmp, TDir, TDur)
+            path2 = simplify_scanpath(path2, TAmp, TDir, TDur)
         # create M, a matrix of all vector pairings length differences (weights)
-        M = cal_vectordifferences(subj1, subj2)
+        M = cal_vectordifferences(path1, path2)
         # initialize a matrix of size M for a matrix of nodes
         szM = np.shape(M)
         M_assignment = np.arange(szM[0] * szM[1]).reshape(szM[0], szM[1])
@@ -881,7 +881,7 @@ def docomparison(fixation_vectors1,
         # find the shortest path (= lowest sum of weights) through the graph
         path, dist = dijkstra(weightedGraph, 0, szM[0] * szM[1] - 1)
         # compute similarities on alinged scanpaths and normalize them
-        unnormalised = getunnormalised(subj1, subj2, path, M_assignment)
+        unnormalised = getunnormalised(path1, path2, path, M_assignment)
         normal = normaliseresults(unnormalised, sz)
         scanpathcomparisons.append(normal)
     # return nan as result if at least one scanpath it too short
