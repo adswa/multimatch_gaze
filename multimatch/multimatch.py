@@ -517,16 +517,11 @@ def createdirectedgraph(szM,
     Startnodes = range(0, szM[0] * szM[1])
     # initialize list with adjacent nodes (adjacent to each startnode)
     # and the weights associated with the paths between them
-    weightedEdges = []
-    # zip Nodes and weights
-    for i in range(0, len(adjacent)):
-        weightedEdges.append(list(zip(list(adjacent.values())[i],
-                                      list(weight.values())[i])))
+    weightedEdges = [
+        dict(zip(a, w)) for a, w in zip(adjacent.values(), weight.values())
+    ]
     # initialize final dictionary
-    weightedGraph = {}
-    # zip Startnodes together with Nodes-Weights, result is a nested dict
-    for i in range(0, len(weightedEdges)):
-        weightedGraph[Startnodes[i]] = dict(weightedEdges[i])
+    weightedGraph = dict(zip(Startnodes, weightedEdges))
     return weightedGraph
 
 
