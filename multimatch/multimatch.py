@@ -55,44 +55,25 @@ def gen_scanpath_structure(data):
     :return: eyedata: OrderedDict, vector-based scanpath representation
     """
 
-    fixation_x = []
-    fixation_y = []
-    fixation_dur = []
-    saccade_x = []
-    saccade_y = []
-    saccade_lenx = []
-    saccade_leny = []
-    saccade_theta = []
-    saccade_rho = []
-    # get the number of rows (= fixations)
-    length = np.shape(data)[0]
+    # everything into a dict
+    eyedata = dict()
     # keep coordinates and durations of fixations
-    for i in range(0, length):
-        fixation_x.append(data[i]['start_x'])
-        fixation_y.append(data[i]['start_y'])
-        fixation_dur.append(data[i]['duration'])
+    # TODO this could be one record array
+    eyedata['fixation_x'] = data['start_x']
+    eyedata['fixation_y'] = data['start_y']
+    eyedata['fixation_dur'] = data['duration']
     # fixations are the start coordinates for saccades
-    for i in range(0, length - 1):
-        saccade_x.append(data[i]['start_x'])
-        saccade_y.append(data[i]['start_y'])
+    # TODO and this could be another record array
+    eyedata['saccade_x'] = data[:-1]['start_x']
+    eyedata['saccade_y'] = data[:-1]['start_y']
     # calculate saccade length and angle from vector lengths between fixations
-    for i in range(1, length):
-        saccade_lenx.append(fixation_x[i] - saccade_x[i - 1])
-        saccade_leny.append(fixation_y[i] - saccade_y[i - 1])
-        rho, theta = cart2pol(saccade_lenx[i - 1], saccade_leny[i - 1])
-        saccade_rho.append(rho)
-        saccade_theta.append(theta)
-    # append everything into an ordered dict.
-    eyedata = collections.OrderedDict()
-    eyedata['fixation_x'] = fixation_x
-    eyedata['fixation_y'] = fixation_y
-    eyedata['fixation_dur'] = fixation_dur
-    eyedata['saccade_x'] = saccade_x
-    eyedata['saccade_y'] = saccade_y
+    saccade_lenx = np.diff(data['start_x'])
+    saccade_leny = np.diff(data['start_y'])
+    rho, theta = cart2pol(saccade_lenx, saccade_leny)
     eyedata['saccade_lenx'] = saccade_lenx
     eyedata['saccade_leny'] = saccade_leny
-    eyedata['saccade_theta'] = saccade_theta
-    eyedata['saccade_rho'] = saccade_rho
+    eyedata['saccade_theta'] = theta
+    eyedata['saccade_rho'] = rho
     return eyedata
 
 
