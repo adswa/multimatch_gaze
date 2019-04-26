@@ -812,14 +812,14 @@ def getunnormalised(data1,
 
     >>> unorm_res = getunnormalised(scanpath_rep1, scanpath_rep2, path, M_assignment)
     """
-    args = data1, data2, path, M_assignment
-    VecSim = np.median(cal_vectordifferencealongpath(*args))
-    DirSim = np.median(cal_angulardifference(*args))
-    LenSim = np.median(cal_lengthdifference(*args))
-    PosSim = np.median(cal_positiondifference(*args))
-    DurSim = np.median(cal_durationdifference(*args))
-    unnormalised = [VecSim, DirSim, LenSim, PosSim, DurSim]
-    return unnormalised
+    return [
+        np.median(fx(data1, data2, path, M_assignment))
+        for fx in (cal_vectordifferencealongpath,
+                   cal_angulardifference,
+                   cal_lengthdifference,
+                   cal_positiondifference,
+                   cal_durationdifference)
+    ]
 
 
 def normaliseresults(unnormalised,
@@ -992,11 +992,13 @@ def main(args=sys.argv):
                           TDir=TDir,
                           TDur=TDur,
                           TAmp=TAmp)
-    print('Vector similarity = ', result[0][0])
-    print('Direction similarity = ', result[0][1])
-    print('Length similarity = ', result[0][2])
-    print('Position similarity = ', result[0][3])
-    print('Duration similarity = ', result[0][4])
+    for i, label in enumerate(('Vector',
+                               'Direction',
+                               'Length',
+                               'Position',
+                               'Duration')):
+        # TODO why is it always result[0]
+        print('{} similarity = {}'.format(label, result[0][i]))
 
 
 if __name__ == '__main__':
