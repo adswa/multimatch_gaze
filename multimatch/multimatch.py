@@ -121,18 +121,16 @@ def keepsaccade(i,
     :param sim_dur: list
     :param data: eyedata, list of list
     """
+    for l, key in ((sim_lenx, 'saccade_lenx'),
+                   (sim_leny, 'saccade_leny'),
+                   (sim_x, 'saccade_x'),
+                   (sim_y, 'saccade_y'),
+                   (sim_theta, 'saccade_theta'),
+                   (sim_len, 'saccade_rho'),
+                   (sim_dur, 'fixation_dur')):
+        l.insert(j, data[key][i])
 
-    sim_lenx.insert(j, data['saccade_lenx'][i])
-    sim_leny.insert(j, data['saccade_leny'][i])
-    sim_x.insert(j, data['saccade_x'][i])
-    sim_y.insert(j, data['saccade_y'][i])
-    sim_theta.insert(j, data['saccade_theta'][i])
-    sim_len.insert(j, data['saccade_rho'][i])
-    sim_dur.insert(j, data['fixation_dur'][i])
-    i += 1
-    j += 1
-
-    return i, j
+    return i + 1, j + 1
 
 
 def simlen(data, TAmp, TDur):
