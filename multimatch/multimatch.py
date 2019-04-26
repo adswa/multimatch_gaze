@@ -611,9 +611,9 @@ def cal_angulardifference(data1,
     # initialize list to hold individual angle differences
     anglediff = []
     # calculate angular differences between the saccades along specified path
-    for k in range(0, len(path)):
+    for p in path:
         # which saccade indices correspond to path?
-        i, j = np.where(M_assignment == path[k])
+        i, j = np.where(M_assignment == p)
         # extract the angle
         spT = [theta1[i.item()], theta2[j.item()]]
         for t in range(0, len(spT)):
@@ -658,9 +658,9 @@ def cal_durationdifference(data1,
     # initialize list to hold individual duration differences
     durdiff = []
     # calculation fixation duration differences between saccades along path
-    for k in range(0, len(path)):
+    for p in path:
         # which saccade indices correspond to path?
-        i, j = np.where(M_assignment == path[k])
+        i, j = np.where(M_assignment == p)
         maxlist = [dur1[i.item()], dur2[j.item()]]
         # compute abs. duration diff, normalize by largest duration in pair
         durdiff.append(abs(dur1[i.item()] -
@@ -698,8 +698,8 @@ def cal_lengthdifference(data1,
     # initialize list to hold individual length differences
     lendiff = []
     # calculate length differences between saccades along path
-    for k in range(0, len(path)):
-        i, j = np.where(M_assignment == path[k])
+    for p in path:
+        i, j = np.where(M_assignment == p)
         lendiff.append(abs(len1[i] - len2[j]))
     return lendiff
 
@@ -737,8 +737,8 @@ def cal_positiondifference(data1,
     # initialize list to hold individual position differences
     posdiff = []
     # calculate position differences along path
-    for k in range(0, len(path)):
-        i, j = np.where(M_assignment == path[k])
+    for p in path:
+        i, j = np.where(M_assignment == p)
         posdiff.append(math.sqrt((x1[i.item()] - x2[j.item()]) ** 2 +
                                  (y1[i.item()] - y2[j.item()]) ** 2))
     return posdiff
@@ -776,8 +776,9 @@ def cal_vectordifferencealongpath(data1,
     # initialize list to hold individual vector differences
     vectordiff = []
     # calculate vector differences along path
-    for k in range(0, len(path)):
-        i, j = np.where(M_assignment == path[k])
+    # TODO look at this again, should be possible simpler
+    for p in path:
+        i, j = np.where(M_assignment == p)
         vectordiff.append(np.sqrt((x1[i.item()] - x2[j.item()]) ** 2 +
                                   (y1[i.item()] - y2[j.item()]) ** 2))
     return vectordiff
