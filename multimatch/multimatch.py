@@ -795,9 +795,7 @@ def getunnormalised(data1,
     ]
 
 
-def normaliseresults(unnormalised,
-                     sz=[1280, 720]
-                     ):
+def normaliseresults(unnormalised, sz):
     """Normalize similarity measures.
 
     Vector similarity is normalised against two times screen diagonal,
@@ -832,7 +830,7 @@ def normaliseresults(unnormalised,
 
 def docomparison(fixation_vectors1,
                  fixation_vectors2,
-                 sz=[1280, 720],
+                 sz,
                  grouping=False,
                  TDir=0.0,
                  TDur=0.0,
@@ -843,7 +841,7 @@ def docomparison(fixation_vectors1,
 
     :param: fixation_vectors1: array-like n x 3 fixation vector of one scanpath
     :param: fixation_vectors2: array-like n x 3 fixation vector of one scanpath
-    :param: sz: list, screen dimensions in px. Default: [1280, 720]
+    :param: sz: list, screen dimensions in px.
     :param: grouping: boolean, if True, simplification is performed based on thresholds TAmp,
         TDir, and TDur. Default: False
     :param: TDir: float, Direction threshold, angle in degrees. Default: 0.0
@@ -944,9 +942,11 @@ def main(args=sys.argv):
     if args.screensize:
         sz = [float(i) for i in args.screensize]
         if len(sz) != 2:
-            print('I expected two floats after --screensize, such as --screensize 1280 720.'
-                  'However, I got {}. I will default to a screensize of 1280 x 720.'.format(args.screensize))
-            sz = [1280, 720]
+            raise ValueError(
+                'I expected two floats after --screensize, '
+                'such as --screensize 1280 720. '
+                'However, I got {}. I will default to a screensize '
+                'of 1280 x 720.'.format(args.screensize))
 
     if (TDir != 0) and (TAmp != 0):
         grouping = True
