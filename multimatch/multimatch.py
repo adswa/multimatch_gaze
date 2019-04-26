@@ -447,17 +447,16 @@ def cal_vectordifferences(data1,
     x2 = np.asarray(data2['saccade_lenx'])
     y1 = np.asarray(data1['saccade_leny'])
     y2 = np.asarray(data2['saccade_leny'])
-    # initialize empty lists M and row, will become matrix to store sacc-length
+    # initialize empty list for rows, will become matrix to store sacc-length
     # pairings
-    M = []
-    row = []
+    rows = []
     # calculate saccade length differences, vectorized
     for i in range(0, len(x1)):
         x_diff = abs(x1[i] * np.ones(len(x2)) - x2)
         y_diff = abs(y1[i] * np.ones(len(y2)) - y2)
         # calc final length from x and y lengths, append, stack into matrix M
-        row.append(np.asarray(np.sqrt(x_diff ** 2 + y_diff ** 2)))
-        M = np.stack(row)
+        rows.append(np.asarray(np.sqrt(x_diff ** 2 + y_diff ** 2)))
+    M = np.vstack(rows)
     return M
 
 
