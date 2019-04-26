@@ -857,8 +857,6 @@ def docomparison(fixation_vectors1,
     >>> print(results)
     >>> [[0.95075847681364678, 0.95637548674423822, 0.94082367355291008, 0.94491164030498609, 0.78260869565217384]]
     """
-    # initialize result vector
-    scanpathcomparisons = []
     # check if fixation vectors/scanpaths are long enough
     if (len(fixation_vectors1) >= 3) & (len(fixation_vectors2) >= 3):
         # get the data into a geometric representation
@@ -880,11 +878,10 @@ def docomparison(fixation_vectors1,
         # compute similarities on alinged scanpaths and normalize them
         unnormalised = getunnormalised(path1, path2, path, M_assignment)
         normal = normaliseresults(unnormalised, sz)
-        scanpathcomparisons.append(normal)
+        return normal
     # return nan as result if at least one scanpath it too short
     else:
-        scanpathcomparisons.append(np.repeat(np.nan, 5))
-    return scanpathcomparisons
+        return np.repeat(np.nan, 5)
 
 
 def main(args=sys.argv):
@@ -970,8 +967,7 @@ def main(args=sys.argv):
                                'Length',
                                'Position',
                                'Duration')):
-        # TODO why is it always result[0]
-        print('{} similarity = {}'.format(label, result[0][i]))
+        print('{} similarity = {}'.format(label, result[i]))
 
 
 if __name__ == '__main__':

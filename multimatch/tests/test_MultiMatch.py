@@ -34,7 +34,7 @@ def test_same_real_data_forrest(run=1,
                                                         grouping=False
                                                         )
     segmentfinal = np.array(segments)
-    assert np.all(segmentfinal.all(1))
+    assert np.all(segmentfinal)
 
 
 def test_same_real_data():
@@ -58,7 +58,7 @@ def test_same_real_data():
                               TDur=0,
                               TAmp=0)
     resultsfinal = np.array(results)
-    assert np.all(resultsfinal.all(1))
+    assert np.all(results)
 
 
 def test_simplification(run=1,
@@ -93,8 +93,8 @@ def test_simplification(run=1,
                                                         TAmp=100.0)
     resultsfinal = np.array(results)
     resultsfinal_M = np.array(segments)
-    assert np.all(resultsfinal.all(1))
-    assert np.all(resultsfinal_M.all(1))
+    assert np.all(resultsfinal)
+    assert np.all(resultsfinal_M)
 
 
 def test_structure_generation(length=5):
@@ -192,8 +192,8 @@ def test_compare2matlab():
     matlab_grouping = [0.95076, 0.95638, 0.94082, 0.94491, 0.78261]
     matlab_no_grouping = [0.99082, 0.69902, 0.98927, 0.94767, 0.65563]
     from pytest import approx
-    assert matlab_grouping == approx(res_grouping[0], abs=1e-5, rel=1e-5)
-    assert matlab_no_grouping == approx(res_no_grouping[0], abs=1e-5, rel=1e-5)
+    assert matlab_grouping == approx(res_grouping, abs=1e-5, rel=1e-5)
+    assert matlab_no_grouping == approx(res_no_grouping, abs=1e-5, rel=1e-5)
 
 
 def test_too_short_scanpaths():
