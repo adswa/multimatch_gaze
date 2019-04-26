@@ -4,7 +4,6 @@
 import numpy as np
 import math
 import sys
-import collections
 
 
 def cart2pol(x, y):
@@ -52,7 +51,7 @@ def gen_scanpath_structure(data):
 
     :param: data: record array
 
-    :return: eyedata: OrderedDict, vector-based scanpath representation
+    :return: eyedata: dict, vector-based scanpath representation
     """
 
     # everything into a dict
@@ -125,7 +124,7 @@ def simlen(data, TAmp, TDur):
     :param: TAmp: float, length in px
     :param: TDur: float, time in seconds
 
-    :return: eyedata: OrderedDict; one iteration of length based simplification
+    :return: eyedata: dict; one iteration of length based simplification
     """
 
     if len(data['saccade_x']) < 1:
@@ -242,7 +241,7 @@ def simlen(data, TAmp, TDur):
     # append the last fixation duration
     sim_dur.append(data['fixation_dur'][-1])
     # append everything into an ordered dict.
-    eyedata = collections.OrderedDict()
+    eyedata = dict()
     eyedata['fixation_dur'] = sim_dur
     eyedata['saccade_x'] = sim_x
     eyedata['saccade_y'] = sim_y
@@ -267,7 +266,7 @@ def simdir(data,
     :param: TDir: float, angle in degrees
     :param: TDur: float, time in seconds
 
-    :return: eyedata: OrderedDict, one iteration of direction based simplification
+    :return: eyedata: dict, one iteration of direction based simplification
     """
 
     if len(data['saccade_x']) < 1:
@@ -372,7 +371,7 @@ def simdir(data,
     # now append the last fixation duration
     sim_dur.append(data['fixation_dur'][-1])
     # append everything into an ordered dict.
-    eyedata = collections.OrderedDict()
+    eyedata = dict()
     eyedata['fixation_dur'] = sim_dur
     eyedata['saccade_x'] = sim_x
     eyedata['saccade_y'] = sim_y
@@ -565,9 +564,9 @@ def cal_angulardifference(data1,
                           ):
     """Calculate angular similarity of two scanpaths:
 
-    :param: data1: OrderedDict; contains vector-based scanpath representation of the
+    :param: data1: dict; contains vector-based scanpath representation of the
         first scanpath
-    :param: data2: OrderedDict, contains vector-based scanpath representation of the
+    :param: data2: dict, contains vector-based scanpath representation of the
         second scanpath
     :param: path: array-like, array of indices for the best-fitting saccade pairings between scan-
         paths
@@ -608,10 +607,10 @@ def cal_durationdifference(data1,
     """Calculate similarity of two scanpaths fixation durations.
 
     :param: data1: array-like
-        OrderedDict, contains vector-based scanpath representation of the
+        dict, contains vector-based scanpath representation of the
         first scanpath
     :param: data2: array-like
-        OrderedDict, contains vector-based scanpath representation of the
+        dict, contains vector-based scanpath representation of the
         second scanpath
     :param: path: array-like
         array of indices for the best-fitting saccade pairings between scan-
@@ -649,10 +648,10 @@ def cal_lengthdifference(data1,
     """Calculate length similarity of two scanpaths.
 
     :param: data1: array-like
-        OrderedDict, contains vector-based scanpath representation of the
+        dict, contains vector-based scanpath representation of the
         first scanpath
     :param: data2: array-like
-        OrderedDict, contains vector-based scanpath representation of the
+        dict, contains vector-based scanpath representation of the
         second scanpath
     :param: path: array-like
         array of indices for the best-fitting saccade pairings between scan-
@@ -685,10 +684,10 @@ def cal_positiondifference(data1,
     """Calculate position similarity of two scanpaths.
 
     :param: data1: array-like
-        OrderedDict, contains vector-based scanpath representation of the
+        dict, contains vector-based scanpath representation of the
         first scanpath
     :param: data2: array-like
-        OrderedDict, contains vector-based scanpath representation of the
+        dict, contains vector-based scanpath representation of the
         second scanpath
     :param: path: array-like
         array of indices for the best-fitting saccade pairings between scan-
@@ -725,10 +724,10 @@ def cal_vectordifferencealongpath(data1,
     """Calculate vector similarity of two scanpaths.
 
     :param: data1: array-like
-        OrderedDict, contains vector-based scanpath representation of the
+        dict, contains vector-based scanpath representation of the
         first scanpath
     :param: data2: array-like
-        OrderedDict, contains vector-based scanpath representation of the
+        dict, contains vector-based scanpath representation of the
         second scanpath
     :param: path: array-like
         array of indices for the best-fitting saccade pairings between scan-
@@ -769,10 +768,10 @@ def getunnormalised(data1,
     similarity values per array.
 
     :param: data1: array-like
-        OrderedDict, contains vector-based scanpath representation of the
+        dict, contains vector-based scanpath representation of the
         first scanpath
     :param: data2: array-like
-        OrderedDict, contains vector-based scanpath representation of the
+        dict, contains vector-based scanpath representation of the
         second scanpath
     :param: path: array-like
         array of indices for the best-fitting saccade pairings between scan-
