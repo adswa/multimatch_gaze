@@ -4,7 +4,6 @@
 import numpy as np
 import math
 import sys
-import collections
 
 
 def cart2pol(x, y):
@@ -52,59 +51,36 @@ def gen_scanpath_structure(data):
 
     :param: data: record array
 
-    :return: eyedata: OrderedDict, vector-based scanpath representation
+    :return: eyedata: dict, vector-based scanpath representation
     """
 
-    fixation_x = []
-    fixation_y = []
-    fixation_dur = []
-    saccade_x = []
-    saccade_y = []
-    saccade_lenx = []
-    saccade_leny = []
-    saccade_theta = []
-    saccade_rho = []
-    # get the number of rows (= fixations)
-    length = np.shape(data)[0]
+    # everything into a dict
     # keep coordinates and durations of fixations
-    for i in range(0, length):
-        fixation_x.append(data[i]['start_x'])
-        fixation_y.append(data[i]['start_y'])
-        fixation_dur.append(data[i]['duration'])
-    # fixations are the start coordinates for saccades
-    for i in range(0, length - 1):
-        saccade_x.append(data[i]['start_x'])
-        saccade_y.append(data[i]['start_y'])
+    fixations = dict(
+        x=data['start_x'],
+        y=data['start_y'],
+        dur=data['duration'],
+    )
     # calculate saccade length and angle from vector lengths between fixations
-    for i in range(1, length):
-        saccade_lenx.append(fixation_x[i] - saccade_x[i - 1])
-        saccade_leny.append(fixation_y[i] - saccade_y[i - 1])
-        rho, theta = cart2pol(saccade_lenx[i - 1], saccade_leny[i - 1])
-        saccade_rho.append(rho)
-        saccade_theta.append(theta)
-    # append everything into an ordered dict.
-    eyedata = collections.OrderedDict()
-    eyedata['fixation_x'] = fixation_x
-    eyedata['fixation_y'] = fixation_y
-    eyedata['fixation_dur'] = fixation_dur
-    eyedata['saccade_x'] = saccade_x
-    eyedata['saccade_y'] = saccade_y
-    eyedata['saccade_lenx'] = saccade_lenx
-    eyedata['saccade_leny'] = saccade_leny
-    eyedata['saccade_theta'] = saccade_theta
-    eyedata['saccade_rho'] = saccade_rho
-    return eyedata
+    lenx = np.diff(data['start_x'])
+    leny = np.diff(data['start_y'])
+    rho, theta = cart2pol(lenx, leny)
+
+    saccades = dict(
+        # fixations are the start coordinates for saccades
+        x=data[:-1]['start_x'],
+        y=data[:-1]['start_y'],
+        lenx=lenx,
+        leny=leny,
+        theta=theta,
+        rho=rho,
+    )
+    return dict(fix=fixations, sac=saccades)
 
 
 def keepsaccade(i,
                 j,
-                sim_lenx,
-                sim_leny,
-                sim_x,
-                sim_y,
-                sim_theta,
-                sim_len,
-                sim_dur,
+                sim,
                 data
                 ):
     """
@@ -121,156 +97,128 @@ def keepsaccade(i,
     :param sim_dur: list
     :param data: eyedata, list of list
     """
+    for t, k in (('sac', 'lenx'),
+                 ('sac', 'leny'),
+                 ('sac', 'x'),
+                 ('sac', 'y'),
+                 ('sac', 'theta'),
+                 ('sac', 'rho'),
+                 ('fix', 'dur')):
+        sim[t][k].insert(j, data[t][k][i])
 
-    sim_lenx.insert(j, data['saccade_lenx'][i])
-    sim_leny.insert(j, data['saccade_leny'][i])
-    sim_x.insert(j, data['saccade_x'][i])
-    sim_y.insert(j, data['saccade_y'][i])
-    sim_theta.insert(j, data['saccade_theta'][i])
-    sim_len.insert(j, data['saccade_rho'][i])
-    sim_dur.insert(j, data['fixation_dur'][i])
-    i += 1
-    j += 1
-
-    return sim_lenx, sim_leny, sim_x, sim_y, sim_theta, sim_len, sim_dur, i, j
+    return i + 1, j + 1
 
 
-def simlen(data, TAmp, TDur):
+def _get_empty_path():
+    return dict(
+        fix=dict(
+            dur=[],
+        ),
+        sac=dict(
+            x=[],
+            y=[],
+            lenx=[],
+            leny=[],
+            theta=[],
+            # why 'len' here and 'rho' in input data?
+            # MIH -> always rho
+            #len=[],
+            rho=[],
+        )
+    )
+
+
+def simlen(path, TAmp, TDur):
     """Simplify scanpaths based on saccadic length.
 
     Simplify consecutive saccades if their length is smaller than the
     threshold TAmp and the duration of the closest fixations is lower
     than threshold TDur.
 
-    :param: data: array-like, list of lists, output of gen_scanpath_structure
+    :param: path: array-like, list of lists, output of gen_scanpath_structure
     :param: TAmp: float, length in px
     :param: TDur: float, time in seconds
 
-    :return: eyedata: OrderedDict; one iteration of length based simplification
+    :return: eyedata: dict; one iteration of length based simplification
     """
+    # shortcuts
+    saccades = path['sac']
+    fixations = path['fix']
 
-    if len(data['saccade_x']) < 1:
-        return data
-    # if the scanpath is long enough
-    else:
-        i = 0
-        j = 0
-        # initialize new empty lists for simplified results
-        sim_dur = []
-        sim_x = []
-        sim_y = []
-        sim_lenx = []
-        sim_leny = []
-        sim_theta = []
-        sim_len = []
-        # while we don't run into index errors
-        while i <= len(data['saccade_x']) - 1:
-            # if saccade is the last one
-            if i == len(data['saccade_x']) - 1:
-                # and if saccade has a length shorter than the threshold:
-                if data['saccade_rho'][i] < TAmp:
-                    # and if the fixation duration is short:
-                    if (data['fixation_dur'][-1] < TDur) or (data['fixation_dur'][-2] < TDur):
-                        # calculate sum of local vectors for simplification
-                        v_x = data['saccade_lenx'][-2] + data['saccade_lenx'][-1]
-                        v_y = data['saccade_leny'][-2] + data['saccade_leny'][-1]
-                        rho, theta = cart2pol(v_x, v_y)
-                        # save them in the new vectors
-                        sim_lenx[j - 1] = v_x
-                        sim_leny[j - 1] = v_y
-                        sim_theta[j - 1] = theta
-                        sim_len[j - 1] = rho
-                        sim_dur.insert(j, data['fixation_dur'][i - 1])
-                        j -= 1
-                        i += 1
-                    # if fixation duration is longer than the threshold:
-                    else:
-                        # insert original event data in new list -- no simplification
-                        sim_lenx, sim_leny, sim_x, sim_y, sim_theta, sim_len, sim_dur, i, j = keepsaccade(i,
-                                                                                                          j,
-                                                                                                          sim_lenx,
-                                                                                                          sim_leny,
-                                                                                                          sim_x,
-                                                                                                          sim_y,
-                                                                                                          sim_theta,
-                                                                                                          sim_len,
-                                                                                                          sim_dur,
-                                                                                                          data)
-                # if saccade does NOT have a length shorter than the threshold:
+    if len(saccades['x']) < 1:
+        return path
+
+    # the scanpath is long enough
+    i = 0
+    j = 0
+    sim = _get_empty_path()
+    # while we don't run into index errors
+    while i <= len(saccades['x']) - 1:
+        # if saccade is the last one
+        if i == len(saccades['x']) - 1:
+            # and if saccade has a length shorter than the threshold:
+            if saccades['rho'][i] < TAmp:
+                # and if the fixation duration is short:
+                if (fixations['dur'][-1] < TDur) or (fixations['dur'][-2] < TDur):
+                    # calculate sum of local vectors for simplification
+                    v_x = saccades['lenx'][-2] + saccades['lenx'][-1]
+                    v_y = saccades['leny'][-2] + saccades['leny'][-1]
+                    rho, theta = cart2pol(v_x, v_y)
+                    # save them in the new vectors
+                    sim['sac']['lenx'][j - 1] = v_x
+                    sim['sac']['leny'][j - 1] = v_y
+                    sim['sac']['theta'][j - 1] = theta
+                    sim['sac']['rho'][j - 1] = rho
+                    sim['fix']['dur'].insert(j, fixations['dur'][i - 1])
+                    j -= 1
+                    i += 1
+                # if fixation duration is longer than the threshold:
                 else:
-                    # insert original data in new list -- no simplification
-                    sim_lenx, sim_leny, sim_x, sim_y, sim_theta, sim_len, sim_dur, i, j = keepsaccade(i,
-                                                                                                      j,
-                                                                                                      sim_lenx,
-                                                                                                      sim_leny,
-                                                                                                      sim_x,
-                                                                                                      sim_y,
-                                                                                                      sim_theta,
-                                                                                                      sim_len,
-                                                                                                      sim_dur,
-                                                                                                      data)
-            # if saccade is not the last one
+                    # insert original event data in new list -- no
+                    # simplification
+                    i, j = keepsaccade(i, j, sim, path)
+            # if saccade does NOT have a length shorter than the threshold:
             else:
-                # and if saccade has a length shorter than the threshold
-                if (data['saccade_rho'][i] < TAmp) and (i < len(data['saccade_x']) - 1):
-                    # and if fixation durations are short
-                    if (data['fixation_dur'][i + 1] < TDur) or (data['fixation_dur'][i] < TDur):
-                        # calculate sum of local vectors in x and y length for simplification
-                        v_x = data['saccade_lenx'][i] + data['saccade_lenx'][i + 1]
-                        v_y = data['saccade_leny'][i] + data['saccade_leny'][i + 1]
-                        rho, theta = cart2pol(v_x, v_y)
-                        # save them in the new vectors
-                        sim_lenx.insert(j, v_x)
-                        sim_leny.insert(j, v_y)
-                        sim_x.insert(j, data['saccade_x'][i])
-                        sim_y.insert(j, data['saccade_y'][i])
-                        sim_theta.insert(j, theta)
-                        sim_len.insert(j, rho)
-                        # add the old fixation duration
-                        sim_dur.insert(j, data['fixation_dur'][i])
-                        i += 2
-                        j += 1
-                    # if fixation durations longer than the threshold
-                    else:
-                        # insert original data in new lists -- no simplification
-                        sim_lenx, sim_leny, sim_x, sim_y, sim_theta, sim_len, sim_dur, i, j = keepsaccade(i,
-                                                                                                          j,
-                                                                                                          sim_lenx,
-                                                                                                          sim_leny,
-                                                                                                          sim_x,
-                                                                                                          sim_y,
-                                                                                                          sim_theta,
-                                                                                                          sim_len,
-                                                                                                          sim_dur,
-                                                                                                          data)
-                # if saccade does NOT have a length shorter than the threshold:
+                # insert original path in new list -- no simplification
+                i, j = keepsaccade(i, j, sim, path)
+        # if saccade is not the last one
+        else:
+            # and if saccade has a length shorter than the threshold
+            if (saccades['rho'][i] < TAmp) and (i < len(saccades['x']) - 1):
+                # and if fixation durations are short
+                if (fixations['dur'][i + 1] < TDur) or \
+                        (fixations['dur'][i] < TDur):
+                    # calculate sum of local vectors in x and y length for
+                    # simplification
+                    v_x = saccades['lenx'][i] + saccades['lenx'][i + 1]
+                    v_y = saccades['leny'][i] + saccades['leny'][i + 1]
+                    rho, theta = cart2pol(v_x, v_y)
+                    # save them in the new vectors
+                    sim['sac']['lenx'].insert(j, v_x)
+                    sim['sac']['leny'].insert(j, v_y)
+                    sim['sac']['x'].insert(j, saccades['x'][i])
+                    sim['sac']['y'].insert(j, saccades['y'][i])
+                    sim['sac']['theta'].insert(j, theta)
+                    sim['sac']['rho'].insert(j, rho)
+                    # add the old fixation duration
+                    sim['fix']['dur'].insert(j, fixations['dur'][i])
+                    i += 2
+                    j += 1
+                # if fixation durations longer than the threshold
                 else:
-                    # insert original data in new list -- no simplification
-                    sim_lenx, sim_leny, sim_x, sim_y, sim_theta, sim_len, sim_dur, i, j = keepsaccade(i,
-                                                                                                      j,
-                                                                                                      sim_lenx,
-                                                                                                      sim_leny,
-                                                                                                      sim_x,
-                                                                                                      sim_y,
-                                                                                                      sim_theta,
-                                                                                                      sim_len,
-                                                                                                      sim_dur,
-                                                                                                      data)
+                    # insert original path in new lists -- no simplification
+                    i, j = keepsaccade(i, j, sim, path)
+            # if saccade does NOT have a length shorter than the threshold:
+            else:
+                # insert original path in new list -- no simplification
+                i, j = keepsaccade(i, j, sim, path)
     # append the last fixation duration
-    sim_dur.append(data['fixation_dur'][-1])
-    # append everything into an ordered dict.
-    eyedata = collections.OrderedDict()
-    eyedata['fixation_dur'] = sim_dur
-    eyedata['saccade_x'] = sim_x
-    eyedata['saccade_y'] = sim_y
-    eyedata['saccade_lenx'] = sim_lenx
-    eyedata['saccade_leny'] = sim_leny
-    eyedata['saccade_theta'] = sim_theta
-    eyedata['saccade_rho'] = sim_len
-    return eyedata
+    sim['fix']['dur'].append(fixations['dur'][-1])
+
+    return sim
 
 
-def simdir(data,
+def simdir(path,
            TDir,
            TDur
            ):
@@ -280,125 +228,85 @@ def simdir(data,
     threshold TDir and the duration of the intermediate fixations is lower
     than threshold TDur.
 
-    :param: data: array-like, list of lists, output of gen_scanpath_structure
+    :param: path: array-like, list of lists, output of gen_scanpath_structure
     :param: TDir: float, angle in degrees
     :param: TDur: float, time in seconds
 
-    :return: eyedata: OrderedDict, one iteration of direction based simplification
+    :return: eyedata: dict, one iteration of direction based simplification
     """
+    # shortcuts
+    saccades = path['sac']
+    fixations = path['fix']
 
-    if len(data['saccade_x']) < 1:
-        return data
-    # if the scanpath is long enough
-    else:
-        i = 0
-        j = 0
-        # initialize empty lists
-        sim_dur = []
-        sim_x = []
-        sim_y = []
-        sim_lenx = []
-        sim_leny = []
-        sim_theta = []
-        sim_len = []
-        # while we don't run into index errors
-        while i <= len(data['saccade_x']) - 1:
-            if i < len(data['saccade_x']) - 1:
-                # lets check angles
-                v1 = [data['saccade_lenx'][i], data['saccade_leny'][i]]
-                v2 = [data['saccade_lenx'][i + 1], data['saccade_leny'][i + 1]]
-                angle = calcangle(v1, v2)
-            else:
-                # an angle of infinite size won't go into any further loop
-                angle = float('inf')
-            # if the angle is smaller than the threshold and its not the last saccade
-            if (angle < TDir) & (i < len(data['saccade_x']) - 1):
-                # if the fixation duration is short:
-                if data['fixation_dur'][i + 1] < TDur:
-                    # calculate the sum of local vectors
-                    v_x = data['saccade_lenx'][i] + data['saccade_lenx'][i + 1]
-                    v_y = data['saccade_leny'][i] + data['saccade_leny'][i + 1]
-                    rho, theta = cart2pol(v_x, v_y)
-                    # save them in the new vectors
-                    sim_lenx.insert(j, v_x)
-                    sim_leny.insert(j, v_y)
-                    sim_x.insert(j, data['saccade_x'][i])
-                    sim_y.insert(j, data['saccade_y'][i])
-                    sim_theta.insert(j, theta)
-                    sim_len.insert(j, rho)
-                    # add the fixation duration
-                    sim_dur.insert(j, data['fixation_dur'][i])
-                    i += 2
-                    j += 1
-                else:
-                    # insert original data in new list -- no simplification
-                    sim_lenx, sim_leny, sim_x, sim_y, sim_theta, sim_len, sim_dur, i, j = keepsaccade(i,
-                                                                                                      j,
-                                                                                                      sim_lenx,
-                                                                                                      sim_leny,
-                                                                                                      sim_x,
-                                                                                                      sim_y,
-                                                                                                      sim_theta,
-                                                                                                      sim_len,
-                                                                                                      sim_dur,
-                                                                                                      data)
-            # elif the angle is smaller than the threshold, but its the LAST saccade:
-            elif (angle < TDir) & (i == len(data['saccade_x']) - 1):
-                # if the fixation duration is short:
-                if data['fixation_dur'][i + 1] < TDur:
-                    # calculate sum of local vectors
-                    v_x = data['saccade_lenx'][i - 2] + data['saccade_lenx'][i - 1]
-                    v_y = data['saccade_leny'][i - 2] + data['saccade_leny'][i - 1]
-                    rho, theta = cart2pol(v_x, v_y)
-                    # save them in new vectors
-                    sim_lenx[j - 1] = v_x
-                    sim_leny[j - 1] = v_y
-                    sim_theta[j - 1] = theta
-                    sim_len[j - 1] = rho
-                    sim_dur.insert(j, data['fixation_dur'][-1] + (data['fixation_dur'][i] / 2))
-                    j -= 1
-                    i += 1
-                # if fixation duration is longer than the threshold:
-                else:
-                    # insert original data in new list -- no simplification
-                    sim_lenx, sim_leny, sim_x, sim_y, sim_theta, sim_len, sim_dur, i, j = keepsaccade(i,
-                                                                                                      j,
-                                                                                                      sim_lenx,
-                                                                                                      sim_leny,
-                                                                                                      sim_x,
-                                                                                                      sim_y,
-                                                                                                      sim_theta,
-                                                                                                      sim_len,
-                                                                                                      sim_dur,
-                                                                                                      data)
-            # else (the angle is larger than the threshold)
+    if len(saccades['x']) < 1:
+        return path
+    # the scanpath is long enough
+    i = 0
+    j = 0
+    sim = _get_empty_path()
+    # while we don't run into index errors
+    while i <= len(saccades['x']) - 1:
+        if i < len(saccades['x']) - 1:
+            # lets check angles
+            v1 = [saccades['lenx'][i], saccades['leny'][i]]
+            v2 = [saccades['lenx'][i + 1], saccades['leny'][i + 1]]
+            angle = calcangle(v1, v2)
+        else:
+            # an angle of infinite size won't go into any further loop
+            angle = float('inf')
+        # if the angle is smaller than the threshold and its not the last saccade
+        if (angle < TDir) & (i < len(saccades['x']) - 1):
+            # if the fixation duration is short:
+            if fixations['dur'][i + 1] < TDur:
+                # calculate the sum of local vectors
+                v_x = saccades['lenx'][i] + saccades['lenx'][i + 1]
+                v_y = saccades['leny'][i] + saccades['leny'][i + 1]
+                rho, theta = cart2pol(v_x, v_y)
+                # save them in the new vectors
+                sim['sac']['lenx'].insert(j, v_x)
+                sim['sac']['leny'].insert(j, v_y)
+                sim['sac']['x'].insert(j, saccades['x'][i])
+                sim['sac']['y'].insert(j, saccades['y'][i])
+                sim['sac']['theta'].insert(j, theta)
+                sim['sac']['rho'].insert(j, rho)
+                # add the fixation duration
+                sim['fix']['dur'].insert(j, fixations['dur'][i])
+                i += 2
+                j += 1
             else:
                 # insert original data in new list -- no simplification
-                sim_lenx, sim_leny, sim_x, sim_y, sim_theta, sim_len, sim_dur, i, j = keepsaccade(i,
-                                                                                                  j,
-                                                                                                  sim_lenx,
-                                                                                                  sim_leny,
-                                                                                                  sim_x,
-                                                                                                  sim_y,
-                                                                                                  sim_theta,
-                                                                                                  sim_len,
-                                                                                                  sim_dur,
-                                                                                                  data)
+                i, j = keepsaccade(i, j, sim, path)
+        # elif the angle is smaller than the threshold, but its the LAST saccade:
+        elif (angle < TDir) & (i == len(saccades['x']) - 1):
+            # if the fixation duration is short:
+            if fixations['dur'][i + 1] < TDur:
+                # calculate sum of local vectors
+                v_x = saccades['lenx'][i - 2] + saccades['lenx'][i - 1]
+                v_y = saccades['leny'][i - 2] + saccades['leny'][i - 1]
+                rho, theta = cart2pol(v_x, v_y)
+                # save them in new vectors
+                sim['sac']['lenx'][j - 1] = v_x
+                sim['sac']['leny'][j - 1] = v_y
+                sim['sac']['theta'][j - 1] = theta
+                sim['sac']['len'][j - 1] = rho
+                sim['fix']['dur'].insert(j, fixations['dur'][-1] + (fixations['dur'][i] / 2))
+                j -= 1
+                i += 1
+            # if fixation duration is longer than the threshold:
+            else:
+                # insert original path in new list -- no simplification
+                i, j = keepsaccade(i, j, sim, path)
+        # else (the angle is larger than the threshold)
+        else:
+            # insert original path in new list -- no simplification
+            i, j = keepsaccade(i, j, sim, path)
     # now append the last fixation duration
-    sim_dur.append(data['fixation_dur'][-1])
-    # append everything into an ordered dict.
-    eyedata = collections.OrderedDict()
-    eyedata['fixation_dur'] = sim_dur
-    eyedata['saccade_x'] = sim_x
-    eyedata['saccade_y'] = sim_y
-    eyedata['saccade_lenx'] = sim_lenx
-    eyedata['saccade_leny'] = sim_leny
-    eyedata['saccade_theta'] = sim_theta
-    eyedata['saccade_rho'] = sim_len
-    return eyedata
+    sim['fix']['dur'].append(fixations['dur'][-1])
+
+    return sim
 
 
-def simplify_scanpath(data,
+def simplify_scanpath(path,
                       TAmp,
                       TDir,
                       TDur
@@ -408,7 +316,7 @@ def simplify_scanpath(data,
     Loops over simplification functions simdir and simlen until no
     further simplification of the scanpath is possible.
 
-    :param: data: list of lists, output of gen_scanpath_structure
+    :param: path: list of lists, output of gen_scanpath_structure
     :param: TAmp: float, length in px
     :param: TDir: float, angle in degrees
     :param: TDur: float, duration in seconds
@@ -417,43 +325,42 @@ def simplify_scanpath(data,
     """
     looptime = 0
     while True:
-        data = simdir(data, TDir, TDur)
-        data = simlen(data, TAmp, TDur)
+        path = simdir(path, TDir, TDur)
+        path = simlen(path, TAmp, TDur)
         looptime += 1
-        if looptime == len(data['fixation_dur']):
-            return data
+        if looptime == len(path['fix']['dur']):
+            return path
 
 
-def cal_vectordifferences(data1,
-                          data2
+def cal_vectordifferences(path1,
+                          path2
                           ):
     """Create matrix of vector-length differences of all vector pairs
 
     Create M, a Matrix with all possible saccade-length differences between
     saccade pairs.
 
-    :param: data1, data2: list of lists, vector-based scanpath representations
+    :param: path1, path2: list of lists, vector-based scanpath representations
 
     :return: M: array-like
         Matrix of vector length differences
 
     """
     # take length in x and y direction of both scanpaths
-    x1 = np.asarray(data1['saccade_lenx'])
-    x2 = np.asarray(data2['saccade_lenx'])
-    y1 = np.asarray(data1['saccade_leny'])
-    y2 = np.asarray(data2['saccade_leny'])
-    # initialize empty lists M and row, will become matrix to store sacc-length
+    x1 = np.asarray(path1['sac']['lenx'])
+    x2 = np.asarray(path2['sac']['lenx'])
+    y1 = np.asarray(path1['sac']['leny'])
+    y2 = np.asarray(path2['sac']['leny'])
+    # initialize empty list for rows, will become matrix to store sacc-length
     # pairings
-    M = []
-    row = []
+    rows = []
     # calculate saccade length differences, vectorized
     for i in range(0, len(x1)):
         x_diff = abs(x1[i] * np.ones(len(x2)) - x2)
         y_diff = abs(y1[i] * np.ones(len(y2)) - y2)
         # calc final length from x and y lengths, append, stack into matrix M
-        row.append(np.asarray(np.sqrt(x_diff ** 2 + y_diff ** 2)))
-        M = np.stack(row)
+        rows.append(np.asarray(np.sqrt(x_diff ** 2 + y_diff ** 2)))
+    M = np.vstack(rows)
     return M
 
 
@@ -513,16 +420,11 @@ def createdirectedgraph(szM,
     Startnodes = range(0, szM[0] * szM[1])
     # initialize list with adjacent nodes (adjacent to each startnode)
     # and the weights associated with the paths between them
-    weightedEdges = []
-    # zip Nodes and weights
-    for i in range(0, len(adjacent)):
-        weightedEdges.append(list(zip(list(adjacent.values())[i],
-                                      list(weight.values())[i])))
+    weightedEdges = [
+        dict(zip(a, w)) for a, w in zip(adjacent.values(), weight.values())
+    ]
     # initialize final dictionary
-    weightedGraph = {}
-    # zip Startnodes together with Nodes-Weights, result is a nested dict
-    for i in range(0, len(weightedEdges)):
-        weightedGraph[Startnodes[i]] = dict(weightedEdges[i])
+    weightedGraph = dict(zip(Startnodes, weightedEdges))
     return weightedGraph
 
 
@@ -586,9 +488,9 @@ def cal_angulardifference(data1,
                           ):
     """Calculate angular similarity of two scanpaths:
 
-    :param: data1: OrderedDict; contains vector-based scanpath representation of the
+    :param: data1: dict; contains vector-based scanpath representation of the
         first scanpath
-    :param: data2: OrderedDict, contains vector-based scanpath representation of the
+    :param: data2: dict, contains vector-based scanpath representation of the
         second scanpath
     :param: path: array-like, array of indices for the best-fitting saccade pairings between scan-
         paths
@@ -600,14 +502,14 @@ def cal_angulardifference(data1,
 
     """
     # get the angle between saccades from the scanpaths
-    theta1 = data1['saccade_theta']
-    theta2 = data2['saccade_theta']
+    theta1 = data1['sac']['theta']
+    theta2 = data2['sac']['theta']
     # initialize list to hold individual angle differences
     anglediff = []
     # calculate angular differences between the saccades along specified path
-    for k in range(0, len(path)):
+    for p in path:
         # which saccade indices correspond to path?
-        i, j = np.where(M_assignment == path[k])
+        i, j = np.where(M_assignment == p)
         # extract the angle
         spT = [theta1[i.item()], theta2[j.item()]]
         for t in range(0, len(spT)):
@@ -629,10 +531,10 @@ def cal_durationdifference(data1,
     """Calculate similarity of two scanpaths fixation durations.
 
     :param: data1: array-like
-        OrderedDict, contains vector-based scanpath representation of the
+        dict, contains vector-based scanpath representation of the
         first scanpath
     :param: data2: array-like
-        OrderedDict, contains vector-based scanpath representation of the
+        dict, contains vector-based scanpath representation of the
         second scanpath
     :param: path: array-like
         array of indices for the best-fitting saccade pairings between scan-
@@ -647,14 +549,14 @@ def cal_durationdifference(data1,
 
     """
     # get the duration of fixations in the scanpath
-    dur1 = data1['fixation_dur']
-    dur2 = data2['fixation_dur']
+    dur1 = data1['fix']['dur']
+    dur2 = data2['fix']['dur']
     # initialize list to hold individual duration differences
     durdiff = []
     # calculation fixation duration differences between saccades along path
-    for k in range(0, len(path)):
+    for p in path:
         # which saccade indices correspond to path?
-        i, j = np.where(M_assignment == path[k])
+        i, j = np.where(M_assignment == p)
         maxlist = [dur1[i.item()], dur2[j.item()]]
         # compute abs. duration diff, normalize by largest duration in pair
         durdiff.append(abs(dur1[i.item()] -
@@ -670,10 +572,10 @@ def cal_lengthdifference(data1,
     """Calculate length similarity of two scanpaths.
 
     :param: data1: array-like
-        OrderedDict, contains vector-based scanpath representation of the
+        dict, contains vector-based scanpath representation of the
         first scanpath
     :param: data2: array-like
-        OrderedDict, contains vector-based scanpath representation of the
+        dict, contains vector-based scanpath representation of the
         second scanpath
     :param: path: array-like
         array of indices for the best-fitting saccade pairings between scan-
@@ -687,13 +589,13 @@ def cal_lengthdifference(data1,
 
     """
     # get the saccade lengths rho
-    len1 = np.asarray(data1['saccade_rho'])
-    len2 = np.asarray(data2['saccade_rho'])
+    len1 = np.asarray(data1['sac']['rho'])
+    len2 = np.asarray(data2['sac']['rho'])
     # initialize list to hold individual length differences
     lendiff = []
     # calculate length differences between saccades along path
-    for k in range(0, len(path)):
-        i, j = np.where(M_assignment == path[k])
+    for p in path:
+        i, j = np.where(M_assignment == p)
         lendiff.append(abs(len1[i] - len2[j]))
     return lendiff
 
@@ -706,10 +608,10 @@ def cal_positiondifference(data1,
     """Calculate position similarity of two scanpaths.
 
     :param: data1: array-like
-        OrderedDict, contains vector-based scanpath representation of the
+        dict, contains vector-based scanpath representation of the
         first scanpath
     :param: data2: array-like
-        OrderedDict, contains vector-based scanpath representation of the
+        dict, contains vector-based scanpath representation of the
         second scanpath
     :param: path: array-like
         array of indices for the best-fitting saccade pairings between scan-
@@ -724,15 +626,15 @@ def cal_positiondifference(data1,
 
     """
     # get the x and y coordinates of points between saccades
-    x1 = np.asarray(data1['saccade_x'])
-    x2 = np.asarray(data2['saccade_x'])
-    y1 = np.asarray(data1['saccade_y'])
-    y2 = np.asarray(data2['saccade_y'])
+    x1 = np.asarray(data1['sac']['x'])
+    x2 = np.asarray(data2['sac']['x'])
+    y1 = np.asarray(data1['sac']['y'])
+    y2 = np.asarray(data2['sac']['y'])
     # initialize list to hold individual position differences
     posdiff = []
     # calculate position differences along path
-    for k in range(0, len(path)):
-        i, j = np.where(M_assignment == path[k])
+    for p in path:
+        i, j = np.where(M_assignment == p)
         posdiff.append(math.sqrt((x1[i.item()] - x2[j.item()]) ** 2 +
                                  (y1[i.item()] - y2[j.item()]) ** 2))
     return posdiff
@@ -746,10 +648,10 @@ def cal_vectordifferencealongpath(data1,
     """Calculate vector similarity of two scanpaths.
 
     :param: data1: array-like
-        OrderedDict, contains vector-based scanpath representation of the
+        dict, contains vector-based scanpath representation of the
         first scanpath
     :param: data2: array-like
-        OrderedDict, contains vector-based scanpath representation of the
+        dict, contains vector-based scanpath representation of the
         second scanpath
     :param: path: array-like
         array of indices for the best-fitting saccade pairings between scan-
@@ -763,15 +665,16 @@ def cal_vectordifferencealongpath(data1,
 
     """
     # get the saccade lengths in x and y direction of both scanpaths
-    x1 = np.asarray(data1['saccade_lenx'])
-    x2 = np.asarray(data2['saccade_lenx'])
-    y1 = np.asarray(data1['saccade_leny'])
-    y2 = np.asarray(data2['saccade_leny'])
+    x1 = np.asarray(data1['sac']['lenx'])
+    x2 = np.asarray(data2['sac']['lenx'])
+    y1 = np.asarray(data1['sac']['leny'])
+    y2 = np.asarray(data2['sac']['leny'])
     # initialize list to hold individual vector differences
     vectordiff = []
     # calculate vector differences along path
-    for k in range(0, len(path)):
-        i, j = np.where(M_assignment == path[k])
+    # TODO look at this again, should be possible simpler
+    for p in path:
+        i, j = np.where(M_assignment == p)
         vectordiff.append(np.sqrt((x1[i.item()] - x2[j.item()]) ** 2 +
                                   (y1[i.item()] - y2[j.item()]) ** 2))
     return vectordiff
@@ -789,10 +692,10 @@ def getunnormalised(data1,
     similarity values per array.
 
     :param: data1: array-like
-        OrderedDict, contains vector-based scanpath representation of the
+        dict, contains vector-based scanpath representation of the
         first scanpath
     :param: data2: array-like
-        OrderedDict, contains vector-based scanpath representation of the
+        dict, contains vector-based scanpath representation of the
         second scanpath
     :param: path: array-like
         array of indices for the best-fitting saccade pairings between scan-
@@ -806,19 +709,17 @@ def getunnormalised(data1,
 
     >>> unorm_res = getunnormalised(scanpath_rep1, scanpath_rep2, path, M_assignment)
     """
-    args = data1, data2, path, M_assignment
-    VecSim = np.median(cal_vectordifferencealongpath(*args))
-    DirSim = np.median(cal_angulardifference(*args))
-    LenSim = np.median(cal_lengthdifference(*args))
-    PosSim = np.median(cal_positiondifference(*args))
-    DurSim = np.median(cal_durationdifference(*args))
-    unnormalised = [VecSim, DirSim, LenSim, PosSim, DurSim]
-    return unnormalised
+    return [
+        np.median(fx(data1, data2, path, M_assignment))
+        for fx in (cal_vectordifferencealongpath,
+                   cal_angulardifference,
+                   cal_lengthdifference,
+                   cal_positiondifference,
+                   cal_durationdifference)
+    ]
 
 
-def normaliseresults(unnormalised,
-                     sz=[1280, 720]
-                     ):
+def normaliseresults(unnormalised, sz):
     """Normalize similarity measures.
 
     Vector similarity is normalised against two times screen diagonal,
@@ -853,7 +754,7 @@ def normaliseresults(unnormalised,
 
 def docomparison(fixation_vectors1,
                  fixation_vectors2,
-                 sz=[1280, 720],
+                 sz,
                  grouping=False,
                  TDir=0.0,
                  TDur=0.0,
@@ -864,7 +765,7 @@ def docomparison(fixation_vectors1,
 
     :param: fixation_vectors1: array-like n x 3 fixation vector of one scanpath
     :param: fixation_vectors2: array-like n x 3 fixation vector of one scanpath
-    :param: sz: list, screen dimensions in px. Default: [1280, 720]
+    :param: sz: list, screen dimensions in px.
     :param: grouping: boolean, if True, simplification is performed based on thresholds TAmp,
         TDir, and TDur. Default: False
     :param: TDir: float, Direction threshold, angle in degrees. Default: 0.0
@@ -880,19 +781,17 @@ def docomparison(fixation_vectors1,
     >>> print(results)
     >>> [[0.95075847681364678, 0.95637548674423822, 0.94082367355291008, 0.94491164030498609, 0.78260869565217384]]
     """
-    # initialize result vector
-    scanpathcomparisons = []
     # check if fixation vectors/scanpaths are long enough
     if (len(fixation_vectors1) >= 3) & (len(fixation_vectors2) >= 3):
         # get the data into a geometric representation
-        subj1 = gen_scanpath_structure(fixation_vectors1)
-        subj2 = gen_scanpath_structure(fixation_vectors2)
+        path1 = gen_scanpath_structure(fixation_vectors1)
+        path2 = gen_scanpath_structure(fixation_vectors2)
         if grouping:
             # simplify the data
-            subj1 = simplify_scanpath(subj1, TAmp, TDir, TDur)
-            subj2 = simplify_scanpath(subj2, TAmp, TDir, TDur)
+            path1 = simplify_scanpath(path1, TAmp, TDir, TDur)
+            path2 = simplify_scanpath(path2, TAmp, TDir, TDur)
         # create M, a matrix of all vector pairings length differences (weights)
-        M = cal_vectordifferences(subj1, subj2)
+        M = cal_vectordifferences(path1, path2)
         # initialize a matrix of size M for a matrix of nodes
         szM = np.shape(M)
         M_assignment = np.arange(szM[0] * szM[1]).reshape(szM[0], szM[1])
@@ -901,13 +800,12 @@ def docomparison(fixation_vectors1,
         # find the shortest path (= lowest sum of weights) through the graph
         path, dist = dijkstra(weightedGraph, 0, szM[0] * szM[1] - 1)
         # compute similarities on alinged scanpaths and normalize them
-        unnormalised = getunnormalised(subj1, subj2, path, M_assignment)
+        unnormalised = getunnormalised(path1, path2, path, M_assignment)
         normal = normaliseresults(unnormalised, sz)
-        scanpathcomparisons.append(normal)
+        return normal
     # return nan as result if at least one scanpath it too short
     else:
-        scanpathcomparisons.append(np.repeat(np.nan, 5))
-    return scanpathcomparisons
+        return np.repeat(np.nan, 5)
 
 
 def main(args=sys.argv):
@@ -965,15 +863,19 @@ def main(args=sys.argv):
     if args.screensize:
         sz = [float(i) for i in args.screensize]
         if len(sz) != 2:
-            print('I expected two floats after --screensize, such as --screensize 1280 720.'
-                  'However, I got {}. I will default to a screensize of 1280 x 720.'.format(args.screensize))
-            sz = [1280, 720]
+            raise ValueError(
+                'I expected two floats after --screensize, '
+                'such as --screensize 1280 720. '
+                'However, I got {}. I will default to a screensize '
+                'of 1280 x 720.'.format(args.screensize))
 
     if (TDir != 0) and (TAmp != 0):
         grouping = True
         print(
-            'Scanpath comparison is done with simplification. Two consecutive saccades shorter than {}px and '
-            'with an angle smaller than {} degrees are grouped together if intermediate fixations are shorter '
+            'Scanpath comparison is done with simplification. Two consecutive '
+            'saccades shorter than {}px and '
+            'with an angle smaller than {} degrees are grouped together if '
+            'intermediate fixations are shorter '
             'than {} seconds.'.format(TAmp, TDir, TDur))
     else:
         grouping = False
@@ -986,11 +888,12 @@ def main(args=sys.argv):
                           TDir=TDir,
                           TDur=TDur,
                           TAmp=TAmp)
-    print('Vector similarity = ', result[0][0])
-    print('Direction similarity = ', result[0][1])
-    print('Length similarity = ', result[0][2])
-    print('Position similarity = ', result[0][3])
-    print('Duration similarity = ', result[0][4])
+    for i, label in enumerate(('Vector',
+                               'Direction',
+                               'Length',
+                               'Position',
+                               'Duration')):
+        print('{} similarity = {}'.format(label, result[i]))
 
 
 if __name__ == '__main__':

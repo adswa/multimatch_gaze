@@ -34,7 +34,7 @@ def test_same_real_data_forrest(run=1,
                                                         grouping=False
                                                         )
     segmentfinal = np.array(segments)
-    assert np.all(segmentfinal.all(1))
+    assert np.all(segmentfinal)
 
 
 def test_same_real_data():
@@ -58,7 +58,7 @@ def test_same_real_data():
                               TDur=0,
                               TAmp=0)
     resultsfinal = np.array(results)
-    assert np.all(resultsfinal.all(1))
+    assert np.all(results)
 
 
 def test_simplification(run=1,
@@ -93,8 +93,8 @@ def test_simplification(run=1,
                                                         TAmp=100.0)
     resultsfinal = np.array(results)
     resultsfinal_M = np.array(segments)
-    assert np.all(resultsfinal.all(1))
-    assert np.all(resultsfinal_M.all(1))
+    assert np.all(resultsfinal)
+    assert np.all(resultsfinal_M)
 
 
 def test_structure_generation(length=5):
@@ -109,15 +109,15 @@ def test_structure_generation(length=5):
     """
     fix_vector = ut.mk_fix_vector(length)
     results = mp.gen_scanpath_structure(fix_vector)
-    assert len(results['fixation_x']) == len(fix_vector)
-    assert len(results['fixation_y']) == len(fix_vector)
-    assert len(results['fixation_dur']) == len(fix_vector)
-    assert len(results['saccade_x']) == len(fix_vector) - 1
-    assert len(results['saccade_y']) == len(fix_vector) - 1
-    assert len(results['saccade_lenx']) == len(fix_vector) - 1
-    assert len(results['saccade_leny']) == len(fix_vector) - 1
-    assert len(results['saccade_theta']) == len(fix_vector) - 1
-    assert len(results['saccade_rho']) == len(fix_vector) - 1
+    assert len(results['fix']['x']) == len(fix_vector)
+    assert len(results['fix']['y']) == len(fix_vector)
+    assert len(results['fix']['dur']) == len(fix_vector)
+    assert len(results['sac']['x']) == len(fix_vector) - 1
+    assert len(results['sac']['y']) == len(fix_vector) - 1
+    assert len(results['sac']['lenx']) == len(fix_vector) - 1
+    assert len(results['sac']['leny']) == len(fix_vector) - 1
+    assert len(results['sac']['theta']) == len(fix_vector) - 1
+    assert len(results['sac']['rho']) == len(fix_vector) - 1
 
 
 def test_cal_vectordifferences(length=5):
@@ -192,8 +192,8 @@ def test_compare2matlab():
     matlab_grouping = [0.95076, 0.95638, 0.94082, 0.94491, 0.78261]
     matlab_no_grouping = [0.99082, 0.69902, 0.98927, 0.94767, 0.65563]
     from pytest import approx
-    assert matlab_grouping == approx(res_grouping[0], abs=1e-5, rel=1e-5)
-    assert matlab_no_grouping == approx(res_no_grouping[0], abs=1e-5, rel=1e-5)
+    assert matlab_grouping == approx(res_grouping, abs=1e-5, rel=1e-5)
+    assert matlab_no_grouping == approx(res_no_grouping, abs=1e-5, rel=1e-5)
 
 
 def test_too_short_scanpaths():
