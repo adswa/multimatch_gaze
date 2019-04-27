@@ -1,6 +1,7 @@
 import sys
 import os
 import numpy as np
+import pytest
 from . import utils as ut
 from .. import multimatch as mp
 
@@ -321,3 +322,57 @@ def test_closestleft():
             assert res == 25
         else:
             assert res == i - 1
+
+
+def test_parser():
+    parser = mp.parse_args(['data/fixvectors/segment_0_sub-01.tsv',
+                            'data/fixvectors/segment_0_sub-19.tsv',
+                            '--screensize', '1280', '720',
+                            '--direction-threshold', '45.0',
+                            '--amplitude-threshold', '100.0',
+                            '--duration-threshold', '0.1'])
+    # does this argument exist?
+    assert parser.screensize
+    # does the argument have the right value?
+    assert parser.direction_threshold == 45.0
+
+
+def test_help():
+    """smoke test whether we blow up when requesting help"""
+    parser = mp.parse_args('-h')
+
+
+# TODO: test what happens with too few args
+
+def test_main(capfd):
+    """
+    asserts whether user gets correct feedback from main function
+
+    """
+    args = mp.parse_args(['data/fixvectors/segment_0_sub-01.tsv',
+                            'data/fixvectors/segment_0_sub-19.tsv',
+                            '--screensize', '1280', '720',
+                            '--direction-threshold', '45.0',
+                            '--amplitude-threshold', '100.0',
+                            '--duration-threshold', '0.1'])
+    mp.main(args)
+    out, err = capfd.readouterr()
+    assert 'Scanpath comparison is done with simplification.'
+    'Two consecutive saccades shorter than 100.0px and with an angle smaller'
+    'than 45.0 degrees are grouped together if intermediate fixations'
+    'are shorter than 0.1 seconds.' in out
+
+
+    args2 = mp.parse_args(['data/fixvectors/segment_0_sub-01.tsv',
+                            'data/fixvectors/segment_0_sub-19.tsv',
+                            '--screensize', '1280', '720'])
+    mp.main(args2)
+    out, err = capfd.readouterr()
+    assert 'Scanpath comparison is done without any simplification.' in out
+
+    # check whether main raises ValueError if screensize is wrong
+    with pytest.raises(ValueError):
+        args3 = mp.parse_args(['data/fixvectors/segment_0_sub-01.tsv',
+                                'data/fixvectors/segment_0_sub-19.tsv',
+                                '--screensize', '1280'])
+        mp.main(args3)

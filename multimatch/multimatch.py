@@ -808,7 +808,14 @@ def docomparison(fixation_vectors1,
         return np.repeat(np.nan, 5)
 
 
-def main(args=sys.argv):
+def parse_args(args):
+    """Argument parse for command line invocation
+
+    Turned it into a function to make testing easier.
+
+    :param args: [command line] arguments
+    :return: argument parser
+    """
     import argparse
 
     parser = argparse.ArgumentParser(
@@ -846,7 +853,18 @@ def main(args=sys.argv):
         help="""Threshold for fixation duration during amplitude and direction
         based grouping, in seconds.""")
 
-    args = parser.parse_args()
+    return parser.parse_args(args)
+
+
+def main(args=None):
+    """
+    call argparsed cli options, read in data, calculate similarity.
+    :return: similarity results
+    """
+    # I'm sure this function parameter is ugly -- I'm trying to test main with
+    # my unit test, in which I need to pass the args...
+    if not args:
+        args = parse_args(sys.argv[1:])
 
     data1 = np.recfromcsv(args.input1,
                           delimiter='\t',
