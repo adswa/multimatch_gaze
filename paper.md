@@ -2,7 +2,7 @@
 title: 'MultiMatch in Python'
 tags:
   - eyetracking
-  - scanpath
+  - scan path
   - fixation
   - saccade
   - Python
@@ -24,13 +24,13 @@ bibliography: paper.bib
 
 # Summary
 
-The similarity of scanpaths, the trace of eye-movements
+The similarity of scan paths, the trace of eye-movements
 in space and time, offers insights into commonalities
 and differences of viewing behavior within and between
 participants. In addition to the quantification of position
 and order of a series of eye-movements, a comparison
 between them adds a useful dimension to the traditional
-analysis of eyetracking data. For example, scanpath
+analysis of eyetracking data. For example, scan path
 comparisons are used to study analogy-making [@french],
 visual exploration and imagery [@Johansson], habituation
 in repetitive visual search [@burmester], or spatial
@@ -39,17 +39,17 @@ is applied within individuals as a measure of change [@burmester],
 or across samples to study group differences [@french].
 Therefore, in recent years, interest
 in the study eye movement sequences has sparked the development
-of novel methodologies and algorithms to perform scanpath
-comparisons. However, many of the contemporary scanpath
+of novel methodologies and algorithms to perform scan path
+comparisons. However, many of the contemporary scan path
 comparison algorithms are implemented in closed-source,
 non-free software such as Matlab.
 
 ``multimatch`` is a Python based
-reimplementation of the MultiMatch toolbox for scanpath
+reimplementation of the MultiMatch toolbox for scan path
 comparison, originally developed by [@Jarodzka] and
 implemented by [@Dewhurst] in Matlab.
-This algorithm represents scanpaths as geometrical
-vectors in a two-dimensional space: Any scanpath is build
+This algorithm represents scan paths as geometrical
+vectors in a two-dimensional space: Any scan path is build
 up of a vector sequence in which the vectors represent
 saccades, and the start and end position of saccadic
 vectors represent fixations. Two such vector sequences
@@ -63,13 +63,13 @@ evaluation.
 This reimplementation in Python aims at providing an
 accessible, well-documented, and tested open
 source alternative to the existing MultiMatch toolbox. The algorithm
-is an established tool for scanpath comparison [@anderson],
+is an established tool for scan path comparison [@anderson],
 and improved availability will likely foster its application
 in a broader research community. multimatch
 is available in the form of the github repository [@multimatch]
 and as the python module multimatch via 'pip install multimatch'.
 The module contains the same functionality as the original
-Matlab toolbox, that is, scanpath comparison with optional
+Matlab toolbox, that is, scan path comparison with optional
 simplification according to user-defined thresholds, and it
 provides this functionality within command-line calls or
 interactive python sessions.
