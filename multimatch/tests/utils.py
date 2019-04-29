@@ -343,7 +343,7 @@ def pursuits_to_fixations(npdata):
     return newdata
 
 
-def preprocess(data, sz=[1280, 720]):
+def preprocess(data, screensize=[1280, 720]):
     """Preprocess record array of eye-events.
 
     A record array of the studyforrest eyemovement data is preprocessed
@@ -353,7 +353,7 @@ def preprocess(data, sz=[1280, 720]):
 
     :param: data: recordarray, remodnav output of eye events from movie
         data
-    :param: sz: list of float, screen measurements in px
+    :param: screensize: list of float, screen measurements in px
 
     :return: fixations: array-like nx4 fixation vectors (onset, x, y,
         duration)
@@ -365,10 +365,10 @@ def preprocess(data, sz=[1280, 720]):
                                       data['label'] == 'PURS')]
     # within x coordinates?
     filterxbounds = filterevents[np.logical_and(filterevents['start_x'] >= 0,
-                                                filterevents['start_x'] <= sz[0])]
+                                                filterevents['start_x'] <= screensize[0])]
     # within y coordinates?
     filterybounds = filterxbounds[np.logical_and(filterxbounds['start_y'] >= 0,
-                                                 filterxbounds['end_y'] <= sz[1])]
+                                                 filterxbounds['end_y'] <= screensize[1])]
     # give me onset times, start_x, start_y and duration
     fixations = filterybounds[["onset", "start_x", "start_y",
                                "duration"]]
@@ -416,7 +416,7 @@ def longshot(shots,
 def docomparison_forrest(shots,
                          data1,
                          data2,
-                         sz=[1280, 720],
+                         screensize=[1280, 720],
                          dur=4.92,
                          ldur=0,
                          offset=False,
@@ -428,7 +428,7 @@ def docomparison_forrest(shots,
     """Compare two scanpaths on five similarity dimensions.
 
     :param: data1, data2: recarray, eyemovement information of forrest gump studyforrest dataset
-    :param: sz: list, screen dimensions in px.
+    :param: screensize: list, screen dimensions in px.
     :param: ldur: float, duration in seconds. An attempt is made to group short shots
         together to form shots of ldur length
     :param: grouping: boolean, if True, simplification is performed based on thresholds TAmp,
@@ -458,8 +458,8 @@ def docomparison_forrest(shots,
     newdata2 = pursuits_to_fixations(data2)
     print('Loaded data.')
     # preprocess input files
-    fixations1 = preprocess(newdata1, sz)
-    fixations2 = preprocess(newdata2, sz)
+    fixations1 = preprocess(newdata1, screensize)
+    fixations2 = preprocess(newdata2, screensize)
     shots = longshot(shots, group_shots, ldur)
     # get shots and scanpath on- and offsets
     if offset:
@@ -500,13 +500,13 @@ def docomparison_forrest(shots,
                 subj1 = mp.simplify_scanpath(subj1, TAmp, TDir, TDur)
                 subj2 = mp.simplify_scanpath(subj2, TAmp, TDir, TDur)
             M = mp.cal_vectordifferences(subj1, subj2)
-            szM = np.shape(M)
-            M_assignment = np.arange(szM[0] *
-                                     szM[1]).reshape(szM[0], szM[1])
-            weightedGraph = mp.createdirectedgraph(szM, M, M_assignment)
-            path, dist = mp.dijkstra(weightedGraph, 0, szM[0] * szM[1] - 1)
+            scanpath_dim = np.shape(M)
+            M_assignment = np.arange(scanpath_dim[0] *
+                                     scanpath_dim[1]).reshape(scanpath_dim[0], scanpath_dim[1])
+            weightedGraph = mp.createdirectedgraph(scanpath_dim, M, M_assignment)
+            path, dist = mp.dijkstra(weightedGraph, 0, scanpath_dim[0] * scanpath_dim[1] - 1)
             unnormalised = mp.getunnormalised(subj1, subj2, path, M_assignment)
-            normal = mp.normaliseresults(unnormalised, sz)
+            normal = mp.normaliseresults(unnormalised, screensize)
             scanpathcomparisons.append(normal)
         # return nan as result if at least one scanpath it too short
         else:

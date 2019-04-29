@@ -364,7 +364,7 @@ def cal_vectordifferences(path1,
     return M
 
 
-def createdirectedgraph(szM,
+def createdirectedgraph(scanpath_dim,
                         M,
                         M_assignment
                         ):
@@ -378,7 +378,7 @@ def createdirectedgraph(szM,
     It defines the possible nodes to reach from a particular node, and the weight that
     is associated with the path to each of the possible nodes.
 
-    :param: szM: list, shape of matrix M
+    :param: scanpath_dim: list, shape of matrix M
     :param: M: array-like, matrix of vector length differences
     :param: M_assignment: array-like, Matrix, arranged with values from 0 to number of entries in M
 
@@ -391,33 +391,33 @@ def createdirectedgraph(szM,
     adjacent = {}
     weight = {}
     # loop through every node rowwise
-    for i in range(0, szM[0]):
+    for i in range(0, scanpath_dim[0]):
         # loop through every node columnwise
-        for j in range(0, szM[1]):
-            currentNode = i * szM[1] + j
+        for j in range(0, scanpath_dim[1]):
+            currentNode = i * scanpath_dim[1] + j
             # if in the last (bottom) row, only go right
-            if (i == szM[0] - 1) & (j < szM[1] - 1):
+            if (i == scanpath_dim[0] - 1) & (j < scanpath_dim[1] - 1):
                 adjacent[M_assignment[i, j]] = [currentNode + 1]
                 weight[M_assignment[i, j]] = [M[i, j + 1]]
             # if in the last (rightmost) column, only go down
-            elif (i < szM[0] - 1) & (j == szM[1] - 1):
-                adjacent[M_assignment[i, j]] = [currentNode + szM[1]]
+            elif (i < scanpath_dim[0] - 1) & (j == scanpath_dim[1] - 1):
+                adjacent[M_assignment[i, j]] = [currentNode + scanpath_dim[1]]
                 weight[M_assignment[i, j]] = [M[i + 1, j]]
             # if in the last (bottom-right) vertex, do not move any further
-            elif (i == szM[0] - 1) & (j == szM[1] - 1):
+            elif (i == scanpath_dim[0] - 1) & (j == scanpath_dim[1] - 1):
                 adjacent[M_assignment[i, j]] = [currentNode]
                 weight[M_assignment[i, j]] = [0]
             # anywhere else, move right, down and down-right.
             else:
                 adjacent[M_assignment[i, j]] = [currentNode + 1,
-                                                currentNode + szM[1],
-                                                currentNode + szM[1] + 1]
+                                                currentNode + scanpath_dim[1],
+                                                currentNode + scanpath_dim[1] + 1]
                 weight[M_assignment[i, j]] = [M[i, j + 1],
                                               M[i + 1, j],
                                               M[i + 1, j + 1]]
     # create ascending list ranging from first to last node - this
     #  will be the first key in the nested dict
-    Startnodes = range(0, szM[0] * szM[1])
+    Startnodes = range(0, scanpath_dim[0] * scanpath_dim[1])
     # initialize list with adjacent nodes (adjacent to each startnode)
     # and the weights associated with the paths between them
     weightedEdges = [
@@ -719,7 +719,7 @@ def getunnormalised(data1,
     ]
 
 
-def normaliseresults(unnormalised, sz):
+def normaliseresults(unnormalised, screensize):
     """Normalize similarity measures.
 
     Vector similarity is normalised against two times screen diagonal,
@@ -735,16 +735,16 @@ def normaliseresults(unnormalised, sz):
     :return: normalresults: array
         array of normalised similarity measures
 
-    >>> normal_res = normaliseresults(unnormalised, sz = [1280, 720])
+    >>> normal_res = normaliseresults(unnormalised, screensize)
     """
     # normalize vector similarity against two times screen diagonal, the maximum
     # theoretical distance
-    VectorSimilarity = 1 - unnormalised[0] / (2 * math.sqrt(sz[0] ** 2 + sz[1] ** 2))
+    VectorSimilarity = 1 - unnormalised[0] / (2 * math.sqrt(screensize[0] ** 2 + screensize[1] ** 2))
     # normalize against pi
     DirectionSimilarity = 1 - unnormalised[1] / math.pi
     # normalize against screen diagonal
-    LengthSimilarity = 1 - unnormalised[2] / math.sqrt(sz[0] ** 2 + sz[1] ** 2)
-    PositionSimilarity = 1 - unnormalised[3] / math.sqrt(sz[0] ** 2 + sz[1] ** 2)
+    LengthSimilarity = 1 - unnormalised[2] / math.sqrt(screensize[0] ** 2 + screensize[1] ** 2)
+    PositionSimilarity = 1 - unnormalised[3] / math.sqrt(screensize[0] ** 2 + screensize[1] ** 2)
     # no normalisazion necessary, already done
     DurationSimilarity = 1 - unnormalised[4]
     normalresults = [VectorSimilarity, DirectionSimilarity, LengthSimilarity,
@@ -754,7 +754,7 @@ def normaliseresults(unnormalised, sz):
 
 def docomparison(fixation_vectors1,
                  fixation_vectors2,
-                 sz,
+                 screensize,
                  grouping=False,
                  TDir=0.0,
                  TDur=0.0,
@@ -765,7 +765,7 @@ def docomparison(fixation_vectors1,
 
     :param: fixation_vectors1: array-like n x 3 fixation vector of one scanpath
     :param: fixation_vectors2: array-like n x 3 fixation vector of one scanpath
-    :param: sz: list, screen dimensions in px.
+    :param: screensize: list, screen dimensions in px.
     :param: grouping: boolean, if True, simplification is performed based on thresholds TAmp,
         TDir, and TDur. Default: False
     :param: TDir: float, Direction threshold, angle in degrees. Default: 0.0
@@ -777,7 +777,7 @@ def docomparison(fixation_vectors1,
         (Angle), Length, Position, and Duration. 1 means absolute similarity, 0 means
         lowest similarity possible.
 
-    >>> results = docomparison(fix_1, fix_2, sz = [1280, 720], grouping = True, TDir = 45.0, TDur = 0.05, TAmp = 150)
+    >>> results = docomparison(fix_1, fix_2, screensize = [1280, 720], grouping = True, TDir = 45.0, TDur = 0.05, TAmp = 150)
     >>> print(results)
     >>> [[0.95075847681364678, 0.95637548674423822, 0.94082367355291008, 0.94491164030498609, 0.78260869565217384]]
     """
@@ -793,15 +793,15 @@ def docomparison(fixation_vectors1,
         # create M, a matrix of all vector pairings length differences (weights)
         M = cal_vectordifferences(path1, path2)
         # initialize a matrix of size M for a matrix of nodes
-        szM = np.shape(M)
-        M_assignment = np.arange(szM[0] * szM[1]).reshape(szM[0], szM[1])
+        scanpath_dim = np.shape(M)
+        M_assignment = np.arange(scanpath_dim[0] * scanpath_dim[1]).reshape(scanpath_dim[0], scanpath_dim[1])
         # create a weighted graph of all possible connections per Node, and their weight
-        weightedGraph = createdirectedgraph(szM, M, M_assignment)
+        weightedGraph = createdirectedgraph(scanpath_dim, M, M_assignment)
         # find the shortest path (= lowest sum of weights) through the graph
-        path, dist = dijkstra(weightedGraph, 0, szM[0] * szM[1] - 1)
+        path, dist = dijkstra(weightedGraph, 0, scanpath_dim[0] * scanpath_dim[1] - 1)
         # compute similarities on alinged scanpaths and normalize them
         unnormalised = getunnormalised(path1, path2, path, M_assignment)
-        normal = normaliseresults(unnormalised, sz)
+        normal = normaliseresults(unnormalised, screensize)
         return normal
     # return nan as result if at least one scanpath it too short
     else:
@@ -894,8 +894,8 @@ def main(args=None):
     TAmp = args.amplitude_threshold
     TDur = args.duration_threshold
 
-    sz = [float(i) for i in args.screensize]
-    if len(sz) != 2:
+    screensize = [float(i) for i in args.screensize]
+    if len(screensize) != 2:
         raise ValueError(
             'I expected two floats after for the positional'
             'screensize argument, such as 1280 720. '
@@ -916,7 +916,7 @@ def main(args=None):
 
     result = docomparison(data1,
                           data2,
-                          sz=sz,
+                          screensize=screensize,
                           grouping=grouping,
                           TDir=TDir,
                           TDur=TDur,

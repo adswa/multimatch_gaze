@@ -25,7 +25,7 @@ def test_same_real_data_forrest(run=1,
     segments, onset, duration = ut.docomparison_forrest(shots,
                                                         data1,
                                                         data2,
-                                                        sz=[1280, 720],
+                                                        screensize=[1280, 720],
                                                         dur=3,
                                                         ldur=0,
                                                         offset=False,
@@ -53,7 +53,7 @@ def test_same_real_data():
                                  'formats': ('f8', 'f8', 'f8')})
     results = mp.docomparison(data1,
                               data1,
-                              sz=[720, 1280],
+                              screensize=[720, 1280],
                               grouping=False,
                               TDir=0,
                               TDur=0,
@@ -75,7 +75,7 @@ def test_simplification(run=1,
                                  'formats': ('f8', 'f8', 'f8')})
     results = mp.docomparison(data1,
                               data1,
-                              sz=[1280, 720],
+                              screensize=[1280, 720],
                               grouping=True,
                               TDir=30.0,
                               TDur=0.05,
@@ -87,7 +87,7 @@ def test_simplification(run=1,
                                                         dur=3,
                                                         ldur=0.0,
                                                         offset=False,
-                                                        sz=[1280, 720],
+                                                        screensize=[1280, 720],
                                                         grouping=True,
                                                         TDir=30.0,
                                                         TDur=0.05,
@@ -178,14 +178,14 @@ def test_compare2matlab():
                                  'formats': ('f8', 'f8', 'f8')})
     res_grouping = mp.docomparison(data1,
                                    data2,
-                                   sz=[720, 1280],
+                                   screensize=[720, 1280],
                                    grouping=True,
                                    TDir=45.0,
                                    TDur=0.3,
                                    TAmp=146.8)
     res_no_grouping = mp.docomparison(data1,
                                       data2,
-                                      sz=[720, 1280],
+                                      screensize=[720, 1280],
                                       grouping=False,
                                       TDir=0,
                                       TDur=0,
@@ -203,7 +203,7 @@ def test_too_short_scanpaths():
     """
     fixvector1 = ut.mk_fix_vector(2)
     fixvector2 = ut.mk_fix_vector(5)
-    results = mp.docomparison(fixvector1, fixvector2, sz=[1280, 720], grouping=True, TAmp=8, TDir=8, TDur=8)
+    results = mp.docomparison(fixvector1, fixvector2, screensize=[1280, 720], grouping=True, TAmp=8, TDir=8, TDur=8)
     assert ([results[i] == np.nan for i in range(0, len(results))])
 
 
