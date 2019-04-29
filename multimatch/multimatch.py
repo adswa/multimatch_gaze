@@ -839,7 +839,9 @@ def parse_args(args):
         'screensize',  metavar='<screensize>',
         nargs='+',
         help="""screensize: Resolution of screen in px, should be supplied as
-        1000 800 for a screen of resolution [1000, 800].""")
+        1000 800 for a screen of resolution [1000, 800]. This parameter is
+        necessary to correctly normalize Length, Position, and Vector similarity
+        to range [0, 1].""")
     parser.add_argument(
         '--direction-threshold', type=float, metavar='<TDir>', default=0.0,
         help="""Threshold for direction based grouping in degree (example: 45.0).
