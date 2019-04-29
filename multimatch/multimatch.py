@@ -848,6 +848,19 @@ def parse_args(args):
         help="""Threshold for fixation duration during amplitude and direction
         based grouping, in seconds (example: 0.1).
         Default: 0 (no simplification)""")
+    parser.add_argument(
+        '-o', '--output-type',
+        help="""Specify output format of the results: "hr", "single-row"
+        or "single-del".
+        <hr>: the most Human Readable option, will print dimension
+        and value row-wise to the terminal.
+        <single-row>: useful to collate results in a table, will print the
+        values in a tab-seperated, single string.
+        <single-del>: print dimension and value separated with a single
+        delimiter (tab), row-wise, without whitespace. Useful to pick a selection
+        of scores, split by a single tab, without worrying about whitespace
+        default: hr""",
+        default = 'hr')
 
     return parser.parse_args(args)
 
@@ -905,7 +918,15 @@ def main(args=None):
     else:
         grouping = False
         print('Scanpath comparison is done without any simplification.')
+    allowed_output = ['hr', 'single-row', 'single-del']
+    output = args.output_type if args.output_type in allowed_output else False
 
+    if not output:
+        raise ValueError(
+                "I expected an output type specification of 'hr', 'single-row'"
+                " or 'single-del', supplied as a string (as in -o 'single-row')."
+                " However, I got '{}' instead.".format(args.output_type)
+                )
     result = docomparison(data1,
                           data2,
                           screensize=screensize,
@@ -913,14 +934,23 @@ def main(args=None):
                           TDir=TDir,
                           TDur=TDur,
                           TAmp=TAmp)
+
     for i, label in enumerate(('Vector',
                                'Direction',
                                'Length',
                                'Position',
                                'Duration')):
-        print('{} similarity = {}'.format(label, result[i]))
+        if output == 'hr':
+            print('{} similarity = {}'.format(label, result[i]))
+        elif output == 'single-del':
+            print('{}\t{}\t'.format(label, result[i]))
 
-
+    if output == 'single-row':
+        print('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t'.format('vector', result[0],
+                                                                 'direction', result[1],
+                                                                 'length', result[2],
+                                                                 'position', result[3],
+                                                                 'duration', result[4]))
 if __name__ == '__main__':
 
     # execution
