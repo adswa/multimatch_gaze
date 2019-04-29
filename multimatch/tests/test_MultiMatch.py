@@ -364,7 +364,7 @@ def test_parser():
 
 def test_help():
     """smoke test whether we blow up when requesting help"""
-    parser = mp.parse_args('-h')
+    parser = mp.parse_args('--help')
 
 
 # TODO: test what happens with too few args
