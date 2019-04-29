@@ -827,14 +827,14 @@ def parse_args(args):
 
     parser.add_argument(
         'input1', metavar='<datafile>',
-        help="""Eyemovement data of scanpath 1. Should be a tab separated
-         file with columns corresponding to x-coordinates, y-coordinates, and
-         fixation duration in seconds.""")
+        help="""Fixation data of scanpath 1. Should be a tab separated
+         file with columns corresponding to start x-coordinates, start
+         y-coordinates, and fixation duration in seconds.""")
     parser.add_argument(
         'input2', metavar='<datafile>',
-        help="""Eyemovement data of scanpath 2. Should be a tab separated
-        file with columns corresponding to x-coordinates, y-coordinates, and
-        fixation duration in seconds.""")
+        help="""Fixation data of scanpath 2. Should be a tab separated
+        file with columns corresponding to start x-coordinates, start
+        y-coordinates, and fixation duration in seconds.""")
     parser.add_argument(
         '--screensize', nargs='+', metavar='<screensize>', default=[1280, 720],
         help="""screensize: Resolution of screen in px, should be supplied as
