@@ -845,19 +845,22 @@ def parse_args(args):
     parser.add_argument(
         '--direction-threshold', type=float, metavar='<TDir>', default=0.0,
         help="""Threshold for direction based grouping in degree (example: 45.0).
-         Two consecutive saccades with an angle below TDir and short fixations will
-         be grouped together to reduce scanpath complexity. If 0: no
-         simplification will be performed.""")
+        Two consecutive saccades with an angle below TDir and short fixations will
+        be grouped together to reduce scanpath complexity. If 0: no
+        simplification will be performed.
+        Default: 0 (no simplification)""")
     parser.add_argument(
         '--amplitude-threshold', type=float, metavar='<TAmp>', default=0.0,
         help="""Threshold for amplitude based grouping in pixel (example: 140.0).
         Two consecutive saccades shorter than TAmp and short fixations will be
         grouped together to reduce scanpath complexity. If 0: no simplification
-        will be performed.""")
+        will be performed.
+        Default: 0 (no simplification)""")
     parser.add_argument(
         '--duration-threshold', type=float, metavar='<TDur>', default=0.0,
         help="""Threshold for fixation duration during amplitude and direction
-        based grouping, in seconds.""")
+        based grouping, in seconds (example: 0.1).
+        Default: 0 (no simplification)""")
 
     return parser.parse_args(args)
 
