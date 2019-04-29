@@ -819,7 +819,11 @@ def parse_args(args):
     import argparse
 
     parser = argparse.ArgumentParser(
-        prog='multimatch', )
+        prog='multimatch',
+        description='{}'.format(
+            main.__doc__
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter)
 
     parser.add_argument(
         'input1', metavar='<datafile>',
@@ -857,9 +861,20 @@ def parse_args(args):
 
 
 def main(args=None):
-    """
-    call argparsed cli options, read in data, calculate similarity.
-    :return: similarity results
+    """Multimatch_gaze: Scanpath comparison in Python.
+
+     Multimatch_gaze is a Python-based reimplementation of the MultiMatch method
+     for scanpath comparison (Jarodzka et al., 2010; Dewhurst et al., 2012).
+     Based on A) two tab-separated scanpath input files that contain the start x-
+     and y-coordinates of fixations and their durations, and B) the screensize in
+     pixel, multimatch_gaze calculates the similarity of the provided scanpaths
+     on the five dimensions 'shape', 'direction', 'fixation duration', 'length',
+     and position (normed to range [0, 1]).
+     Scanpath simplification based on angular relation or length is possible on demand.
+
+     For further information, please see https://multimatch.readthedocs.io/en/latest/.
+
+
     """
     # I'm sure this function parameter is ugly -- I'm trying to test main with
     # my unit test, in which I need to pass the args...
