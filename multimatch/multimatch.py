@@ -268,25 +268,31 @@ def simdir(path,
                 # insert original data in new list -- no simplification
                 i, j = keepsaccade(i, j, sim, path)
         # elif the angle is smaller than the threshold, but its the LAST saccade:
-        elif (angle < TDir) & (i == len(saccades['x']) - 1):
-            # if the fixation duration is short:
-            if fixations['dur'][i + 1] < TDur:
-                # calculate sum of local vectors
-                v_x = saccades['lenx'][i - 2] + saccades['lenx'][i - 1]
-                v_y = saccades['leny'][i - 2] + saccades['leny'][i - 1]
-                rho, theta = cart2pol(v_x, v_y)
-                # save them in new vectors
-                sim['sac']['lenx'][j - 1] = v_x
-                sim['sac']['leny'][j - 1] = v_y
-                sim['sac']['theta'][j - 1] = theta
-                sim['sac']['len'][j - 1] = rho
-                sim['fix']['dur'].insert(j, fixations['dur'][-1] + (fixations['dur'][i] / 2))
-                j -= 1
-                i += 1
-            # if fixation duration is longer than the threshold:
-            else:
-                # insert original path in new list -- no simplification
-                i, j = keepsaccade(i, j, sim, path)
+        ## Testing revealed that we never actually get here -- because for the
+        ## last saccade, the angle is inf. This however, is how it seems to be
+        ## implemented in the original toolbox -- \_(ツ)_/¯.
+        ##  TODO: ponder whether to keep exact original (dys)functionality here
+        # elif (angle < TDir) & (i == len(saccades['x']) - 1):
+        #     print("step 1", angle, i)
+        #     # if the fixation duration is short:
+        #     if fixations['dur'][i + 1] < TDur:
+        #         # calculate sum of local vectors
+        #         print("TRIGGERED")
+        #         v_x = saccades['lenx'][i - 2] + saccades['lenx'][i - 1]
+        #         v_y = saccades['leny'][i - 2] + saccades['leny'][i - 1]
+        #         rho, theta = cart2pol(v_x, v_y)
+        #         # save them in new vectors
+        #         sim['sac']['lenx'][j - 1] = v_x
+        #         sim['sac']['leny'][j - 1] = v_y
+        #         sim['sac']['theta'][j - 1] = theta
+        #         sim['sac']['len'][j - 1] = rho
+        #         sim['fix']['dur'].insert(j, fixations['dur'][-1] + (fixations['dur'][i] / 2))
+        #         j -= 1
+        #         i += 1
+        #     # if fixation duration is longer than the threshold:
+        #     else:
+        #         # insert original path in new list -- no simplification
+        #         i, j = keepsaccade(i, j, sim, path)
         # else (the angle is larger than the threshold)
         else:
             # insert original path in new list -- no simplification

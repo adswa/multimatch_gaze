@@ -197,31 +197,6 @@ def test_compare2matlab():
     assert matlab_no_grouping == approx(res_no_grouping, abs=1e-5, rel=1e-5)
 
 
-def test_simplification_conditional():
-    """test the case that the last saccade in a scanpath needs simplification
-    """
-    eyedata1, eyedata2 = ut.mk_strucarray(5)
-    # repeat the last eye events + a bit of wriggle - this should qualify the last event
-    # for simplification
-    for i in eyedata1.keys():
-        for j in eyedata1[i].keys():
-            eyedata1[i][j].append(eyedata1[i][j][-1]+1)
-    # make sure the fixation duration is short
-    eyedata1['fix']['dur'][-1] = 0.05
-
-
-    # simplify -- smoketest whether we blow
-    simple = mp.simdir(eyedata1,
-                       TDir=45.0,
-                       TDur=0.1
-                       )
-
-    for i in simple.keys():
-        for j in simple[i].keys():
-            # check whether the scanpath length is reduced by one
-            assert (len(simple[i][j]) - len(eyedata1[i][j])) == -1
-
-
 def test_too_short_scanpaths():
     """
     if at least one scanpath is too short results should be nan.
