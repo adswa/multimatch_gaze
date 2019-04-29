@@ -327,7 +327,7 @@ def test_closestleft():
 def test_parser():
     parser = mp.parse_args(['data/fixvectors/segment_0_sub-01.tsv',
                             'data/fixvectors/segment_0_sub-19.tsv',
-                            '--screensize', '1280', '720',
+                            '1280', '720',
                             '--direction-threshold', '45.0',
                             '--amplitude-threshold', '100.0',
                             '--duration-threshold', '0.1'])
@@ -351,7 +351,7 @@ def test_main(capfd):
     """
     args = mp.parse_args(['data/fixvectors/segment_0_sub-01.tsv',
                             'data/fixvectors/segment_0_sub-19.tsv',
-                            '--screensize', '1280', '720',
+                            '1280', '720',
                             '--direction-threshold', '45.0',
                             '--amplitude-threshold', '100.0',
                             '--duration-threshold', '0.1'])
@@ -365,7 +365,7 @@ def test_main(capfd):
 
     args2 = mp.parse_args(['data/fixvectors/segment_0_sub-01.tsv',
                             'data/fixvectors/segment_0_sub-19.tsv',
-                            '--screensize', '1280', '720'])
+                            '1280', '720'])
     mp.main(args2)
     out, err = capfd.readouterr()
     assert 'Scanpath comparison is done without any simplification.' in out
@@ -374,5 +374,5 @@ def test_main(capfd):
     with pytest.raises(ValueError):
         args3 = mp.parse_args(['data/fixvectors/segment_0_sub-01.tsv',
                                 'data/fixvectors/segment_0_sub-19.tsv',
-                                '--screensize', '1280'])
+                                '1280'])
         mp.main(args3)

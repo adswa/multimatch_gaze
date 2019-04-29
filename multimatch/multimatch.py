@@ -836,10 +836,10 @@ def parse_args(args):
         file with columns corresponding to start x-coordinates, start
         y-coordinates, and fixation duration in seconds.""")
     parser.add_argument(
-        '--screensize', nargs='+', metavar='<screensize>', default=[1280, 720],
+        'screensize',  metavar='<screensize>',
+        nargs='+',
         help="""screensize: Resolution of screen in px, should be supplied as
-        --screensize 1000 800 for a screen of resolution [1000, 800]. The
-        default is 1280 x 720px.""")
+        1000 800 for a screen of resolution [1000, 800].""")
     parser.add_argument(
         '--direction-threshold', type=float, metavar='<TDir>', default=0.0,
         help="""Threshold for direction based grouping in degree (example: 45.0).
@@ -893,14 +893,14 @@ def main(args=None):
     TDir = args.direction_threshold
     TAmp = args.amplitude_threshold
     TDur = args.duration_threshold
-    if args.screensize:
-        sz = [float(i) for i in args.screensize]
-        if len(sz) != 2:
-            raise ValueError(
-                'I expected two floats after --screensize, '
-                'such as --screensize 1280 720. '
-                'However, I got {}. I will default to a screensize '
-                'of 1280 x 720.'.format(args.screensize))
+
+    sz = [float(i) for i in args.screensize]
+    if len(sz) != 2:
+        raise ValueError(
+            'I expected two floats after for the positional'
+            'screensize argument, such as 1280 720. '
+            'However, I got {}. Please provide the screensize'
+            'in pixel')
 
     if (TDir != 0) and (TAmp != 0):
         grouping = True
