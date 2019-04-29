@@ -37,17 +37,14 @@ def gen_scanpath_structure(data):
     """Transform a fixation vector into a vector based scanpath representation.
 
     Takes an nx3 fixation vector (start_x, start_y, duration) in the form of
-    of a record array and transforms it into appropriate vector-based scanpath
-    representation. Indices are as follows:
-    0: fixation_x
-    1: fixation_y
-    2: fixation_dur
-    3: saccade_x
-    4: saccade_y
-    5: saccade_lenx
-    6: saccade_leny
-    7: saccade_theta
-    8: saccade_rho
+    of a record array and transforms it into a vector-based scanpath
+    representation in the form of a nested dictionary. Saccade starting and
+    end points, as well as length in x & y direction, and vector length (theta)
+    and direction (rho) are calculated from fixation coordinates as a vector
+    representation in 2D space.
+    Structure:
+    fix --> fixations --> (start_x, start_y, duration)
+    sac --> saccades --> (start_x, start_y, lenx, leny, rho, theta)
 
     :param: data: record array
 
@@ -88,14 +85,8 @@ def keepsaccade(i,
     performed on a particular saccade, this functions stores the original data.
     :param i: current index
     :param j: current index
-    :param sim_lenx: list
-    :param sim_leny: list
-    :param sim_x: list
-    :param sim_y: list
-    :param sim_theta: list
-    :param sim_len: list
-    :param sim_dur: list
-    :param data: eyedata, list of list
+    :param sim: dict with current similarities
+    :param data: original dict with vector based scanpath representation
     """
     for t, k in (('sac', 'lenx'),
                  ('sac', 'leny'),
@@ -135,7 +126,7 @@ def simlen(path, TAmp, TDur):
     threshold TAmp and the duration of the closest fixations is lower
     than threshold TDur.
 
-    :param: path: array-like, list of lists, output of gen_scanpath_structure
+    :param: path: dict, output of gen_scanpath_structure
     :param: TAmp: float, length in px
     :param: TDur: float, time in seconds
 
@@ -228,7 +219,7 @@ def simdir(path,
     threshold TDir and the duration of the intermediate fixations is lower
     than threshold TDur.
 
-    :param: path: array-like, list of lists, output of gen_scanpath_structure
+    :param: path: dict, output of gen_scanpath_structure
     :param: TDir: float, angle in degrees
     :param: TDur: float, time in seconds
 
@@ -316,12 +307,13 @@ def simplify_scanpath(path,
     Loops over simplification functions simdir and simlen until no
     further simplification of the scanpath is possible.
 
-    :param: path: list of lists, output of gen_scanpath_structure
+    :param: path: dict, vector based scanpath representation,
+                  output of gen_scanpath_structure
     :param: TAmp: float, length in px
     :param: TDir: float, angle in degrees
     :param: TDur: float, duration in seconds
 
-    :return: eyedata: list of lists, simplified vector-based scanpath representation
+    :return: eyedata: dict, simplified vector-based scanpath representation
     """
     looptime = 0
     while True:
@@ -340,7 +332,7 @@ def cal_vectordifferences(path1,
     Create M, a Matrix with all possible saccade-length differences between
     saccade pairs.
 
-    :param: path1, path2: list of lists, vector-based scanpath representations
+    :param: path1, path2: dicts, vector-based scanpath representations
 
     :return: M: array-like
         Matrix of vector length differences
@@ -369,8 +361,7 @@ def createdirectedgraph(scanpath_dim,
                         M_assignment
                         ):
     """Create a directed graph:
-    The data structure of the result is a dicitionary within a dictionary
-    such as
+    The data structure of the result is a nested dictionary such as
     weightedGraph = {0 : {1:259.55, 15:48.19, 16:351.95},
     1 : {2:249.354, 16:351.951, 17:108.97},
     2 : {3:553.30, 17:108.97, 18:341.78}, ...}
@@ -437,11 +428,11 @@ def dijkstra(weightedGraph,
     graph (weightedGraph) from start to end.
 
     :param: weightedGraph: dict, dictionary within a dictionary pairing weights (distances) with
-        node-pairings
+            node-pairings
     :param: start: int, starting point of path, should be 0
     :param: end: int, end point of path, should be (n, m) of Matrix M
 
-    :return: path: array-like, array of indices of the shortest path, i.e. best-fitting saccade pairs
+    :return: path: array, indices of the shortest path, i.e. best-fitting saccade pairs
     :return: dist: float, sum of weights
 
     """
@@ -492,12 +483,12 @@ def cal_angulardifference(data1,
         first scanpath
     :param: data2: dict, contains vector-based scanpath representation of the
         second scanpath
-    :param: path: array-like, array of indices for the best-fitting saccade pairings between scan-
-        paths
-    :param: M_assignment: array-like, Matrix, arranged with values from 0 to number of entries in
+    :param: path: array,
+        indices for the best-fitting saccade pairings between scanpaths
+    :param: M_assignment: array-like, Matrix arranged with values from 0 to number of entries in
         M, the matrix of vector length similarities
 
-    :return: anglediff: array of floats, array of angular differences between pairs of saccades
+    :return: anglediff: array of floats, angular differences between pairs of saccades
         of two scanpaths
 
     """
@@ -536,9 +527,8 @@ def cal_durationdifference(data1,
     :param: data2: array-like
         dict, contains vector-based scanpath representation of the
         second scanpath
-    :param: path: array-like
-        array of indices for the best-fitting saccade pairings between scan-
-        paths
+    :param: path: array
+        indices for the best-fitting saccade pairings between scanpaths
     :param: M_assignment: array-like
          Matrix, arranged with values from 0 to number of entries in M, the
          matrix of vector length similarities
@@ -577,9 +567,8 @@ def cal_lengthdifference(data1,
     :param: data2: array-like
         dict, contains vector-based scanpath representation of the
         second scanpath
-    :param: path: array-like
-        array of indices for the best-fitting saccade pairings between scan-
-        paths
+    :param: path: array
+        indices for the best-fitting saccade pairings between scanpaths
     :param: M_assignment: array-like
          Matrix, arranged with values from 0 to number of entries in M, the
          matrix of vector length similarities
@@ -613,9 +602,8 @@ def cal_positiondifference(data1,
     :param: data2: array-like
         dict, contains vector-based scanpath representation of the
         second scanpath
-    :param: path: array-like
-        array of indices for the best-fitting saccade pairings between scan-
-        paths
+    :param: path: array
+        indices for the best-fitting saccade pairings between scanpaths
     :param: M_assignment: array-like
          Matrix, arranged with values from 0 to number of entries in M, the
          matrix of vector length similarities
@@ -697,9 +685,8 @@ def getunnormalised(data1,
     :param: data2: array-like
         dict, contains vector-based scanpath representation of the
         second scanpath
-    :param: path: array-like
-        array of indices for the best-fitting saccade pairings between scan-
-        paths
+    :param: path: array
+        indices for the best-fitting saccade pairings between scanpaths
     :param: M_assignment: array-like
          Matrix, arranged with values from 0 to number of entries in M, the
          matrix of vector length similarities
