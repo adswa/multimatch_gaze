@@ -956,11 +956,11 @@ def main(args=None):
             print('{}\t{}\t'.format(label, result[i]))
 
     if output == 'single-row':
-        print('{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t'.format('vector', result[0],
-                                                                 'direction', result[1],
-                                                                 'length', result[2],
-                                                                 'position', result[3],
-                                                                 'duration', result[4]))
+        print('{}\t{}\t{}\t{}\t{}\t'.format(result[0],
+                                            result[1],
+                                            result[2],
+                                            result[3],
+                                            result[4]))
 if __name__ == '__main__':
 
     # execution
