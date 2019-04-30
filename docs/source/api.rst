@@ -161,6 +161,11 @@ instance such as ipython, you can import the module and use the function
    delimiter='\t', dtype={'names': ('start_x', 'start_y', 'duration'),
    'formats': ('f8', 'f8', 'f8')})
 
+   # Optional - if the input data are produced by REMoDNaV
+   # pursuits = True is the equivalent of --pursuits 'relabel', else specify False
+   fix_vector1 = m.remodnav_reader('data/remodnav_samples/sub-01_task-movie_run-1_events.tsv',
+   screensize = [1280, 720], pursuits = True)
+
    # execution with multimatch's docomparison() function without grouping
    m.docomparison(fix_vector1, fix_vector2, screensize=[1280, 720])
 
