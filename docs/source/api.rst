@@ -74,7 +74,7 @@ The way results are displayed in the command line can be configured with the ``-
 parameter.
 Three different formats are possible:
 
-- ``hr`` (default): Results are returned row-wise, with dimension name. This is the
+- ``hr`` (**default**): Results are returned row-wise, with dimension name. This is the
   most human readable format, and good for a quick glance at results:
 
 .. code::
@@ -100,6 +100,46 @@ Three different formats are possible:
    length\t<value>
    position\t<value>
    duration\t<value>
+
+
+**REMoDNaV helper**
+
+REMoDNaV_ is a velocity-based event detection algorithm for eye movement classification.
+It detects and labels saccades, fixations, post-saccadic oscillations, and smooth pursuit
+movements, and it was specifically developed to work with dynamic stimulation.
+``REMoDNaV`` is an open-source python module, and its outputs, BIDS-compliant_ TSV files,
+can be read natively by ``multimatch_gaze``. The conversion of data to a fixation vector is
+then handled internally.
+
+.. _REMoDNaV: https://github.com/psychoinformatics-de/remodnav
+.. _BIDS-compliant: https://bids-specification.readthedocs.io/en/stable/
+
+Should you have data produced by ``REMoDNaV``, you can to supply the ``--remodnav``
+parameter:
+
+.. code::
+
+   multimatch data/remodnav_samples/sub-01_task-movie_run-1_events.tsv
+   data/remodnav_samples/sub-01_task-movie_run-2_events.tsv 1280 720 --remodnav
+
+As ``REMoDNaV`` classifies pursuits, which can be seen as a "visual intake" category such
+as fixations, you can decide whether to **include** or **discard any pursuit events**. Using pursuits
+would be useful for example in the case of moving stimuli: Visual intake of a moving target
+would appear as a pursuit in eye tracking data. Setting this function is
+handled with the ``--pursuit`` parameter. Chose between options ``"discard"`` and
+``"relabel"``.
+
+- ``discard`` (**default**) will disregard pursuit events.
+- ``relabel`` will turn a pursuit movement into two fixations - the start and ending point
+  of the pursuit movement.
+
+Specify relabeling of pursuit movements (i.e. inclusion into the scanpath) like this:
+
+.. code::
+
+   multimatch data/remodnav_samples/sub-01_task-movie_run-1_events.tsv
+   data/remodnav_samples/sub-01_task-movie_run-2_events.tsv 1280 720 --remodnav --pursuit 'relabel'
+
 
 Python
 ^^^^^^
