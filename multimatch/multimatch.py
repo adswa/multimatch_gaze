@@ -4,6 +4,7 @@
 import numpy as np
 import math
 import sys
+import logging
 
 
 def cart2pol(x, y):
@@ -915,7 +916,8 @@ def main(args=None):
 
     if (TDir != 0) and (TAmp != 0):
         grouping = True
-        print(
+        # give information about the specified analysis, but to stderr
+        logging.info(
             'Scanpath comparison is done with simplification. Two consecutive '
             'saccades shorter than {}px and '
             'with an angle smaller than {} degrees are grouped together if '
@@ -923,7 +925,9 @@ def main(args=None):
             'than {} seconds.'.format(TAmp, TDir, TDur))
     else:
         grouping = False
-        print('Scanpath comparison is done without any simplification.')
+        logging.info(
+            'Scanpath comparison is done without any simplification.')
+
     allowed_output = ['hr', 'single-row', 'single-del']
     output = args.output_type if args.output_type in allowed_output else False
 
