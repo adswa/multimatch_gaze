@@ -868,6 +868,18 @@ def parse_args(args):
         of scores, split by a single tab, without worrying about whitespace
         default: hr""",
         default = 'hr')
+    parser.add_argument(
+        '--remodnav', default=False, action='store_true',
+        help="""If the input files are output of the REMoDNaV algorithm, and
+        the --remodnav parameter is given, multimatch will read in the
+        REMoDNaV data natively. default: False""")
+    parser.add_argument(
+        '--pursuit', choices=('discard', 'relabel'),
+        help="""IF the --remodnav parameter is given: Which action to take to
+        deal with results? Chose from: 'discard', 'relabel'.
+        Discard will discard any pursuit event.
+        Relabel will keep start and end points of pursuits in the
+        gaze path.""")
 
     return parser.parse_args(args)
 
@@ -888,23 +900,15 @@ def main(args=None):
 
 
     """
+    # I want to give infos to the user in the command line, but it shouldn't
+    # go to stdout -- that would make collation in a table horrible.
+    logging.basicConfig(
+        format='%(levelname)s:%(message)s',
+        level=logging.INFO)
     # I'm sure this function parameter is ugly -- I'm trying to test main with
     # my unit test, in which I need to pass the args...
     if not args:
         args = parse_args(sys.argv[1:])
-
-    data1 = np.recfromcsv(args.input1,
-                          delimiter='\t',
-                          dtype={'names': ('start_x', 'start_y', 'duration'),
-                                 'formats': ('f8', 'f8', 'f8')})
-    data2 = np.recfromcsv(args.input2,
-                          delimiter='\t',
-                          dtype={'names': ('start_x', 'start_y', 'duration'),
-                                 'formats': ('f8', 'f8', 'f8')})
-
-    TDir = args.direction_threshold
-    TAmp = args.amplitude_threshold
-    TDur = args.duration_threshold
 
     screensize = [float(i) for i in args.screensize]
     if len(screensize) != 2:
@@ -913,6 +917,34 @@ def main(args=None):
             'screensize argument, such as 1280 720. '
             'However, I got {}. Please provide the screensize'
             'in pixel')
+
+    if args.remodnav:
+        from multimatch.tests import utils as ut
+        # read in the remodnav data
+        data1 = ut.read_remodnav(args.input1)
+        data2 = ut.read_remodnav(args.input2)
+
+        if args.pursuit == 'relabel':
+            data1 = ut.pursuits_to_fixations(data1)
+            data2 = ut.pursuits_to_fixations(data2)
+            #print("Triggered")
+            #import pdb; pdb.set_trace()
+
+        data1 = ut.preprocess_remodnav(data1, screensize)
+        data2 = ut.preprocess_remodnav(data2, screensize)
+    else:
+        data1 = np.recfromcsv(args.input1,
+                              delimiter='\t',
+                              dtype={'names': ('start_x', 'start_y', 'duration'),
+                                     'formats': ('f8', 'f8', 'f8')})
+        data2 = np.recfromcsv(args.input2,
+                              delimiter='\t',
+                              dtype={'names': ('start_x', 'start_y', 'duration'),
+                                     'formats': ('f8', 'f8', 'f8')})
+
+    TDir = args.direction_threshold
+    TAmp = args.amplitude_threshold
+    TDur = args.duration_threshold
 
     if (TDir != 0) and (TAmp != 0):
         grouping = True

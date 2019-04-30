@@ -373,3 +373,26 @@ def test_main(caplog):
                                 'data/fixvectors/segment_0_sub-19.tsv',
                                 '1280'])
         mp.main(args3)
+
+
+def test_remodnav():
+    """Test handling of remodnav input files."""
+    files = ['data/remodnav_samples/sub-01_task-movie_run-1_events.tsv',
+             'data/remodnav_samples/sub-01_task-movie_run-2_events.tsv']
+    args = mp.parse_args([files[0],
+                         files[1],
+                         '1280', '720',
+                         '--direction-threshold', '45.0',
+                         '--amplitude-threshold', '100.0',
+                         '--duration-threshold', '0.1',
+                         '--remodnav', '--pursuit', 'relabel'])
+
+    mp.main(args)
+    args2 = mp.parse_args([files[0],
+                         files[1],
+                         '1280', '720',
+                         '--direction-threshold', '45.0',
+                         '--amplitude-threshold', '100.0',
+                         '--duration-threshold', '0.1',
+                         '--remodnav', '--pursuit', 'discard'])
+    mp.main(args2)

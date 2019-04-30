@@ -302,67 +302,68 @@ def fixations_chunks(fixations, startid, endid):
     return fixation_vector
 
 
-def pursuits_to_fixations(npdata):
+def pursuits_to_fixations(remodnav_data):
     """Transform start and endpoints of pursuits to fixations.
 
     Uses the output of a record array created by the remodnav algorithm for
-    eye- movement classification to transform pursuit data into fixations.
-    This is done because the stimulus material is a moving image -
-    a fixation on a moving object in the movie resembles hence a pursuit.
+    eye-movement classification to transform pursuit data into fixations.
+    The start and end point of a pursuit are relabeled as a fixation.
+    This is useful for example if the underlying stimulus material is a
+    moving image - visual intake of a moving object would then resemble
+    a pursuit.
 
     :param: npdata: recordarray, remodnav output of eyemovement data
 
     :return: newdata: recordarray
     """
     # initialize empty rec array of the same shape
-    newdata = np.recarray((0,), dtype=[('onset', '<f8'),
-                                       ('duration', '<f8'),
-                                       ('label', '<U10'),
-                                       ('start_x', '<f8'),
-                                       ('start_y', '<f8'),
-                                       ('end_x', '<f8'),
-                                       ('end_y', '<f8'),
-                                       ('amp', '<f8'),
-                                       ('peak_vel', '<f8'),
-                                       ('med_vel', '<f8'),
-                                       ('avg_vel', '<f8')])
+    dtype = [('onset', '<f8'), ('duration', '<f8'),
+             ('label', '<U10'), ('start_x', '<f8'),
+             ('start_y', '<f8'), ('end_x', '<f8'),
+             ('end_y', '<f8'), ('amp', '<f8'),
+             ('peak_vel', '<f8'), ('med_vel', '<f8'), ('avg_vel', '<f8')]
+    newdata = np.recarray((0,), dtype=dtype)
     # reassemble rec array.
     # split pursuits to use end and start as fixations later
-    for i in range(0, len(npdata)):
-        if npdata[i]['label'] == 'PURS':
-            row_1 = npdata[i]
-            row_1['duration'] = npdata[i]['duration'] / 2
-            row_2 = row_1.copy()
-            row_2['onset'] += row_2['duration']
-            row_2['start_x'] = row_2['end_x']
-            row_2['start_y'] = row_2['end_y']
-            newdata = np.append(newdata, row_1)
-            newdata = np.append(newdata, row_2)
+    from copy import deepcopy
+    data = deepcopy(remodnav_data)
+    for i, d in enumerate(data):
+        if data[i]['label'] == 'PURS':
+            # start and end point of pursuit get
+            #  half the total duration
+            d['duration'] = d['duration'] / 2
+            d['label'] = 'FIXA'
+            d2 = deepcopy(d)
+            # end point of the pursuit is start
+            # of new fixation
+            d2['onset'] += d2['duration']
+            d2['start_x'] = d2['end_x']
+            d2['start_y'] = d2['end_y']
+            newdata = np.append(newdata, np.array(d, dtype=dtype))
+            newdata = np.append(newdata, np.array(d2, dtype=dtype))
         else:
-            newdata = np.append(newdata, npdata[i])
+            newdata = np.append(newdata, np.array(d, dtype=dtype))
     return newdata
 
 
-def preprocess(data, screensize=[1280, 720]):
+def preprocess_remodnav(data, screensize):
     """Preprocess record array of eye-events.
 
-    A record array of the studyforrest eyemovement data is preprocessed
-    in the following way: Subset to only get fixation and pursuit data,
+    A record array from REMoDNaV data is preprocessed
+    in the following way: Subset to only get fixation data,
     disregard out-of-frame gazes, subset to only keep x, y coordinates,
-    duration, and onset.
+    duration.
 
-    :param: data: recordarray, remodnav output of eye events from movie
+    :param: data: recordarray, REMoDNaV output of eye events from movie
         data
     :param: screensize: list of float, screen measurements in px
 
-    :return: fixations: array-like nx4 fixation vectors (onset, x, y,
+    :return: fixations: array-like nx3 fixation vectors (onset, x, y,
         duration)
 
     """
-
-    # only fixations and pursuits
-    filterevents = data[np.logical_or(data['label'] == 'FIXA',
-                                      data['label'] == 'PURS')]
+    # only fixation labels
+    filterevents = data[(data['label'] == 'FIXA')]
     # within x coordinates?
     filterxbounds = filterevents[np.logical_and(filterevents['start_x'] >= 0,
                                                 filterevents['start_x'] <= screensize[0])]
@@ -374,6 +375,16 @@ def preprocess(data, screensize=[1280, 720]):
                                "duration"]]
     return fixations
 
+def read_remodnav(data):
+    """ Helper to read input data produced by the REMoDNaV algorithm.
+    Further information on the REMoDNaV algorithm can be found here:
+    https://github.com/psychoinformatics-de/remodnav
+    """
+    d = np.recfromcsv(data,
+        delimiter='\t',
+         )
+
+    return d
 
 def longshot(shots,
              group_shots,
@@ -458,8 +469,8 @@ def docomparison_forrest(shots,
     newdata2 = pursuits_to_fixations(data2)
     print('Loaded data.')
     # preprocess input files
-    fixations1 = preprocess(newdata1, screensize)
-    fixations2 = preprocess(newdata2, screensize)
+    fixations1 = preprocess_remodnav(newdata1, screensize)
+    fixations2 = preprocess_remodnav(newdata2, screensize)
     shots = longshot(shots, group_shots, ldur)
     # get shots and scanpath on- and offsets
     if offset:
