@@ -15,3 +15,4 @@ __version__ = '0.1.0'
 
 
 from .multimatch import docomparison
+from .multimatch import remodnav_reader

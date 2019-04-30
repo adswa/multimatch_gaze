@@ -34,6 +34,22 @@ def calcangle(x1, x2):
     return angle
 
 
+def remodnav_reader(data, screensize, pursuits=False):
+    """
+    Helper function to read and preprocess REMoDNaV data for use in
+    interactive python sessions.
+
+    :param data: path to a REMoDNaV output
+    :param pursuits: if True, pursuits will be relabeled to fixations
+    """
+    from multimatch.tests import utils as ut
+    data = ut.read_remodnav(data)
+    if pursuits:
+        data = ut.pursuits_to_fixations(data)
+    data = ut.preprocess_remodnav(data, screensize)
+    return data
+
+
 def gen_scanpath_structure(data):
     """Transform a fixation vector into a vector based scanpath representation.
 
