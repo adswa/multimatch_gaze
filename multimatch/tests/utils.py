@@ -7,6 +7,11 @@ from bisect import bisect_right
 from bisect import bisect_left
 from .. import multimatch as mp
 
+dtype = [('onset', '<f8'), ('duration', '<f8'),
+         ('label', '<U10'), ('start_x', '<f8'),
+         ('start_y', '<f8'), ('end_x', '<f8'),
+         ('end_y', '<f8'), ('amp', '<f8'),
+         ('peak_vel', '<f8'), ('med_vel', '<f8'), ('avg_vel', '<f8')]
 
 def same_sample(run=1, subj=1):
     """duplicate dataset to force exactly similar scanpaths. Choose the run
@@ -317,11 +322,6 @@ def pursuits_to_fixations(remodnav_data):
     :return: newdata: recordarray
     """
     # initialize empty rec array of the same shape
-    dtype = [('onset', '<f8'), ('duration', '<f8'),
-             ('label', '<U10'), ('start_x', '<f8'),
-             ('start_y', '<f8'), ('end_x', '<f8'),
-             ('end_y', '<f8'), ('amp', '<f8'),
-             ('peak_vel', '<f8'), ('med_vel', '<f8'), ('avg_vel', '<f8')]
     newdata = np.recarray((0,), dtype=dtype)
     # reassemble rec array.
     # split pursuits to use end and start as fixations later
@@ -382,6 +382,7 @@ def read_remodnav(data):
     """
     d = np.recfromcsv(data,
         delimiter='\t',
+        dtype=dtype
          )
 
     return d

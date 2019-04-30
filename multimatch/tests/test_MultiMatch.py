@@ -396,3 +396,30 @@ def test_remodnav():
                          '--duration-threshold', '0.1',
                          '--remodnav', '--pursuit', 'discard'])
     mp.main(args2)
+
+
+def test_preproc_remodnav():
+    """
+    check whether preprocessing returns subsets of correct lengths
+    """
+    f ='data/remodnav_samples/sub-01_task-movie_run-2_events.tsv'
+    d = ut.read_remodnav(f)
+    num_fix = len(d[d['label']=='FIXA'])
+    fixations = ut.preprocess_remodnav(d, [1280, 720])
+    # check that we have the exact number of fixation events in resulting
+    # data
+    assert len(fixations) == num_fix
+
+
+def test_pursuits_to_fixations():
+    """
+    test whether relabeling of pursuits to fixations returns
+    subset of correct length
+    """
+    f ='data/remodnav_samples/sub-01_task-movie_run-2_events.tsv'
+    d = ut.read_remodnav(f)
+    num_fix = len(d[d['label']=='FIXA'])
+    num_pur = len(d[d['label']=='PURS'])
+    newdata = ut.pursuits_to_fixations(d)
+    fixations = ut.preprocess_remodnav(newdata, [1280, 720])
+    assert len(fixations) == (num_fix + (2*num_pur))
