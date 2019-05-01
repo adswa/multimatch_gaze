@@ -301,7 +301,7 @@ def simdir(path,
         # elif the angle is smaller than the threshold, but its the LAST saccade:
         ## Testing revealed that we never actually get here -- because for the
         ## last saccade, the angle is inf. This however, is how it seems to be
-        ## implemented in the original toolbox -- \_(ツ)_/¯.
+        ## implemented in the original toolbox.
         ##  TODO: ponder whether to keep exact original (dys)functionality here
         # elif (angle < TDir) & (i == len(saccades['x']) - 1):
         #     print("step 1", angle, i)
