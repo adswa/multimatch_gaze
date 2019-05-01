@@ -10,7 +10,17 @@ compute scanpath similarity. It was originally proposed by Jarodzka, Holmqvist
 The method represents scanpaths as geometrical vectors in a two-dimensional
 space: Any scanpath is build up of a vector sequence in which the vectors
 represent saccades, and the start and end position of saccade vectors represent
-fixations. Two such sequences (which can differ in length) are compared on the
+fixations. In the example image below, the scanpath is build by connecting the
+fixations (red dots) with vectors (black lines), which constitute simplified
+saccades.
+
+ .. figure:: ../img/example_path.png
+   :scale: 150%
+   :alt: examplary scanpath
+
+   Example scanpath as used in the MultiMatch algorithm
+
+Two such sequences (which can differ in length) are compared on the
 five dimensions **vector shape**, **vector length** (saccadic amplitude), **vector
 position**, **vector direction** and **fixation duration** for a multidimensional
 similarity evaluation.
