@@ -40,10 +40,24 @@ def remodnav_reader(data, screensize, pursuits=False):
     interactive python sessions.
 
     :param data: path to a REMoDNaV output
+    :param screensize: list, screendimensions in x and y direction
     :param pursuits: if True, pursuits will be relabeled to fixations
     """
     from multimatch.tests import utils as ut
     data = ut.read_remodnav(data)
+    # this function can be called without any previous check that
+    # screensize are two values, so I'm putting an additional check
+    # here
+    try:
+        assert len(screensize) == 2
+    except:
+        raise ValueError(
+            "Screensize should be the dimensions of the"
+            "screen in x and y direction, such as "
+            "[1000, 800]. I received {}.".format(
+                screensize
+            )
+        )
     if pursuits:
         data = ut.pursuits_to_fixations(data)
     data = ut.preprocess_remodnav(data, screensize)
@@ -838,12 +852,12 @@ def parse_args(args):
     parser.add_argument(
         'input1', metavar='<datafile>',
         help="""Fixation data of scanpath 1. Should be a tab separated
-         file with columns corresponding to start x-coordinates, start
+         file with columns corresponding to x-coordinates,
          y-coordinates, and fixation duration in seconds.""")
     parser.add_argument(
         'input2', metavar='<datafile>',
         help="""Fixation data of scanpath 2. Should be a tab separated
-        file with columns corresponding to start x-coordinates, start
+        file with columns corresponding to x-coordinates,
         y-coordinates, and fixation duration in seconds.""")
     parser.add_argument(
         'screensize',  metavar='<screensize>',

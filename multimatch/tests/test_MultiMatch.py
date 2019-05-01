@@ -423,3 +423,20 @@ def test_pursuits_to_fixations():
     newdata = ut.pursuits_to_fixations(d)
     fixations = ut.preprocess_remodnav(newdata, [1280, 720])
     assert len(fixations) == (num_fix + (2*num_pur))
+
+
+def test_read_remodnav():
+    """
+
+    :return:
+    """
+    f = 'data/remodnav_samples/sub-01_task-movie_run-2_events.tsv'
+    contr = ut.read_remodnav(f)
+    test = mp.remodnav_reader(f, [1280, 720])
+    wpurs = mp.remodnav_reader(f, [1280, 720], pursuits=True)
+    assert len(test) == (len(contr[contr['label']=='FIXA']))
+    assert len(wpurs) == ((len(contr[contr['label']=='FIXA']) +
+                           2 * len(contr[contr['label']=='PURS'])))
+    with pytest.raises(ValueError):
+        # blow up with wrong screensize
+        mp.remodnav_reader(f, [1280, 720, 5])
