@@ -1,7 +1,7 @@
 **********************
 an example computation
 **********************
-The following section shows a multimatch use case to compute the scanpath
+The following section shows a multimatch-gaze use case to compute the scanpath
 similarities of participants that watched the Hollywood movie Forrest Gump
 during simultaneous fMRI acquisition.
 
@@ -171,7 +171,7 @@ during movie watching. This analysis has furthermore demonstrated one way of usi
 multimatchs scanpath comparison on a grouplevel similarity computation per segment.
 If you have any questions about this example, please ask here_.
 
- .. _here: https://github.com/adswa/multimatch/issues/new
+ .. _here: https://github.com/adswa/multimatch_gaze/issues/new
 
 
 

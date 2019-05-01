@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.com/adswa/multimatch_gaze.svg?branch=master)](https://travis-ci.com/adswa/multimatch_gaze)
 [![codecov](https://codecov.io/gh/adswa/multimatch_gaze/branch/master/graph/badge.svg)](https://codecov.io/gh/adswa/multimatch_gaze)
-[![Documentation](https://readthedocs.org/projects/multimatch_gaze/badge/?version=latest)](https://multimatch_gaze.readthedocs.io/en/latest/)
+[![Documentation](https://readthedocs.org/projects/multimatch/badge/?version=latest)](https://multimatch.readthedocs.io/en/latest/)
 [![PyPIversion](https://badge.fury.io/py/multimatch_gaze.svg)](https://badge.fury.io/py/multimatch_gaze)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Build status](https://ci.appveyor.com/api/projects/status/wrphckxqjrfut703?svg=true)](https://ci.appveyor.com/project/adswa/multimatch_gaze)

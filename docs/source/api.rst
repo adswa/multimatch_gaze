@@ -21,14 +21,16 @@ of the screen:
    multimatch path/to/scanpath_one path/to/scanpath_two x_dim y_dim
 
 The input files will be read with ``numpy``\s ``recfromcsv()`` and should contain
-one fixation per line. The first column is assumed to contain (center) x-coordinates
-of the fixation in px, the second column is assumed to contain (center) y-coordinates
-in px, and the third column is assumed to contain the fixation duration in seconds.
-Example files with this structure can be found here_.
+one fixation per line. The first three columns of the input file are relevant.
+One column should contain x-coordinates of the fixation in px
+(``start_x``), one column should contain y-coordinates in px (``start_y``),
+and one column should contain contain the fixation duration (``duration``) in seconds.
+Example files with this structure can be found here_. Note that the input data needs to
+have a header with the correct column names (``x_start``, ``y_start``, ``duration``).
 
  .. _here: https://github.com/adswa/multimatch/tree/master/data/fixvectors
 
-An examplary command line call that you could execute if you have cloned the
+An examplary command line call that you could execute if you cloned the
 repository looks like this:
 
 .. code::

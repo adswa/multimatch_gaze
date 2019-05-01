@@ -13,7 +13,7 @@ alternative to the matlab toolbox.
 The module provides the possibility to compute the similarity of two scanpaths
 with a terminal command or within a python instance (see section API_).
 
- .. _API: https://multimatch_gaze.readthedocs.io/en/latest/api.html
+ .. _API: https://multimatch.readthedocs.io/en/latest/api.html
 
 
 
@@ -64,7 +64,7 @@ examples provided in the API_
 section. The data used in these examples corresponds to the
 data found in the repository.
 
-.. _API: https://multimatch_gaze.readthedocs.io/en/latest/api.html
+.. _API: https://multimatch.readthedocs.io/en/latest/api.html
 
 
 =======

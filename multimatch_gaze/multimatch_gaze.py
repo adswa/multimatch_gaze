@@ -852,13 +852,15 @@ def parse_args(args):
     parser.add_argument(
         'input1', metavar='<datafile>',
         help="""Fixation data of scanpath 1. Should be a tab separated
-         file with columns corresponding to x-coordinates,
-         y-coordinates, and fixation duration in seconds.""")
+        file with columns corresponding to x-coordinates ('start_x'),
+        y-coordinates ('start_y'), and fixation duration ('duration')
+        in seconds.""")
     parser.add_argument(
         'input2', metavar='<datafile>',
         help="""Fixation data of scanpath 2. Should be a tab separated
-        file with columns corresponding to x-coordinates,
-        y-coordinates, and fixation duration in seconds.""")
+        file with columns corresponding to x-coordinates ('start_x'),
+        y-coordinates ('start_y'), and fixation duration ('duration')
+        in seconds.""")
     parser.add_argument(
         'screensize',  metavar='<screensize>',
         nargs='+',
@@ -915,9 +917,9 @@ def parse_args(args):
 
 
 def main(args=None):
-    """Multimatch_gaze: Scanpath comparison in Python.
+    """Multimatch-gaze: Scanpath comparison in Python.
 
-     Multimatch_gaze is a Python-based reimplementation of the MultiMatch method
+     Multimatch-gaze is a Python-based reimplementation of the MultiMatch method
      for scanpath comparison (Jarodzka et al., 2010; Dewhurst et al., 2012).
      Based on A) two tab-separated scanpath input files that contain the start x-
      and y-coordinates of fixations and their durations, and B) the screensize in
@@ -966,11 +968,15 @@ def main(args=None):
         data1 = np.recfromcsv(args.input1,
                               delimiter='\t',
                               dtype={'names': ('start_x', 'start_y', 'duration'),
-                                     'formats': ('f8', 'f8', 'f8')})
+                                     'formats': ('f8', 'f8', 'f8')},
+                              usecols=(0, 1, 2)
+                              )
         data2 = np.recfromcsv(args.input2,
                               delimiter='\t',
                               dtype={'names': ('start_x', 'start_y', 'duration'),
-                                     'formats': ('f8', 'f8', 'f8')})
+                                     'formats': ('f8', 'f8', 'f8')},
+                              usecols=(0, 1, 2)
+                              )
 
     TDir = args.direction_threshold
     TAmp = args.amplitude_threshold
