@@ -3,7 +3,7 @@ import os
 import numpy as np
 import pytest
 from . import utils as ut
-from .. import multimatch as mp
+from .. import multimatch_gaze as mp
 
 
 def test_same_real_data_forrest(run=1,
@@ -46,7 +46,7 @@ def test_same_real_data():
     dimensions?
     """
     import os
-    testfile = os.path.abspath('multimatch/tests/testdata/segment_5_sub-19.tsv')
+    testfile = os.path.abspath('multimatch_gaze/tests/testdata/segment_5_sub-19.tsv')
     data1 = np.recfromcsv(testfile,
                           delimiter='\t',
                           dtype={'names': ('start_x', 'start_y', 'duration'),
@@ -68,7 +68,7 @@ def test_simplification(run=1,
     Smoketest to see whether simplification blows up and whether identical
     scanpaths are still identical after grouping, using real data.
     """
-    testfile = os.path.abspath('multimatch/tests/testdata/segment_5_sub-19.tsv')
+    testfile = os.path.abspath('multimatch_gaze/tests/testdata/segment_5_sub-19.tsv')
     data1 = np.recfromcsv(testfile,
                           delimiter='\t',
                           dtype={'names': ('start_x', 'start_y', 'duration'),
@@ -166,8 +166,8 @@ def test_compare2matlab():
     compares whether analysis with given inputs yields the same results as a
     calculation with the matlab toolbox
     """
-    testfile = os.path.abspath('multimatch/tests/testdata/segment_10_sub-19.tsv')
-    testfile2 = os.path.abspath('multimatch/tests/testdata/segment_10_sub-01.tsv')
+    testfile = os.path.abspath('multimatch_gaze/tests/testdata/segment_10_sub-19.tsv')
+    testfile2 = os.path.abspath('multimatch_gaze/tests/testdata/segment_10_sub-01.tsv')
     data1 = np.recfromcsv(testfile,
                           delimiter='\t',
                           dtype={'names': ('start_x', 'start_y', 'duration'),
@@ -211,7 +211,7 @@ def test_too_short_scanpaths():
 # scanpath comparison on the studyforrest dataset (Hanke et al., 2016). The test
 # in this sections utilize (and test) functions that are related to this data
 # specifically (found under tests/testdata and in a non-entrypoint script
-# multimatch_forrest). Coincidentally, these tests test multimatch functions
+# multimatch_forrest). Coincidentally, these tests test multimatch_gaze functions
 # nevertheless, so they'll stay for now..
 
 def test_offsets():
@@ -231,7 +231,7 @@ def test_offsets():
     assert len(offsets3) == len(shots_long)
 
 
-# disabling those for now -- chunking is not relevant for multimatch anymore
+# disabling those for now -- chunking is not relevant for multimatch_gaze anymore
 
 # def test_createchunks(run=1, subj=1):
 #     """

@@ -44,7 +44,7 @@ comparisons. However, many of the contemporary scanpath
 comparison algorithms are implemented in closed-source,
 non-free software such as Matlab.
 
-``multimatch`` is a Python based
+``multimatch-gaze`` is a Python based
 reimplementation of the MultiMatch toolbox for scanpath
 comparison, originally developed by [@Jarodzka] and
 implemented by [@Dewhurst] in Matlab.
@@ -65,9 +65,9 @@ accessible, well-documented, and tested open
 source alternative to the existing MultiMatch toolbox. The algorithm
 is an established tool for scanpath comparison [@anderson],
 and improved availability will likely foster its application
-in a broader research community. multimatch
-is available in the form of the github repository [@multimatch]
-and as the python module multimatch via 'pip install multimatch'.
+in a broader research community. multimatch-gaze
+is available in the form of the github repository [@multimatch_gaze]
+and as the python module multimatch-gaze via 'pip install multimatch-gaze'.
 The module contains the same functionality as the original
 Matlab toolbox, that is, scanpath comparison with optional
 simplification according to user-defined thresholds, and it

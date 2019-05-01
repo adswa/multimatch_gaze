@@ -29,7 +29,7 @@ The method takes two n x 3 fixation vectors (x-coordinate in px, y-coordinate in
 duration in sec) of two scanpaths as its input. Example files how input should look
 like can be found here_.
 
- .. _here: https://github.com/adswa/multimatch/tree/master/data/fixvectors
+ .. _here: https://github.com/adswa/multimatch_gaze/tree/master/data/fixvectors
 
 
 - **Step 1: Representation of scanpaths as vector sequences**

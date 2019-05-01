@@ -14,5 +14,5 @@ from __future__ import absolute_import
 __version__ = '0.1.0'
 
 
-from .multimatch import docomparison
-from .multimatch import remodnav_reader
+from .multimatch_gaze import docomparison
+from .multimatch_gaze import remodnav_reader

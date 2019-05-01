@@ -43,7 +43,7 @@ def remodnav_reader(data, screensize, pursuits=False):
     :param screensize: list, screendimensions in x and y direction
     :param pursuits: if True, pursuits will be relabeled to fixations
     """
-    from multimatch.tests import utils as ut
+    from multimatch_gaze.tests import utils as ut
     data = ut.read_remodnav(data)
     # this function can be called without any previous check that
     # screensize are two values, so I'm putting an additional check
@@ -843,7 +843,7 @@ def parse_args(args):
     import argparse
 
     parser = argparse.ArgumentParser(
-        prog='multimatch',
+        prog='multimatch_gaze',
         description='{}'.format(
             main.__doc__
         ),
@@ -901,7 +901,7 @@ def parse_args(args):
     parser.add_argument(
         '--remodnav', default=False, action='store_true',
         help="""If the input files are output of the REMoDNaV algorithm, and
-        the --remodnav parameter is given, multimatch will read in the
+        the --remodnav parameter is given, multimatch-gaze will read in the
         REMoDNaV data natively. default: False""")
     parser.add_argument(
         '--pursuit', choices=('discard', 'relabel'),
@@ -926,7 +926,7 @@ def main(args=None):
      and position (normed to range [0, 1]).
      Scanpath simplification based on angular relation or length is possible on demand.
 
-     For further information, please see https://multimatch.readthedocs.io/en/latest/.
+     For further information, please see https://multimatch_gaze.readthedocs.io/en/latest/.
 
 
     """
@@ -949,7 +949,7 @@ def main(args=None):
             'in pixel')
 
     if args.remodnav:
-        from multimatch.tests import utils as ut
+        from multimatch_gaze.tests import utils as ut
         # read in the remodnav data
         data1 = ut.read_remodnav(args.input1)
         data2 = ut.read_remodnav(args.input2)

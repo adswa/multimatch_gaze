@@ -13,6 +13,7 @@ multimatch: Multidimensional scanpath comparison in python
    overview
    reimplementation
    api
+   example
 
 Indices and tables
 ^^^^^^^^^^^^^^^^^^

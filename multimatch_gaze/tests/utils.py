@@ -5,7 +5,7 @@ import random
 import collections
 from bisect import bisect_right
 from bisect import bisect_left
-from .. import multimatch as mp
+from .. import multimatch_gaze as mp
 
 dtype = [('onset', '<f8'), ('duration', '<f8'),
          ('label', '<U10'), ('start_x', '<f8'),
@@ -20,9 +20,9 @@ def same_sample(run=1, subj=1):
         sub = "sub-30"
     else:
         sub = "sub-10"
-    path = os.path.join("multimatch/tests/testdata",
+    path = os.path.join("multimatch_gaze/tests/testdata",
                         "{}_task-movie_run-{}_events.tsv".format(sub, run))
-    loc = os.path.join("multimatch/tests/testdata",
+    loc = os.path.join("multimatch_gaze/tests/testdata",
                        "locations_run-{}_events.tsv".format(run))
     data = np.recfromcsv(path,
                          delimiter='\t',
@@ -40,7 +40,7 @@ def same_sample(run=1, subj=1):
 
 def short_shots(run=3):
     """create a shortened shots location annotation to test longshots()"""
-    loc = os.path.join("multimatch/tests/testdata",
+    loc = os.path.join("multimatch_gaze/tests/testdata",
                        "locations_run-{}_events.tsv".format(run))
     shots = pd.read_csv(loc, sep='\t')
     shortshots = shots[0:20]
