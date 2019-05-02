@@ -385,7 +385,7 @@ def test_remodnav():
                          '--direction-threshold', '45.0',
                          '--amplitude-threshold', '100.0',
                          '--duration-threshold', '0.1',
-                         '--remodnav', '--pursuit', 'relabel'])
+                         '--remodnav', '--pursuit', 'keep'])
 
     mp.main(args)
     args2 = mp.parse_args([files[0],

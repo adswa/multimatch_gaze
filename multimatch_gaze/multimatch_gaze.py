@@ -906,11 +906,11 @@ def parse_args(args):
         the --remodnav parameter is given, multimatch-gaze will read in the
         REMoDNaV data natively. default: False""")
     parser.add_argument(
-        '--pursuit', choices=('discard', 'relabel'),
+        '--pursuit', choices=('discard', 'keep'),
         help="""IF the --remodnav parameter is given: Which action to take to
-        deal with results? Chose from: 'discard', 'relabel'.
+        deal with results? Chose from: 'discard', 'keep'.
         Discard will discard any pursuit event.
-        Relabel will keep start and end points of pursuits in the
+        Keep will keep start and end points of pursuits in the
         gaze path.""")
 
     return parser.parse_args(args)
@@ -956,7 +956,7 @@ def main(args=None):
         data1 = ut.read_remodnav(args.input1)
         data2 = ut.read_remodnav(args.input2)
 
-        if args.pursuit == 'relabel':
+        if args.pursuit == 'keep':
             data1 = ut.pursuits_to_fixations(data1)
             data2 = ut.pursuits_to_fixations(data2)
             #print("Triggered")

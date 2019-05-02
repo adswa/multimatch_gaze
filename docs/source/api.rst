@@ -129,18 +129,18 @@ as fixations, you can decide whether to **include** or **discard any pursuit eve
 would be useful for example in the case of moving stimuli: Visual intake of a moving target
 would appear as a pursuit in eye tracking data. Setting this function is
 handled with the ``--pursuit`` parameter. Chose between options ``"discard"`` and
-``"relabel"``.
+``"keep"``.
 
 - ``discard`` (**default**) will disregard pursuit events.
-- ``relabel`` will turn a pursuit movement into two fixations - the start and ending point
+- ``keep`` will turn a pursuit movement into two fixations - the start and ending point
   of the pursuit movement.
 
-Specify relabeling of pursuit movements (i.e. inclusion into the scanpath) like this:
+Specify to keep pursuit movements (i.e. inclusion into the scanpath) like this:
 
 .. code::
 
    multimatch data/remodnav_samples/sub-01_task-movie_run-1_events.tsv
-   data/remodnav_samples/sub-01_task-movie_run-2_events.tsv 1280 720 --remodnav --pursuit 'relabel'
+   data/remodnav_samples/sub-01_task-movie_run-2_events.tsv 1280 720 --remodnav --pursuit 'keep'
 
 
 Python
@@ -164,7 +164,7 @@ instance such as ipython, you can import the module and use the function
    'formats': ('f8', 'f8', 'f8')})
 
    # Optional - if the input data are produced by REMoDNaV
-   # pursuits = True is the equivalent of --pursuits 'relabel', else specify False
+   # pursuits = True is the equivalent of --pursuits 'keep', else specify False
    fix_vector1 = m.remodnav_reader('data/remodnav_samples/sub-01_task-movie_run-1_events.tsv',
    screensize = [1280, 720], pursuits = True)
 
