@@ -4,7 +4,7 @@
 [![PyPIversion](https://badge.fury.io/py/multimatch_gaze.svg)](https://badge.fury.io/py/multimatch_gaze)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Build status](https://ci.appveyor.com/api/projects/status/wrphckxqjrfut703?svg=true)](https://ci.appveyor.com/project/adswa/multimatch_gaze)
-
+[![DOI](https://zenodo.org/badge/151181532.svg)](https://zenodo.org/badge/latestdoi/151181532)
 
 # multimatch-gaze
 ## Reimplementation of MultiMatch toolbox (Dewhurst et al., 2012) in Python.
