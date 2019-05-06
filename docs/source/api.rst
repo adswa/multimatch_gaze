@@ -152,7 +152,7 @@ instance such as ipython, you can import the module and use the function
 
 .. code::
 
-   import multimatch as m
+   import multimatch_gaze as m
    import numpy as np
 
    # read in data
