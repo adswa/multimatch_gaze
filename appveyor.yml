@@ -22,6 +22,6 @@ install:
 build: false
 
 test_script:
-  - "python -m pytest -s -v multimatch/tests"
+  - "python -m pytest -s -v multimatch_gaze/tests"
 
 

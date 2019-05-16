@@ -23,7 +23,7 @@ install:
 #command to run tests
 script:
     - PATH=$PWD/tools/coverage-bin:$PATH
-      python -m pytest -s -v --cov=multimatch/ --cov-report=xml:coverage.xml
+      python -m pytest -s -v --cov=multimatch_gaze/ --cov-report=xml:coverage.xml
     # upload my python reports
     - bash <(curl -s https://codecov.io/bash) -cF python
     - codecov

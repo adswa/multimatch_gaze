@@ -3,7 +3,7 @@ import os
 import numpy as np
 import pytest
 from . import utils as ut
-from .. import multimatch as mp
+from .. import multimatch_gaze as mp
 
 
 def test_same_real_data_forrest(run=1,
@@ -25,7 +25,7 @@ def test_same_real_data_forrest(run=1,
     segments, onset, duration = ut.docomparison_forrest(shots,
                                                         data1,
                                                         data2,
-                                                        sz=[1280, 720],
+                                                        screensize=[1280, 720],
                                                         dur=3,
                                                         ldur=0,
                                                         offset=False,
@@ -46,14 +46,14 @@ def test_same_real_data():
     dimensions?
     """
     import os
-    testfile = os.path.abspath('multimatch/tests/testdata/segment_5_sub-19.tsv')
+    testfile = os.path.abspath('multimatch_gaze/tests/testdata/segment_5_sub-19.tsv')
     data1 = np.recfromcsv(testfile,
                           delimiter='\t',
                           dtype={'names': ('start_x', 'start_y', 'duration'),
                                  'formats': ('f8', 'f8', 'f8')})
     results = mp.docomparison(data1,
                               data1,
-                              sz=[720, 1280],
+                              screensize=[720, 1280],
                               grouping=False,
                               TDir=0,
                               TDur=0,
@@ -68,14 +68,14 @@ def test_simplification(run=1,
     Smoketest to see whether simplification blows up and whether identical
     scanpaths are still identical after grouping, using real data.
     """
-    testfile = os.path.abspath('multimatch/tests/testdata/segment_5_sub-19.tsv')
+    testfile = os.path.abspath('multimatch_gaze/tests/testdata/segment_5_sub-19.tsv')
     data1 = np.recfromcsv(testfile,
                           delimiter='\t',
                           dtype={'names': ('start_x', 'start_y', 'duration'),
                                  'formats': ('f8', 'f8', 'f8')})
     results = mp.docomparison(data1,
                               data1,
-                              sz=[1280, 720],
+                              screensize=[1280, 720],
                               grouping=True,
                               TDir=30.0,
                               TDur=0.05,
@@ -87,7 +87,7 @@ def test_simplification(run=1,
                                                         dur=3,
                                                         ldur=0.0,
                                                         offset=False,
-                                                        sz=[1280, 720],
+                                                        screensize=[1280, 720],
                                                         grouping=True,
                                                         TDir=30.0,
                                                         TDur=0.05,
@@ -166,8 +166,8 @@ def test_compare2matlab():
     compares whether analysis with given inputs yields the same results as a
     calculation with the matlab toolbox
     """
-    testfile = os.path.abspath('multimatch/tests/testdata/segment_10_sub-19.tsv')
-    testfile2 = os.path.abspath('multimatch/tests/testdata/segment_10_sub-01.tsv')
+    testfile = os.path.abspath('multimatch_gaze/tests/testdata/segment_10_sub-19.tsv')
+    testfile2 = os.path.abspath('multimatch_gaze/tests/testdata/segment_10_sub-01.tsv')
     data1 = np.recfromcsv(testfile,
                           delimiter='\t',
                           dtype={'names': ('start_x', 'start_y', 'duration'),
@@ -178,14 +178,14 @@ def test_compare2matlab():
                                  'formats': ('f8', 'f8', 'f8')})
     res_grouping = mp.docomparison(data1,
                                    data2,
-                                   sz=[720, 1280],
+                                   screensize=[720, 1280],
                                    grouping=True,
                                    TDir=45.0,
                                    TDur=0.3,
                                    TAmp=146.8)
     res_no_grouping = mp.docomparison(data1,
                                       data2,
-                                      sz=[720, 1280],
+                                      screensize=[720, 1280],
                                       grouping=False,
                                       TDir=0,
                                       TDur=0,
@@ -203,7 +203,7 @@ def test_too_short_scanpaths():
     """
     fixvector1 = ut.mk_fix_vector(2)
     fixvector2 = ut.mk_fix_vector(5)
-    results = mp.docomparison(fixvector1, fixvector2, sz=[1280, 720], grouping=True, TAmp=8, TDir=8, TDur=8)
+    results = mp.docomparison(fixvector1, fixvector2, screensize=[1280, 720], grouping=True, TAmp=8, TDir=8, TDur=8)
     assert ([results[i] == np.nan for i in range(0, len(results))])
 
 
@@ -211,7 +211,7 @@ def test_too_short_scanpaths():
 # scanpath comparison on the studyforrest dataset (Hanke et al., 2016). The test
 # in this sections utilize (and test) functions that are related to this data
 # specifically (found under tests/testdata and in a non-entrypoint script
-# multimatch_forrest). Coincidentally, these tests test multimatch functions
+# multimatch_forrest). Coincidentally, these tests test multimatch_gaze functions
 # nevertheless, so they'll stay for now..
 
 def test_offsets():
@@ -231,7 +231,7 @@ def test_offsets():
     assert len(offsets3) == len(shots_long)
 
 
-# disabling those for now -- chunking is not relevant for multimatch anymore
+# disabling those for now -- chunking is not relevant for multimatch_gaze anymore
 
 # def test_createchunks(run=1, subj=1):
 #     """
@@ -327,7 +327,7 @@ def test_closestleft():
 def test_parser():
     parser = mp.parse_args(['data/fixvectors/segment_0_sub-01.tsv',
                             'data/fixvectors/segment_0_sub-19.tsv',
-                            '--screensize', '1280', '720',
+                            '1280', '720',
                             '--direction-threshold', '45.0',
                             '--amplitude-threshold', '100.0',
                             '--duration-threshold', '0.1'])
@@ -339,40 +339,104 @@ def test_parser():
 
 def test_help():
     """smoke test whether we blow up when requesting help"""
-    parser = mp.parse_args('-h')
+    parser = mp.parse_args('--help')
 
-
-# TODO: test what happens with too few args
-
-def test_main(capfd):
+def test_main(caplog):
     """
     asserts whether user gets correct feedback from main function
 
     """
+    import logging
+    log = caplog
+    log.set_level(logging.INFO)
     args = mp.parse_args(['data/fixvectors/segment_0_sub-01.tsv',
                             'data/fixvectors/segment_0_sub-19.tsv',
-                            '--screensize', '1280', '720',
+                            '1280', '720',
                             '--direction-threshold', '45.0',
                             '--amplitude-threshold', '100.0',
                             '--duration-threshold', '0.1'])
     mp.main(args)
-    out, err = capfd.readouterr()
-    assert 'Scanpath comparison is done with simplification.'
-    'Two consecutive saccades shorter than 100.0px and with an angle smaller'
-    'than 45.0 degrees are grouped together if intermediate fixations'
-    'are shorter than 0.1 seconds.' in out
-
+    #import pdb; pdb.set_trace()
+    assert ('Scanpath comparison is done with simplification. Two consecutive saccades shorter than 100.0px and with an angle smaller than 45.0 degrees are grouped together if intermediate fixations are shorter than 0.1 seconds.')\
+           in log.text
 
     args2 = mp.parse_args(['data/fixvectors/segment_0_sub-01.tsv',
                             'data/fixvectors/segment_0_sub-19.tsv',
-                            '--screensize', '1280', '720'])
+                            '1280', '720'])
     mp.main(args2)
-    out, err = capfd.readouterr()
-    assert 'Scanpath comparison is done without any simplification.' in out
+    #import pdb; pdb.set_trace()
+    assert 'Scanpath comparison is done without any simplification.' in log.text
 
     # check whether main raises ValueError if screensize is wrong
     with pytest.raises(ValueError):
         args3 = mp.parse_args(['data/fixvectors/segment_0_sub-01.tsv',
                                 'data/fixvectors/segment_0_sub-19.tsv',
-                                '--screensize', '1280'])
+                                '1280'])
         mp.main(args3)
+
+
+def test_remodnav():
+    """Test handling of remodnav input files."""
+    files = ['data/remodnav_samples/sub-01_task-movie_run-1_events.tsv',
+             'data/remodnav_samples/sub-01_task-movie_run-2_events.tsv']
+    args = mp.parse_args([files[0],
+                         files[1],
+                         '1280', '720',
+                         '--direction-threshold', '45.0',
+                         '--amplitude-threshold', '100.0',
+                         '--duration-threshold', '0.1',
+                         '--remodnav', '--pursuit', 'keep'])
+
+    mp.main(args)
+    args2 = mp.parse_args([files[0],
+                         files[1],
+                         '1280', '720',
+                         '--direction-threshold', '45.0',
+                         '--amplitude-threshold', '100.0',
+                         '--duration-threshold', '0.1',
+                         '--remodnav', '--pursuit', 'discard'])
+    mp.main(args2)
+
+
+def test_preproc_remodnav():
+    """
+    check whether preprocessing returns subsets of correct lengths
+    """
+    f ='data/remodnav_samples/sub-01_task-movie_run-2_events.tsv'
+    d = ut.read_remodnav(f)
+    num_fix = len(d[d['label']=='FIXA'])
+    fixations = ut.preprocess_remodnav(d, [1280, 720])
+    # check that we have the exact number of fixation events in resulting
+    # data
+    assert len(fixations) == num_fix
+
+
+def test_pursuits_to_fixations():
+    """
+    test whether relabeling of pursuits to fixations returns
+    subset of correct length
+    """
+    f ='data/remodnav_samples/sub-01_task-movie_run-2_events.tsv'
+    d = ut.read_remodnav(f)
+    num_fix = len(d[d['label']=='FIXA'])
+    num_pur = len(d[d['label']=='PURS'])
+    newdata = ut.pursuits_to_fixations(d)
+    fixations = ut.preprocess_remodnav(newdata, [1280, 720])
+    assert len(fixations) == (num_fix + (2*num_pur))
+
+
+def test_read_remodnav():
+    """
+
+    :return:
+    """
+    f = 'data/remodnav_samples/sub-01_task-movie_run-2_events.tsv'
+    contr = ut.read_remodnav(f)
+    test = mp.remodnav_reader(f, [1280, 720])
+    wpurs = mp.remodnav_reader(f, [1280, 720], pursuits=True)
+    assert len(test) == (len(contr[contr['label']=='FIXA']))
+    assert len(wpurs) == ((len(contr[contr['label']=='FIXA']) +
+                           2 * len(contr[contr['label']=='PURS'])))
+    with pytest.raises(ValueError):
+        # blow up with wrong screensize
+        mp.remodnav_reader(f, [1280, 720, 5])

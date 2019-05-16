@@ -7,6 +7,6 @@
 #
 # ## ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ### ##
 
-import multimatch
+import multimatch_gaze
 
-multimatch.main()
+multimatch_gaze.main()

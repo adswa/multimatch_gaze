@@ -1,5 +1,5 @@
 [run]
-source = multimatch/
+source = multimatch_gaze/
 
 [report]
 exclude_lines =

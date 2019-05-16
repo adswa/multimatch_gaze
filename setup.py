@@ -8,7 +8,7 @@ from os.path import dirname
 def get_version():
     """Load version only
     """
-    with open(opj(dirname(__file__), 'multimatch', '__init__.py')) as f:
+    with open(opj(dirname(__file__), 'multimatch_gaze', '__init__.py')) as f:
         version_lines = list(filter(lambda x: x.startswith('__version__'), f))
     assert (len(version_lines) == 1)
     return version_lines[0].split('=')[1].strip(" '\"\t\n")
@@ -31,13 +31,13 @@ except (ImportError, OSError) as exc:
 
 # Metadata
 setup(
-    name='multimatch',
+    name='multimatch_gaze',
     version=version,
     description='Multidimensional scanpath comparison',
     long_description=long_description,
     author='Adina Wagner',
     author_email='adina.wagner@t-online.de',
-    url='https://github.com/adswa/multimatch',
+    url='https://github.com/adswa/multimatch_gaze',
     packages=[pkg for pkg in find_packages('.') if pkg.startswith('multimatch')],
     install_requires=[
         'numpy',
@@ -50,7 +50,7 @@ setup(
         ]},
     entry_points={
         'console_scripts': [
-            'multimatch=multimatch.multimatch:main'
+            'multimatch=multimatch_gaze.multimatch_gaze:main'
             ],
     },
     classifiers=[

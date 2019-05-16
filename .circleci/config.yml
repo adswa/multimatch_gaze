@@ -15,7 +15,7 @@ jobs:
       # documented at https://circleci.com/docs/2.0/circleci-images/
       # - image: circleci/postgres:9.4
 
-    working_directory: ~/multimatch
+    working_directory: ~/multimatch_gaze
 
     steps:
       - checkout
@@ -51,7 +51,7 @@ jobs:
             . venv/bin/activate
             mkdir test-reports
             pytest --junitxml=test-reports/junit.xml
-            python -m pytest -s -v multimatch/tests
+            python -m pytest -s -v multimatch_gaze/tests
       
       - store_test_results:
           path: test-reports

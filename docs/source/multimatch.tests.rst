@@ -1,21 +1,21 @@
-multimatch.tests package
-========================
+multimatch_gaze.tests package
+=============================
 
 Submodules
 ----------
 
-multimatch.tests.test\_MultiMatch module
-----------------------------------------
+multimatch_gaze.tests.test\_MultiMatch module
+---------------------------------------------
 
-.. automodule:: multimatch.tests.test_MultiMatch
+.. automodule:: multimatch_gaze.tests.test_MultiMatch
     :members:
     :undoc-members:
     :show-inheritance:
 
-multimatch.tests.utils module
------------------------------
+multimatch_gaze.tests.utils module
+----------------------------------
 
-.. automodule:: multimatch.tests.utils
+.. automodule:: multimatch_gaze.tests.utils
     :members:
     :undoc-members:
     :show-inheritance:
@@ -24,7 +24,7 @@ multimatch.tests.utils module
 Module contents
 ---------------
 
-.. automodule:: multimatch.tests
+.. automodule:: multimatch_gaze.tests
     :members:
     :undoc-members:
     :show-inheritance:

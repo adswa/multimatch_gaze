@@ -1,0 +1,28 @@
+{
+  "creators": [
+    {
+      "affiliation": "Institute of Neuroscience and Medicine, Brain & Behaviour (INM-7), Research Centre Jülich, Jülich, Germany",
+      "name": "Wagner, Adina S.",
+      "orcid": "0000-0003-2917-3450"
+    },
+    {
+      "affiliation": "Dartmouth College",
+      "name": "Halchenko, Yaroslav O.",
+      "orcid": "0000-0003-3456-2493"
+    },
+    {
+      "affiliation": "Institute of Neuroscience and Medicine, Brain & Behaviour (INM-7), Research Centre Jülich, Jülich, Germany and Institute of Systems Neuroscience, Medical Faculty, Heinrich Heine University Düsseldorf, Düsseldorf, Germany",
+      "name": "Hanke, Michael",
+      "orcid": "0000-0001-6398-6370"
+    }
+  ],
+  "keywords": [
+    "eye tracking",
+    "scan path comparison",
+    "gaze path",
+    "fixation"
+  ],
+  "license": "mit-license",
+  "upload_type": "software"
+}
+

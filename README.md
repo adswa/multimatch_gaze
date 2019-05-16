@@ -1,12 +1,12 @@
-[![Build Status](https://travis-ci.com/adswa/multimatch.svg?branch=master)](https://travis-ci.com/adswa/multimatch)
-[![codecov](https://codecov.io/gh/adswa/multimatch/branch/master/graph/badge.svg)](https://codecov.io/gh/adswa/multimatch)
+[![Build Status](https://travis-ci.com/adswa/multimatch_gaze.svg?branch=master)](https://travis-ci.com/adswa/multimatch_gaze)
+[![codecov](https://codecov.io/gh/adswa/multimatch_gaze/branch/master/graph/badge.svg)](https://codecov.io/gh/adswa/multimatch_gaze)
 [![Documentation](https://readthedocs.org/projects/multimatch/badge/?version=latest)](https://multimatch.readthedocs.io/en/latest/)
-[![PyPIversion](https://badge.fury.io/py/multimatch.svg)](https://badge.fury.io/py/multimatch)
+[![PyPI version](https://badge.fury.io/py/multimatch-gaze.svg)](https://badge.fury.io/py/multimatch-gaze)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Build status](https://ci.appveyor.com/api/projects/status/wrphckxqjrfut703?svg=true)](https://ci.appveyor.com/project/adswa/multimatch)
+[![Build status](https://ci.appveyor.com/api/projects/status/wrphckxqjrfut703?svg=true)](https://ci.appveyor.com/project/adswa/multimatch_gaze)
+[![DOI](https://zenodo.org/badge/151181532.svg)](https://zenodo.org/badge/latestdoi/151181532)
 
-
-# multimatch
+# multimatch-gaze
 ## Reimplementation of MultiMatch toolbox (Dewhurst et al., 2012) in Python.
 
 The **MultiMatch** method proposed by Jarodzka, Holmqvist and Nyström (2010),
@@ -37,35 +37,33 @@ It is recommended to use a dedicated virtualenv:
     virtualenv --python=python3 ~/env/multimatch
     . ~/env/multimatch/bin/activate
 
-multimatch can be installed via pip. To automatically install multimatch with all
+multimatch-gaze can be installed via pip. To automatically install multimatch-gaze with all
 dependencies, use:
 
     # install from pyPi
-    pip install multimatch
+    pip install multimatch-gaze
 
 
 ### Support/Contributing
 
 Bug reports, feedback, or any other contribution are always appreciated. To
 report a bug, request a feature, or ask a question, please open an
-[issue](https://github.com/adswa/multimatch/issues/new).
+[issue](https://github.com/adswa/multimatch_gaze/issues/new).
 [Pull requests](https://help.github.com/en/articles/creating-a-pull-request-from-a-fork)
 are always welcome.
 
 
-### Examplary usage of multimatch in a terminal
+### Examplary usage of multimatch-gaze in a terminal
 
 **required inputs:**
 - two tab-separated files with nx3 fixation vectors (x coordinate in px, y coordinate in px, duration)
+- screensize in px (x dimension, y dimension)
 
-`` multimatch data/fixvectors/segment_10_sub-19.tsv data/fixvectors/segment_10_sub-01.tsv ``
+`` multimatch data/fixvectors/segment_10_sub-19.tsv data/fixvectors/segment_10_sub-01.tsv 1280 720 ``
 
 
 
 **optional inputs:**
-- --screensize: in pixel, supply first x and then y dimension. The default size is 1280 x 720px
-
-`` multimatch data/fixvectors/segment_10_sub-19.tsv data/fixvectors/segment_10_sub-01.tsv --screensize 1280 720 ``
 
 if scanpath simplification should be performed, please specify in addition
 - --amplitude-threshold (-am) in px
@@ -75,8 +73,26 @@ if scanpath simplification should be performed, please specify in addition
 Example usage with grouping:
 
 `` multimatch data/fixvectors/segment_10_sub-19.tsv
-data/fixvectors/segment_10_sub-01.tsv --direction-threshold 45.0
+data/fixvectors/segment_10_sub-01.tsv 1280 720 --direction-threshold 45.0
 --duration-threshold 0.3 --amplitude-threshold 147.0 ``
+
+**REMoDNaV helper:**
+
+Eye movement event detection results produced by [REMoDNaV](https://github.com/psychoinformatics-de/remodnav)
+can be read in natively by multimatch-gaze. To indicate that datafiles are REMoDNaV outputs, supply the
+``--remodnav`` parameter.
+
+`` multimatch data/remodnav_samples/sub-01_task-movie_run-1_events.tsv
+data/remodnav_samples/sub-01_task-movie_run-2_events.tsv 1280 720 --remodnav ``
+
+REMoDNaV can classify smooth pursuit movements. As a consequence, when using REMoDNaV output, users need to
+indicate how these events should be treated. By default, multimatch-gaze will discard pursuits. In some
+circumstances, however, it can be useful to include pursuit information. Moving stimuli for example would
+evoke a pursuit movement during visual intake. When specifying the ``--pursuit keep`` parameter, the start
+and end points of pursuits will be included in the scanpath.
+
+`` multimatch data/remodnav_samples/sub-01_task-movie_run-1_events.tsv
+data/remodnav_samples/sub-01_task-movie_run-2_events.tsv 1280 720 --remodnav --pursuit keep``
 
 
 ### References:

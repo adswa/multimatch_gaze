@@ -5,8 +5,13 @@ import random
 import collections
 from bisect import bisect_right
 from bisect import bisect_left
-from .. import multimatch as mp
+from .. import multimatch_gaze as mp
 
+dtype = [('onset', '<f8'), ('duration', '<f8'),
+         ('label', '<U10'), ('start_x', '<f8'),
+         ('start_y', '<f8'), ('end_x', '<f8'),
+         ('end_y', '<f8'), ('amp', '<f8'),
+         ('peak_vel', '<f8'), ('med_vel', '<f8'), ('avg_vel', '<f8')]
 
 def same_sample(run=1, subj=1):
     """duplicate dataset to force exactly similar scanpaths. Choose the run
@@ -15,9 +20,9 @@ def same_sample(run=1, subj=1):
         sub = "sub-30"
     else:
         sub = "sub-10"
-    path = os.path.join("multimatch/tests/testdata",
+    path = os.path.join("multimatch_gaze/tests/testdata",
                         "{}_task-movie_run-{}_events.tsv".format(sub, run))
-    loc = os.path.join("multimatch/tests/testdata",
+    loc = os.path.join("multimatch_gaze/tests/testdata",
                        "locations_run-{}_events.tsv".format(run))
     data = np.recfromcsv(path,
                          delimiter='\t',
@@ -35,7 +40,7 @@ def same_sample(run=1, subj=1):
 
 def short_shots(run=3):
     """create a shortened shots location annotation to test longshots()"""
-    loc = os.path.join("multimatch/tests/testdata",
+    loc = os.path.join("multimatch_gaze/tests/testdata",
                        "locations_run-{}_events.tsv".format(run))
     shots = pd.read_csv(loc, sep='\t')
     shortshots = shots[0:20]
@@ -302,78 +307,85 @@ def fixations_chunks(fixations, startid, endid):
     return fixation_vector
 
 
-def pursuits_to_fixations(npdata):
+def pursuits_to_fixations(remodnav_data):
     """Transform start and endpoints of pursuits to fixations.
 
     Uses the output of a record array created by the remodnav algorithm for
-    eye- movement classification to transform pursuit data into fixations.
-    This is done because the stimulus material is a moving image -
-    a fixation on a moving object in the movie resembles hence a pursuit.
+    eye-movement classification to transform pursuit data into fixations.
+    The start and end point of a pursuit are relabeled as a fixation.
+    This is useful for example if the underlying stimulus material is a
+    moving image - visual intake of a moving object would then resemble
+    a pursuit.
 
     :param: npdata: recordarray, remodnav output of eyemovement data
 
     :return: newdata: recordarray
     """
     # initialize empty rec array of the same shape
-    newdata = np.recarray((0,), dtype=[('onset', '<f8'),
-                                       ('duration', '<f8'),
-                                       ('label', '<U10'),
-                                       ('start_x', '<f8'),
-                                       ('start_y', '<f8'),
-                                       ('end_x', '<f8'),
-                                       ('end_y', '<f8'),
-                                       ('amp', '<f8'),
-                                       ('peak_vel', '<f8'),
-                                       ('med_vel', '<f8'),
-                                       ('avg_vel', '<f8')])
+    newdata = np.recarray((0,), dtype=dtype)
     # reassemble rec array.
     # split pursuits to use end and start as fixations later
-    for i in range(0, len(npdata)):
-        if npdata[i]['label'] == 'PURS':
-            row_1 = npdata[i]
-            row_1['duration'] = npdata[i]['duration'] / 2
-            row_2 = row_1.copy()
-            row_2['onset'] += row_2['duration']
-            row_2['start_x'] = row_2['end_x']
-            row_2['start_y'] = row_2['end_y']
-            newdata = np.append(newdata, row_1)
-            newdata = np.append(newdata, row_2)
+    from copy import deepcopy
+    data = deepcopy(remodnav_data)
+    for i, d in enumerate(data):
+        if data[i]['label'] == 'PURS':
+            # start and end point of pursuit get
+            #  half the total duration
+            d['duration'] = d['duration'] / 2
+            d['label'] = 'FIXA'
+            d2 = deepcopy(d)
+            # end point of the pursuit is start
+            # of new fixation
+            d2['onset'] += d2['duration']
+            d2['start_x'] = d2['end_x']
+            d2['start_y'] = d2['end_y']
+            newdata = np.append(newdata, np.array(d, dtype=dtype))
+            newdata = np.append(newdata, np.array(d2, dtype=dtype))
         else:
-            newdata = np.append(newdata, npdata[i])
+            newdata = np.append(newdata, np.array(d, dtype=dtype))
     return newdata
 
 
-def preprocess(data, sz=[1280, 720]):
+def preprocess_remodnav(data, screensize):
     """Preprocess record array of eye-events.
 
-    A record array of the studyforrest eyemovement data is preprocessed
-    in the following way: Subset to only get fixation and pursuit data,
+    A record array from REMoDNaV data is preprocessed
+    in the following way: Subset to only get fixation data,
     disregard out-of-frame gazes, subset to only keep x, y coordinates,
-    duration, and onset.
+    duration.
 
-    :param: data: recordarray, remodnav output of eye events from movie
+    :param: data: recordarray, REMoDNaV output of eye events from movie
         data
-    :param: sz: list of float, screen measurements in px
+    :param: screensize: list of float, screen measurements in px
 
-    :return: fixations: array-like nx4 fixation vectors (onset, x, y,
+    :return: fixations: array-like nx3 fixation vectors (onset, x, y,
         duration)
 
     """
-
-    # only fixations and pursuits
-    filterevents = data[np.logical_or(data['label'] == 'FIXA',
-                                      data['label'] == 'PURS')]
+    # only fixation labels
+    filterevents = data[(data['label'] == 'FIXA')]
     # within x coordinates?
     filterxbounds = filterevents[np.logical_and(filterevents['start_x'] >= 0,
-                                                filterevents['start_x'] <= sz[0])]
+                                                filterevents['start_x'] <= screensize[0])]
     # within y coordinates?
     filterybounds = filterxbounds[np.logical_and(filterxbounds['start_y'] >= 0,
-                                                 filterxbounds['end_y'] <= sz[1])]
+                                                 filterxbounds['end_y'] <= screensize[1])]
     # give me onset times, start_x, start_y and duration
     fixations = filterybounds[["onset", "start_x", "start_y",
                                "duration"]]
     return fixations
 
+def read_remodnav(data):
+    """ Helper to read input data produced by the REMoDNaV algorithm.
+    Further information on the REMoDNaV algorithm can be found here:
+    https://github.com/psychoinformatics-de/remodnav
+    """
+    d = np.recfromcsv(data,
+        delimiter='\t',
+        dtype=dtype
+         )
+
+    return d
 
 def longshot(shots,
              group_shots,
@@ -416,7 +428,7 @@ def longshot(shots,
 def docomparison_forrest(shots,
                          data1,
                          data2,
-                         sz=[1280, 720],
+                         screensize=[1280, 720],
                          dur=4.92,
                          ldur=0,
                          offset=False,
@@ -428,7 +440,7 @@ def docomparison_forrest(shots,
     """Compare two scanpaths on five similarity dimensions.
 
     :param: data1, data2: recarray, eyemovement information of forrest gump studyforrest dataset
-    :param: sz: list, screen dimensions in px.
+    :param: screensize: list, screen dimensions in px.
     :param: ldur: float, duration in seconds. An attempt is made to group short shots
         together to form shots of ldur length
     :param: grouping: boolean, if True, simplification is performed based on thresholds TAmp,
@@ -458,8 +470,8 @@ def docomparison_forrest(shots,
     newdata2 = pursuits_to_fixations(data2)
     print('Loaded data.')
     # preprocess input files
-    fixations1 = preprocess(newdata1, sz)
-    fixations2 = preprocess(newdata2, sz)
+    fixations1 = preprocess_remodnav(newdata1, screensize)
+    fixations2 = preprocess_remodnav(newdata2, screensize)
     shots = longshot(shots, group_shots, ldur)
     # get shots and scanpath on- and offsets
     if offset:
@@ -500,13 +512,13 @@ def docomparison_forrest(shots,
                 subj1 = mp.simplify_scanpath(subj1, TAmp, TDir, TDur)
                 subj2 = mp.simplify_scanpath(subj2, TAmp, TDir, TDur)
             M = mp.cal_vectordifferences(subj1, subj2)
-            szM = np.shape(M)
-            M_assignment = np.arange(szM[0] *
-                                     szM[1]).reshape(szM[0], szM[1])
-            weightedGraph = mp.createdirectedgraph(szM, M, M_assignment)
-            path, dist = mp.dijkstra(weightedGraph, 0, szM[0] * szM[1] - 1)
+            scanpath_dim = np.shape(M)
+            M_assignment = np.arange(scanpath_dim[0] *
+                                     scanpath_dim[1]).reshape(scanpath_dim[0], scanpath_dim[1])
+            weightedGraph = mp.createdirectedgraph(scanpath_dim, M, M_assignment)
+            path, dist = mp.dijkstra(weightedGraph, 0, scanpath_dim[0] * scanpath_dim[1] - 1)
             unnormalised = mp.getunnormalised(subj1, subj2, path, M_assignment)
-            normal = mp.normaliseresults(unnormalised, sz)
+            normal = mp.normaliseresults(unnormalised, screensize)
             scanpathcomparisons.append(normal)
         # return nan as result if at least one scanpath it too short
         else:
