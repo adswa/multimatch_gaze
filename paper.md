@@ -1,5 +1,5 @@
 ---
-title: 'MultiMatch in Python'
+title: 'multimatch_gaze: The MultiMatch algorithm for gaze path comparison in Python'
 tags:
   - eyetracking
   - scan path
@@ -10,6 +10,9 @@ authors:
  - name: Adina S. Wagner
    orcid: 0000-0003-2917-3450
    affiliation: 1
+ - name: Yaroslav O. Halchenko
+   orcid: 0000-0003-3456-2493
+   affiliation: "3"
  - name: Michael Hanke
    orcid: 0000-0001-6398-6370
    affiliation: "1, 2"
@@ -18,7 +21,9 @@ affiliations:
    index: 1
  - name: Institute of Systems Neuroscience, Medical Faculty, Heinrich Heine University Düsseldorf, Düsseldorf, Germany
    index: 2
-date: XX April 2019
+ - name: Dartmouth College
+   index: 3
+date: XX May 2019
 bibliography: paper.bib
 ---
 
@@ -44,15 +49,15 @@ comparisons. However, many of the contemporary scan path
 comparison algorithms are implemented in closed-source,
 non-free software such as Matlab.
 
-``multimatch`` is a Python based
+``multimatch-gaze`` is a Python based
 reimplementation of the MultiMatch toolbox for scan path
 comparison, originally developed by [@Jarodzka] and
 implemented by [@Dewhurst] in Matlab.
 This algorithm represents scan paths as geometrical
 vectors in a two-dimensional space: Any scan path is built
-up of a coordinate vector sequence in which the vectors represent
-saccades, and the start and end position of saccadic
-vectors represent fixations. Two such vector sequences
+up of a coordinate vector sequence in which the start and end position
+of vectors represent fixations, and the vectors represent
+saccades. Two such vector sequences
 are, after optional simplification based on angular relations
 and amplitudes of saccades,
 compared on the five dimensions “vector shape”, “vector
@@ -65,14 +70,26 @@ accessible, documented, and tested open
 source alternative to the existing MultiMatch toolbox. The algorithm
 is an established tool for scan path comparison [@anderson],
 and improved availability aids adoption
-in a broader research community. multimatch
-is available from its GitHub repository [@multimatch]
-and as the Python package multimatch via 'pip install multimatch'.
+in a broader research community. multimatch-gaze
+is available from its Github repository [@multimatch_gaze]
+and as the Python package multimatch-gaze via 'pip install multimatch-gaze'.
 The module contains the same functionality as the original
 Matlab toolbox, that is, scan path comparison with optional
 simplification according to user-defined thresholds, and it
 provides this functionality via a command line interface or
 a Python API.
+
+Data for scan path comparison can be supplied as nx3
+fixation vectors with columns corresponding to x-coordinates,
+y-coordinates, and duration of the fixation in seconds (as for
+the original Matlab toolbox).
+Alternatively, multimatch-gaze can natively read in event detection
+output produced by REMoDNaV [@remodnav], a velocity-based eye movement
+classification algorithm written in Python.
+For REMoDNaV-based input,
+users can additionally specify whether smooth pursuit events
+in the data should be kept in the scan path or
+discarded.
 
 # Acknowledgements
 
