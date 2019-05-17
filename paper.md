@@ -71,7 +71,7 @@ source alternative to the existing MultiMatch toolbox. The algorithm
 is an established tool for scan path comparison [@anderson],
 and improved availability aids adoption
 in a broader research community. multimatch-gaze
-is available from its Github repository [@multimatch_gaze]
+is available from its Github repository
 and as the Python package ``multimatch-gaze`` via ``pip install multimatch-gaze``.
 The module contains the same functionality as the original
 Matlab toolbox, that is, scan path comparison with optional
