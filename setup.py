@@ -33,7 +33,7 @@ except (ImportError, OSError) as exc:
 setup(
     name='multimatch_gaze',
     version=version,
-    description='Multidimensional scanpath comparison',
+    description='Multidimensional scan path comparison',
     long_description=long_description,
     author='Adina Wagner',
     author_email='adina.wagner@t-online.de',
@@ -50,7 +50,7 @@ setup(
         ]},
     entry_points={
         'console_scripts': [
-            'multimatch=multimatch_gaze.multimatch_gaze:main'
+            'multimatch-gaze=multimatch_gaze.multimatch_gaze:main'
             ],
     },
     classifiers=[

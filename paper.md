@@ -91,6 +91,18 @@ users can additionally specify whether smooth pursuit events
 in the data should be kept in the scan path or
 discarded.
 
+Data for scan path comparison can be supplied as nx3
+fixation vectors with columns corresponding to x-coordinates,
+y-coordinates, and duration of the fixation in seconds (as for
+the original Matlab toolbox).
+Alternatively, multimatch-gaze can natively read in event detection
+output produced by REMoDNaV [@remodnav], a velocity-based eye movement
+classification algorithm written in Python.
+For REMoDNaV-based input,
+users can additionally specify whether smooth pursuit events
+in the data should be kept in the scan path or
+discarded.
+
 # Acknowledgements
 
 We thank Dr. Richard Dewhurst for kindly and swiftly providing
