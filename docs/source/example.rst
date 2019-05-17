@@ -51,7 +51,7 @@ contemporary algorithms and human annotations, please see the respective publica
 (Dar et al., in preparation) or take a look at the REMoDNaV_ module.
 The eye events are reported together with their start and end coordinates, their onsets
 and durations in seconds, their velocity, and the average pupil size.
-Fixation vectors as input for multimatch were derived from the REMoDNaV output.
+Fixation vectors as input for multimatch-gaze were derived from the REMoDNaV output.
 As the stimulus was dynamic with moving targets that evoke smooth pursuit movements,
 such pursuit events are categorized to be
 an eye movement category of 'visual intake', just as fixation. Therefore, in a first step,
@@ -72,8 +72,8 @@ began maximally distant to the snippet onset.
 .. _REmoDNaV: https://github.com/psychoinformatics-de/remodnav
 .. _publication: https://github.com/psychoinformatics-de/paper-remodnav/
 
-multimatch application
-^^^^^^^^^^^^^^^^^^^^^^
+multimatch-gaze application
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Overall scan path similarities were computed in a two-step procedure. First,
 scan path comparisons of all scan paths from the same shot of two subjects were
 calculated for all possible pairs of subject. This resulted in 105 combinations
