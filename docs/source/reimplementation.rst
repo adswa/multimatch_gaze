@@ -3,23 +3,23 @@ multimatch-gaze
 ***************
 
 
-**multimatch-gaze** is a python-based reimplementation of the MultiMatch algorithm
+**multimatch-gaze** is a Python-based reimplementation of the MultiMatch algorithm
 (Jarodzka, Holmqvist & Nyström, 2010).
 The original Matlab toolbox was kindly provided via email by Dr. Richard Dewhurst
 and the method was ported into Python with the intent of providing an open source
-alternative to the matlab toolbox.
+alternative to the Matlab toolbox.
 
 
-The module provides the possibility to compute the similarity of two scanpaths
-with a terminal command or within a python instance (see section API_).
+The module provides the possibility to compute the similarity of two scan paths
+with a terminal command or within a Python instance (see section API_).
 
  .. _API: https://multimatch.readthedocs.io/en/latest/api.html
 
 
 
-==============
-gettingstarted
-==============
+===============
+Getting started
+===============
 
 Installation
 ************
@@ -68,7 +68,7 @@ data found in the repository.
 
 
 =======
-support
+Support
 =======
 
 All bugs, concerns and enhancement requests for this software can be submitted
@@ -81,7 +81,7 @@ are always welcome.
 
 
 ================
-acknowledgements
+Acknowledgements
 ================
 
 We thank Dr. Richard Dewhurst for kindly and swiftly providing the original

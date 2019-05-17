@@ -3,22 +3,22 @@ Algorithm
 *********
 
 The **MultiMatch** method is a vector-based, multi-dimensional approach to
-compute scanpath similarity. It was originally proposed by Jarodzka, Holmqvist
+compute scan path similarity. It was originally proposed by Jarodzka, Holmqvist
 & Nyström (2010) and implemented as a Matlab toolbox by Dewhursts and colleagues
 (2012).
 
-The method represents scanpaths as geometrical vectors in a two-dimensional
-space: Any scanpath is build up of a vector sequence in which the vectors
+The method represents scan paths as geometrical vectors in a two-dimensional
+space: Any scan path is build up of a vector sequence in which the vectors
 represent saccades, and the start and end position of saccade vectors represent
-fixations. In the example image below, the scanpath is build by connecting the
+fixations. In the example image below, the scan path is build by connecting the
 fixations (red dots) with vectors (black lines), which constitute simplified
 saccades.
 
  .. figure:: ../img/example_path.png
    :scale: 150%
-   :alt: examplary scanpath
+   :alt: examplary scan path
 
-   Example scanpath as used in the MultiMatch algorithm
+   Example scan path as used in the MultiMatch algorithm
 
 Two such sequences (which can differ in length) are compared on the
 five dimensions **vector shape**, **vector length** (saccadic amplitude), **vector
@@ -27,22 +27,22 @@ similarity evaluation.
 
  .. figure:: ../img/dimensions.png
    :scale: 100%
-   :alt: scanpath dimensions
+   :alt: scan path dimensions
 
-   Dimensions of scanpath comparison, taken from Dewhurst et al., 2012
+   Dimensions of scan path comparison, taken from Dewhurst et al., 2012
 
 
 Overview
 ^^^^^^^^^
 
 The method takes two n x 3 fixation vectors (x-coordinate in px, y-coordinate in px,
-duration in sec) of two scanpaths as its input. Example files how input should look
+duration in sec) of two scan paths as its input. Example files how input should look
 like can be found here_.
 
  .. _here: https://github.com/adswa/multimatch_gaze/tree/master/data/fixvectors
 
 
-- **Step 1: Representation of scanpaths as vector sequences**
+- **Step 1: Representation of scan paths as vector sequences**
 
     An idealized saccade is represented as the shortest distance between two
     fixations. The Cartesian coordinates of the fixations are thus the starting
@@ -72,18 +72,18 @@ like can be found here_.
 
 - **Step 3: Temporal alignment**
 
-        Two simplified scanpaths are temporally aligned in order to find
+        Two simplified scan paths are temporally aligned in order to find
         pairings of saccade vectors to compare. The aim is not necessarily to
         align two saccade vectors that constitute the same component in their
         respective vector sequence, but those two vectors that are the most
         similar while preserving temporal order. In this way, a stray saccade in
-        one of the two scanpaths does not lead to an overall low similarity
-        rating, and it is further possible to compare scanpaths of unequal
+        one of the two scan paths does not lead to an overall low similarity
+        rating, and it is further possible to compare scan paths of unequal
         length. To do so, all possible pairings of saccades are evaluated in
         similarity by their shape (i.e. vector differences). More formally, the
-        vector difference between each element i in scanpath
+        vector difference between each element i in scan path
         S1 = (u1, u2, …, um)
-        and each element j in scanpath
+        and each element j in scan path
         S2 = (v1, v2, …, vn)
         is computed and stored in Matrix M as a weight. Low weights correspond to high
         similarity. An adjacency matrix of size M is build, defining rules on
@@ -105,11 +105,11 @@ like can be found here_.
 
 -  **Step 5: Similarity calculation**
 
-        Five measures of scanpath similarity are computed on the aligned
-        scanpaths. This is done by performing simple vector arithmetic on all
+        Five measures of scan path similarity are computed on the aligned
+        scan paths. This is done by performing simple vector arithmetic on all
         aligned saccade pairs, taking the median of the results and
         normalizing it. As a result, all five measures are in range [0, 1] with
-        higher values indicating higher similarity between scanpaths on the
+        higher values indicating higher similarity between scan paths on the
         given dimension.
 
 

@@ -1,7 +1,7 @@
 **********************
-an example computation
+An example computation
 **********************
-The following section shows a multimatch-gaze use case to compute the scanpath
+The following section shows a multimatch-gaze use case to compute the scan path
 similarities of participants that watched the Hollywood movie Forrest Gump
 during simultaneous fMRI acquisition.
 
@@ -38,8 +38,8 @@ had an approximate spatial uncertainty of 40px according to the calibration proc
 
 .. _studyforrest: https://github.com/psychoinformatics-de/studyforrest-data-phase2
 
-Event detection and scanpath derivation
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Event detection and scan path derivation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Raw gaze data was classified into different categories of eye movements
 with an adaptive, data-driven algorithm for robust eye movement detection for natural
 viewing (REMoDNaV_ ) in Python. The algorithm categorizes the raw data into
@@ -55,17 +55,17 @@ Fixation vectors as input for multimatch were derived from the REMoDNaV output.
 As the stimulus was dynamic with moving targets that evoke smooth pursuit movements,
 such pursuit events are categorized to be
 an eye movement category of 'visual intake', just as fixation. Therefore, in a first step,
-the start and end of pursuit movements were included in scanpaths to compare as well.
+the start and end of pursuit movements were included in scan paths to compare as well.
 In a second step, the continuous eye movement data (~15 min per run) was split into shots
 corresponding to segments that did not contain scene changes between depicted
 locales using the published location annotation for the movie (Häusler & Hanke,
 2016). This was done to accommodate the fact that subjects gazes have
 a bias towards the center in Hollywood movies (Tseng et al. 2009). This bias can
 at least in part be traced back to a strong center bias directly after cuts in
-dynamic scenes. Lastly, within each segment, scanpaths of the median shot length
+dynamic scenes. Lastly, within each segment, scan paths of the median shot length
 of ~4.92 seconds. To further evade any problems associated with the center bias,
-scanpaths were extracted from the end of the segment: The last oculomotor event
-within the range of the segment marked the end of a scanpath. As such, scanpaths
+scan paths were extracted from the end of the segment: The last oculomotor event
+within the range of the segment marked the end of a scan path. As such, scan paths
 began maximally distant to the snippet onset.
 
 
@@ -74,16 +74,16 @@ began maximally distant to the snippet onset.
 
 multimatch application
 ^^^^^^^^^^^^^^^^^^^^^^
-Overall scanpath similarities were computed in a two-step procedure. First,
-scanpath comparisons of all scanpaths from the same shot of two subjects were
+Overall scan path similarities were computed in a two-step procedure. First,
+scan path comparisons of all scan paths from the same shot of two subjects were
 calculated for all possible pairs of subject. This resulted in 105 combinations
 for N = 15 subjects. These comparisons were done without any further
 simplification (i.e. no use of the direction, length, and duration thresholds),
-as even minor differences in scanpaths obtained from a movie can correspond to
+as even minor differences in scan paths obtained from a movie can correspond to
 major differences in attended visual stimuli. In a second step, the resulting
 similarities for each of the five similarity dimensions were averaged. Thus, for
 each snippet longer than 4.92s five similarity measures were computed that
-represented the average similarity of scanpaths of all subjects on the given
+represented the average similarity of scan paths of all subjects on the given
 dimension.
 The results of this computation can be found on Github_.
 
@@ -91,7 +91,7 @@ The results of this computation can be found on Github_.
 
 Results
 ^^^^^^^
-In total, 533 scanpaths were extracted from the movie. The median duration of extracted scanpath
+In total, 533 scan paths were extracted from the movie. The median duration of extracted scan path
 duration was 4.39 seconds (mean = 4.36s).
 The following figures give an overview of the similarity computations.
 Figures 1 and 2 display a frame within the segments in the first run of the movie
@@ -140,11 +140,11 @@ deviations are very small. This is also highlighted by Figure 3.
 Discussion
 ^^^^^^^^^^
 
-As evident from the previous table and figure, scanpaths were almost
+As evident from the previous table and figure, scan paths were almost
 perfectly similar on the dimensions vector length and vector position.
-This is likely at least partially due to the scanpath alignment based on the scanpath shape.
+This is likely at least partially due to the scan path alignment based on the scan path shape.
 Scanpaths were also highly similar on the position dimension, which demonstrates a strong
-gaze control of the movie stimulus. Subjects scanpaths differed more substantially on
+gaze control of the movie stimulus. Subjects scan paths differed more substantially on
 the dimensions direction and duration, which indicates differences in fixation dwelling
 times and saccadic angle. Thus, the general points of interest (as evident from high
 similarities in position, length and shape) were similar across subject, but differences in
@@ -168,7 +168,7 @@ across subjects, even for backwards presentations of movies.
 The results obtained with the multimatch algorithm from the Hollywood movie
 Forrest Gump, therefore, are consistent with known properties of gaze behavior
 during movie watching. This analysis has furthermore demonstrated one way of using
-multimatchs scanpath comparison on a grouplevel similarity computation per segment.
+multimatchs scan path comparison on a grouplevel similarity computation per segment.
 If you have any questions about this example, please ask here_.
 
  .. _here: https://github.com/adswa/multimatch_gaze/issues/new

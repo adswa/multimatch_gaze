@@ -9,7 +9,7 @@ toolbox and is easiest executed directly from the command line.
 Command line
 ^^^^^^^^^^^^
 
-The computation of the similarity between two scanpaths doesn't involve anything
+The computation of the similarity between two scan paths doesn't involve anything
 beyond the command line keyword ``multimatch`` followed by two input files,
 corresponding to tab-separated files with a fixation vector, and the screensize in
 pixel, supplied as two consecutive integers corresponding to the x and y dimension
@@ -39,8 +39,8 @@ repository looks like this:
 
 **Scanpath simplification**
 
-Optionally, scanpaths can be simplified to reduce their complexity. To simplify
-scanpaths, specify the following arguments:
+Optionally, scan paths can be simplified to reduce their complexity. To simplify
+scan paths, specify the following arguments:
 
 - ``--direction-threshold``: If two consecutive saccades have a small angle, they will be
   combined. Should be in degrees, such as ``45.0`` for 45°
@@ -65,7 +65,7 @@ this:
 
 There are no guidelines whether and if so, how much,
 simplification is appropriate, and it is strongly dependent
-on individual use case. The original matlab toolbox implements a default
+on individual use case. The original Matlab toolbox implements a default
 amplitude threshold of 10% of the screen diagonal as amplitude, 45° as angle, and 300ms as
 duration thresholds. ``multimatch`` has defaults of 0 for simplification parameters
 (i.e. simplification is not performed by default).
@@ -109,7 +109,7 @@ Three different formats are possible:
 REMoDNaV_ is a velocity-based event detection algorithm for eye movement classification.
 It detects and labels saccades, fixations, post-saccadic oscillations, and smooth pursuit
 movements, and it was specifically developed to work with dynamic stimulation.
-``REMoDNaV`` is an open-source python module, and its outputs, BIDS-compliant_ TSV files,
+``REMoDNaV`` is an open-source Python package, and its outputs, BIDS-compliant_ TSV files,
 can be read natively by ``multimatch_gaze``. The conversion of data to a fixation vector is
 then handled internally.
 
@@ -135,7 +135,7 @@ handled with the ``--pursuit`` parameter. Chose between options ``"discard"`` an
 - ``keep`` will turn a pursuit movement into two fixations - the start and ending point
   of the pursuit movement.
 
-Specify to keep pursuit movements (i.e. inclusion into the scanpath) like this:
+Specify to keep pursuit movements (i.e. inclusion into the scan path) like this:
 
 .. code::
 
@@ -146,8 +146,8 @@ Specify to keep pursuit movements (i.e. inclusion into the scanpath) like this:
 Python
 ^^^^^^
 
-If you wish to use the functionality of multimatch within a running python
-instance such as ipython, you can import the module and use the function
+If you wish to use the functionality of multimatch within a running Python
+instance such as IPython, you can import the module and use the function
 ``docomparison``. Here is an example:
 
 .. code::

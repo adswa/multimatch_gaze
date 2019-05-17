@@ -3,8 +3,8 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-multimatch-gaze: Multidimensional scanpath comparison in python
-===============================================================
+multimatch-gaze: Multidimensional scan path comparison in Python
+================================================================
 
 .. toctree::
    :maxdepth: 1

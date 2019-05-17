@@ -22,13 +22,13 @@ sys.path.insert(0, os.path.abspath('../../'))
 # -- Project information -----------------------------------------------------
 
 project = 'multimatch'
-copyright = '2018, Adina Wagner'
+copyright = '2018-2019, Adina Wagner'
 author = 'Adina Wagner'
 
 # The short X.Y version
 version = ''
 # The full version, including alpha/beta/rc tags
-release = '0.0.1'
+release = '0.1.0'
 
 
 # -- General configuration ---------------------------------------------------
