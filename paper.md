@@ -23,7 +23,7 @@ affiliations:
    index: 2
  - name: Dartmouth College
    index: 3
-date: XX May 2019
+date: 17 May 2019
 bibliography: paper.bib
 ---
 
@@ -72,7 +72,7 @@ is an established tool for scan path comparison [@anderson],
 and improved availability aids adoption
 in a broader research community. multimatch-gaze
 is available from its Github repository [@multimatch_gaze]
-and as the Python package multimatch-gaze via 'pip install multimatch-gaze'.
+and as the Python package ``multimatch-gaze`` via ``pip install multimatch-gaze``.
 The module contains the same functionality as the original
 Matlab toolbox, that is, scan path comparison with optional
 simplification according to user-defined thresholds, and it
@@ -91,22 +91,10 @@ users can additionally specify whether smooth pursuit events
 in the data should be kept in the scan path or
 discarded.
 
-Data for scan path comparison can be supplied as nx3
-fixation vectors with columns corresponding to x-coordinates,
-y-coordinates, and duration of the fixation in seconds (as for
-the original Matlab toolbox).
-Alternatively, multimatch-gaze can natively read in event detection
-output produced by REMoDNaV [@remodnav], a velocity-based eye movement
-classification algorithm written in Python.
-For REMoDNaV-based input,
-users can additionally specify whether smooth pursuit events
-in the data should be kept in the scan path or
-discarded.
-
 # Acknowledgements
 
 We thank Dr. Richard Dewhurst for kindly and swiftly providing
-the original matlab code for the MultiMatch toolbox via e-mail
+the original Matlab code for the MultiMatch toolbox via e-mail
 and being supportive of an open source implementation.
 
 # References
