@@ -98,14 +98,14 @@ Figures 1 and 2 display a frame within the segments in the first run of the movi
 with the lowest and highest group-level similarity (averaged across the five dimensions).
 
  .. figure:: ../img/low_sim.png
-   :scale: 50%
+   :figwidth: 100%
    :alt: low similarity segment
 
    One frame from the segment within the first run of the movie with the **lowest** average group-level similarity.
    The circles represent participants center of eye gaze.
 
  .. figure:: ../img/max_sim.png
-   :scale: 50%
+   :figwidth: 100%
    :alt: high similarity segment
 
    One frame from the segment within the first run of the movie with the **highest** average group-level similarity.
@@ -131,7 +131,6 @@ deviations are very small. This is also highlighted by Figure 3.
 
 
  .. figure:: ../img/sim_per_dimension.png
-   :scale: 100%
    :alt: distribution of similarity measures
 
    Distribution of similarity measures throughout the movie. Note the extremely high
