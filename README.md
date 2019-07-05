@@ -38,7 +38,8 @@ It is recommended to use a dedicated virtualenv:
     . ~/env/multimatch/bin/activate
 
 multimatch-gaze can be installed via pip. To automatically install multimatch-gaze with all
-dependencies, use:
+dependencies ([pandas](https://pandas.pydata.org/), [numpy](https://www.numpy.org/), and
+[argparse](https://docs.python.org/3/library/argparse.html)), use:
 
     # install from pyPi
     pip install multimatch-gaze
