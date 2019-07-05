@@ -21,7 +21,7 @@ affiliations:
    index: 1
  - name: Institute of Systems Neuroscience, Medical Faculty, Heinrich Heine University Düsseldorf, Düsseldorf, Germany
    index: 2
- - name: Dartmouth College
+ - name: Department of Psychological and Brain Sciences, Dartmouth College, Dartmouth, NH, United States
    index: 3
 date: 17 May 2019
 bibliography: paper.bib
