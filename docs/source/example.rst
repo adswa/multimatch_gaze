@@ -96,16 +96,19 @@ duration was 4.39 seconds (mean = 4.36s).
 The following figures give an overview of the similarity computations.
 Figures 1 and 2 display a frame within the segments in the first run of the movie
 with the lowest and highest group-level similarity (averaged across the five dimensions).
+The overlayed eye gaze was created with a custom script that is part of the studyforrest
+phase-2 data release (Hanke et al., 2016) and publicly available in the corresponding
+Github repository_.
 
  .. figure:: ../img/low_sim.png
-   :scale: 50%
+   :figwidth: 100%
    :alt: low similarity segment
 
    One frame from the segment within the first run of the movie with the **lowest** average group-level similarity.
    The circles represent participants center of eye gaze.
 
  .. figure:: ../img/max_sim.png
-   :scale: 50%
+   :figwidth: 100%
    :alt: high similarity segment
 
    One frame from the segment within the first run of the movie with the **highest** average group-level similarity.
@@ -131,11 +134,13 @@ deviations are very small. This is also highlighted by Figure 3.
 
 
  .. figure:: ../img/sim_per_dimension.png
-   :scale: 100%
    :alt: distribution of similarity measures
 
    Distribution of similarity measures throughout the movie. Note the extremely high
    position and length dimension.
+
+.. _repository: https://www.github.com/psychoinformatics-de/studyforrest-data-phase2/blob/master/code/overlay_gaze_on_video
+
 
 Discussion
 ^^^^^^^^^^

@@ -40,12 +40,15 @@ Via pip install
 
 
 multimatch-gaze can be installed via pip_ (**P**\ip **I**\nstalls **P**\ython). To
-automatically install multimatch-gaze with all dependencies type::
+automatically install multimatch-gaze with all dependencies (pandas_, numpy_, argparse_)
+type:
 
    pip install multimatch-gaze
 
 .. _pip: https://pip.pypa.io
-
+.. _pandas: https://pandas.pydata.org/
+.. _numpy: https://www.numpy.org/
+.. _argparse: https://docs.python.org/3/library/argparse.html
 
 Via Github
 ----------

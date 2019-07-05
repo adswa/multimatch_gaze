@@ -15,7 +15,7 @@ fixations (red dots) with vectors (black lines), which constitute simplified
 saccades.
 
  .. figure:: ../img/example_path.png
-   :scale: 150%
+   :figwidth: 100%
    :alt: examplary scan path
 
    Example scan path as used in the MultiMatch algorithm
@@ -26,7 +26,7 @@ position**, **vector direction** and **fixation duration** for a multidimensiona
 similarity evaluation.
 
  .. figure:: ../img/dimensions.png
-   :scale: 100%
+   :figwidth: 100%
    :alt: scan path dimensions
 
    Dimensions of scan path comparison, taken from Dewhurst et al., 2012
