@@ -47,11 +47,13 @@ dependencies ([pandas](https://pandas.pydata.org/), [numpy](https://www.numpy.or
 
 ### Support/Contributing
 
-Bug reports, feedback, or any other contribution are always appreciated. To
-report a bug, request a feature, or ask a question, please open an
+Bug reports, feedback, or any other contribution are always appreciated.
+To report a bug, request a feature, or ask a question, please open an
 [issue](https://github.com/adswa/multimatch_gaze/issues/new).
 [Pull requests](https://help.github.com/en/articles/creating-a-pull-request-from-a-fork)
 are always welcome.
+For additional information on how to contribute, checkout
+[CONTRIBUTING.md](https://github.com/adswa/multimatch_gaze/blob/master/CONTRIBUTING.md).
 
 
 ### Examplary usage of multimatch-gaze in a terminal
