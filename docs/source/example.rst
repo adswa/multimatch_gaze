@@ -97,7 +97,8 @@ The following figures give an overview of the similarity computations.
 Figures 1 and 2 display a frame within the segments in the first run of the movie
 with the lowest and highest group-level similarity (averaged across the five dimensions).
 The overlayed eye gaze was created with a custom script that is part of the studyforrest
-phase-2 publication and publicly available in the corresponding Github repository_.
+phase-2 data release (Hanke et al., 2016) and publicly available in the corresponding
+Github repository_.
 
  .. figure:: ../img/low_sim.png
    :figwidth: 100%
