@@ -500,7 +500,7 @@ def dijkstra(weightedGraph,
         end = predecessors[end]
 
     #Return the path in ascending order and return the distance
-    return(path[-2::-1],dist)
+    return path[-2::-1], dist 
 
 
 def cal_angulardifference(data1,
@@ -781,24 +781,24 @@ def docomparison(fixation_vectors1,
     """Compare two scanpaths on five similarity dimensions.
 
 
-        :param: fixation_vectors1: array-like n x 3 fixation vector of one scanpath
-        :param: fixation_vectors2: array-like n x 3 fixation vector of one scanpath
-        :param: screensize: list, screen dimensions in px.
-        :param: grouping: boolean, if True, simplification is performed based on thresholds TAmp,
-            TDir, and TDur. Default: False
-        :param: TDir: float, Direction threshold, angle in degrees. Default: 0.0
-        :param: TDur: float,  Duration threshold, duration in seconds. Default: 0.0
-        :param: TAmp: float, Amplitude threshold, length in px. Default: 0.0
+    :param: fixation_vectors1: array-like n x 3 fixation vector of one scanpath
+    :param: fixation_vectors2: array-like n x 3 fixation vector of one scanpath
+    :param: screensize: list, screen dimensions in px.
+    :param: grouping: boolean, if True, simplification is performed based on thresholds TAmp,
+        TDir, and TDur. Default: False
+    :param: TDir: float, Direction threshold, angle in degrees. Default: 0.0
+    :param: TDur: float,  Duration threshold, duration in seconds. Default: 0.0
+    :param: TAmp: float, Amplitude threshold, length in px. Default: 0.0
 
-        :return: scanpathcomparisons: array
-            array of 5 scanpath similarity measures. Vector (Shape), Direction
-            (Angle), Length, Position, and Duration. 1 means absolute similarity, 0 means
-            lowest similarity possible.
+    :return: scanpathcomparisons: array
+        array of 5 scanpath similarity measures. Vector (Shape), Direction
+        (Angle), Length, Position, and Duration. 1 means absolute similarity, 0 means
+        lowest similarity possible.
 
-        >>> results = docomparison(fix_1, fix_2, screensize = [1280, 720], grouping = True, TDir = 45.0, TDur = 0.05, TAmp = 150)
-        >>> print(results)
-        >>> [[0.95075847681364678, 0.95637548674423822, 0.94082367355291008, 0.94491164030498609, 0.78260869565217384]]
-        """
+    >>> results = docomparison(fix_1, fix_2, screensize = [1280, 720], grouping = True, TDir = 45.0, TDur = 0.05, TAmp = 150)
+    >>> print(results)
+    >>> [[0.95075847681364678, 0.95637548674423822, 0.94082367355291008, 0.94491164030498609, 0.78260869565217384]]
+    """
     # check if fixation vectors/scanpaths are long enough
     if (len(fixation_vectors1) >= 3) & (len(fixation_vectors2) >= 3):
         # get the data into a geometric representation
@@ -815,12 +815,12 @@ def docomparison(fixation_vectors1,
         M_assignment = np.arange(scanpath_dim[0] * scanpath_dim[1]).reshape(scanpath_dim[0], scanpath_dim[1])
         # create a weighted graph of all possible connections per Node, and their weight
         weightedGraph = createdirectedgraph(scanpath_dim, M, M_assignment)
-        #find the shorest path (= lowest sum of weights) through the graph using scipy dijkstra
-        path,dist = dijkstra(weightedGraph,0,scanpath_dim[0] *scanpath_dim[1]-1)
+        # find the shortest path (= lowest sum of weights) through the graph using scipy dijkstra
+        path,dist = dijkstra(weightedGraph, 0, scanpath_dim[0] * scanpath_dim[1] - 1)
         # compute similarities on aligned scanpaths and normalize them
-        unnormalised = getunnormalised(path1,path2,path,M_assignment)
-        normal = normaliseresults(unnormalised,screensize)
-        return(normal)
+        unnormalised = getunnormalised(path1, path2, path, M_assignment)
+        normal = normaliseresults(unnormalised, screensize)
+        return normal
     # return nan as result if at least one scanpath it too short
     else:
         return np.repeat(np.nan, 5)
