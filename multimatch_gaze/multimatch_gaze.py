@@ -5,7 +5,6 @@ import numpy as np
 import math
 import sys
 import logging
-from collections import defaultdict
 import scipy.sparse as sp
 
 
