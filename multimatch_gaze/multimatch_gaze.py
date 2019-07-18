@@ -5,6 +5,9 @@ import numpy as np
 import math
 import sys
 import logging
+from collections import defaultdict
+import scipy.sparse as sp
+
 
 
 def cart2pol(x, y):
@@ -457,11 +460,11 @@ def createdirectedgraph(scanpath_dim,
 
 
 def dijkstra(weightedGraph,
-             start,
-             end
-             ):
-    """Implementation of Dijkstra algorithm:
-    Use the dijkstra algorithm to find the shortest path through a directed
+            start,
+            end):
+    """
+    Dijkstra algorithm:
+    Use dijkstra's algorithm from the scipy module to find the shortest path through a directed
     graph (weightedGraph) from start to end.
 
     :param: weightedGraph: dict, dictionary within a dictionary pairing weights (distances) with
@@ -471,42 +474,33 @@ def dijkstra(weightedGraph,
 
     :return: path: array, indices of the shortest path, i.e. best-fitting saccade pairs
     :return: dist: float, sum of weights
-
     """
 
-    # initialize empty dictionary to hold distances
-    dist = {}
-    # inialize list of vertices in the path to current vertex (predecessors)
-    pred = {}
-    # where do I need to go still?
-    to_assess = weightedGraph.keys()
-    for node in weightedGraph:
-        # set inital distances to infinity
-        dist[node] = float('inf')
-        # no node has any predecessors yet
-        pred[node] = None
-    # initialize list to be filled with final distances(weights) of nodes
-    sp_set = []
-    # the starting node gets a weight of 0 to make sure to start there
-    dist[start] = 0
-    # continue the algorithm as long as there are still unexplored nodes
-    while len(sp_set) < len(to_assess):
-        still_in = {node: dist[node] for node in [node for node in to_assess if
-                                                  node not in sp_set]}
-        # find adjacent node with minimal weight and append to sp_set
-        closest = min(still_in, key=dist.get)
-        sp_set.append(closest)
-        for node in weightedGraph[closest]:
-            if dist[node] > dist[closest] + weightedGraph[closest][node]:
-                dist[node] = dist[closest] + weightedGraph[closest][node]
-                pred[node] = closest
-    # append endnode to list path
+    #The number of vertices in the graph
+    numVert = len(weightedGraph.keys())
+
+    #initialize 2d array with shape numVert x numVert with 0
+    arrayWeightedGraph = [[0 for x in range(numVert)] for y in range(numVert)]
+    
+    #Convert the weightedGraph into a 2d matrix for scipy dijkstra
+    for srcNode,dictEdges in weightedGraph.items():
+        for destNode,weight in dictEdges.items():
+            arrayWeightedGraph[srcNode][destNode]= weight
+    matrixScipy = sp.csr_matrix(arrayWeightedGraph)
+
+    #Run scipy's dijkstra and get the distance matrix and predecessors 
+    dist_matrix,predecessors = sp.csgraph.dijkstra(csgraph=matrixScipy,directed=True,indices=0,return_predecessors=True)
+
+    #Backtrack thru the predecessors to get the reverse path
     path = [end]
-    # append contents of pred in reversed order to path
-    while start not in path:
-        path.append(pred[path[-1]])
-    # return path in reverse order (begin to end) and final distance
-    return path[::-1], dist[end]
+    dist = float(dist_matrix[end])
+    #If the predecessor is -9999, that means the index has no parent and thus we have reached the start node
+    while(end != -9999):
+        path.append(predecessors[end])
+        end = predecessors[end]
+
+    #Return the path in ascending order and return the distance
+    return(path[-2::-1],dist)
 
 
 def cal_angulardifference(data1,
@@ -787,24 +781,24 @@ def docomparison(fixation_vectors1,
     """Compare two scanpaths on five similarity dimensions.
 
 
-    :param: fixation_vectors1: array-like n x 3 fixation vector of one scanpath
-    :param: fixation_vectors2: array-like n x 3 fixation vector of one scanpath
-    :param: screensize: list, screen dimensions in px.
-    :param: grouping: boolean, if True, simplification is performed based on thresholds TAmp,
-        TDir, and TDur. Default: False
-    :param: TDir: float, Direction threshold, angle in degrees. Default: 0.0
-    :param: TDur: float,  Duration threshold, duration in seconds. Default: 0.0
-    :param: TAmp: float, Amplitude threshold, length in px. Default: 0.0
+        :param: fixation_vectors1: array-like n x 3 fixation vector of one scanpath
+        :param: fixation_vectors2: array-like n x 3 fixation vector of one scanpath
+        :param: screensize: list, screen dimensions in px.
+        :param: grouping: boolean, if True, simplification is performed based on thresholds TAmp,
+            TDir, and TDur. Default: False
+        :param: TDir: float, Direction threshold, angle in degrees. Default: 0.0
+        :param: TDur: float,  Duration threshold, duration in seconds. Default: 0.0
+        :param: TAmp: float, Amplitude threshold, length in px. Default: 0.0
 
-    :return: scanpathcomparisons: array
-        array of 5 scanpath similarity measures. Vector (Shape), Direction
-        (Angle), Length, Position, and Duration. 1 means absolute similarity, 0 means
-        lowest similarity possible.
+        :return: scanpathcomparisons: array
+            array of 5 scanpath similarity measures. Vector (Shape), Direction
+            (Angle), Length, Position, and Duration. 1 means absolute similarity, 0 means
+            lowest similarity possible.
 
-    >>> results = docomparison(fix_1, fix_2, screensize = [1280, 720], grouping = True, TDir = 45.0, TDur = 0.05, TAmp = 150)
-    >>> print(results)
-    >>> [[0.95075847681364678, 0.95637548674423822, 0.94082367355291008, 0.94491164030498609, 0.78260869565217384]]
-    """
+        >>> results = docomparison(fix_1, fix_2, screensize = [1280, 720], grouping = True, TDir = 45.0, TDur = 0.05, TAmp = 150)
+        >>> print(results)
+        >>> [[0.95075847681364678, 0.95637548674423822, 0.94082367355291008, 0.94491164030498609, 0.78260869565217384]]
+        """
     # check if fixation vectors/scanpaths are long enough
     if (len(fixation_vectors1) >= 3) & (len(fixation_vectors2) >= 3):
         # get the data into a geometric representation
@@ -821,12 +815,12 @@ def docomparison(fixation_vectors1,
         M_assignment = np.arange(scanpath_dim[0] * scanpath_dim[1]).reshape(scanpath_dim[0], scanpath_dim[1])
         # create a weighted graph of all possible connections per Node, and their weight
         weightedGraph = createdirectedgraph(scanpath_dim, M, M_assignment)
-        # find the shortest path (= lowest sum of weights) through the graph
-        path, dist = dijkstra(weightedGraph, 0, scanpath_dim[0] * scanpath_dim[1] - 1)
-        # compute similarities on alinged scanpaths and normalize them
-        unnormalised = getunnormalised(path1, path2, path, M_assignment)
-        normal = normaliseresults(unnormalised, screensize)
-        return normal
+        #find the shorest path (= lowest sum of weights) through the graph using scipy dijkstra
+        path,dist = dijkstra(weightedGraph,0,scanpath_dim[0] *scanpath_dim[1]-1)
+        # compute similarities on aligned scanpaths and normalize them
+        unnormalised = getunnormalised(path1,path2,path,M_assignment)
+        normal = normaliseresults(unnormalised,screensize)
+        return(normal)
     # return nan as result if at least one scanpath it too short
     else:
         return np.repeat(np.nan, 5)
