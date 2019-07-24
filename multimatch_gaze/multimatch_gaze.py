@@ -8,7 +8,6 @@ import logging
 import scipy.sparse as sp
 
 
-
 def cart2pol(x, y):
     """Transform cartesian into polar coordinates.
 
@@ -474,22 +473,27 @@ def dijkstra(weightedGraph,
     :return: path: array, indices of the shortest path, i.e. best-fitting saccade pairs
     :return: dist: float, sum of weights
     """
-
     #The number of vertices in the graph
     numVert = len(weightedGraph.keys())
 
-    #initialize 2d array with shape numVert x numVert with 0
-    arrayWeightedGraph = [[0 for x in range(numVert)] for y in range(numVert)]
-    
+    #collect the row,col, and weight info from the weightedGraph 2d 
+    rows = np.zeros(1)
+    cols = np.zeros(1)
+    data = np.zeros(1)
+
     #Convert the weightedGraph into a 2d matrix for scipy dijkstra
     for srcNode,dictEdges in weightedGraph.items():
         for destNode,weight in dictEdges.items():
-            arrayWeightedGraph[srcNode][destNode]= weight
-    matrixScipy = sp.csr_matrix(arrayWeightedGraph)
+            rows = np.append(rows,[srcNode])
+            cols = np.append(cols,[destNode])
+            data = np.append(data,[weight])
+
+    #Create a scipy csr matrix from the rows,cols and append. This saves on memory.
+    arrayWeightedGraph = (sp.coo_matrix((data,(rows,cols)),shape=(numVert,numVert))).tocsr()
 
     #Run scipy's dijkstra and get the distance matrix and predecessors 
-    dist_matrix,predecessors = sp.csgraph.dijkstra(csgraph=matrixScipy,directed=True,indices=0,return_predecessors=True)
-
+    dist_matrix,predecessors = sp.csgraph.dijkstra(csgraph=arrayWeightedGraph,directed=True,indices=0,return_predecessors=True)
+    
     #Backtrack thru the predecessors to get the reverse path
     path = [end]
     dist = float(dist_matrix[end])
