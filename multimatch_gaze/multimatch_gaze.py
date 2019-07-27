@@ -5,6 +5,7 @@ import numpy as np
 import math
 import sys
 import logging
+import scipy.sparse as sp
 
 
 def cart2pol(x, y):
@@ -457,11 +458,11 @@ def createdirectedgraph(scanpath_dim,
 
 
 def dijkstra(weightedGraph,
-             start,
-             end
-             ):
-    """Implementation of Dijkstra algorithm:
-    Use the dijkstra algorithm to find the shortest path through a directed
+            start,
+            end):
+    """
+    Dijkstra algorithm:
+    Use dijkstra's algorithm from the scipy module to find the shortest path through a directed
     graph (weightedGraph) from start to end.
 
     :param: weightedGraph: dict, dictionary within a dictionary pairing weights (distances) with
@@ -471,42 +472,38 @@ def dijkstra(weightedGraph,
 
     :return: path: array, indices of the shortest path, i.e. best-fitting saccade pairs
     :return: dist: float, sum of weights
-
     """
+    #The number of vertices in the graph
+    numVert = len(weightedGraph.keys())
 
-    # initialize empty dictionary to hold distances
-    dist = {}
-    # inialize list of vertices in the path to current vertex (predecessors)
-    pred = {}
-    # where do I need to go still?
-    to_assess = weightedGraph.keys()
-    for node in weightedGraph:
-        # set inital distances to infinity
-        dist[node] = float('inf')
-        # no node has any predecessors yet
-        pred[node] = None
-    # initialize list to be filled with final distances(weights) of nodes
-    sp_set = []
-    # the starting node gets a weight of 0 to make sure to start there
-    dist[start] = 0
-    # continue the algorithm as long as there are still unexplored nodes
-    while len(sp_set) < len(to_assess):
-        still_in = {node: dist[node] for node in [node for node in to_assess if
-                                                  node not in sp_set]}
-        # find adjacent node with minimal weight and append to sp_set
-        closest = min(still_in, key=dist.get)
-        sp_set.append(closest)
-        for node in weightedGraph[closest]:
-            if dist[node] > dist[closest] + weightedGraph[closest][node]:
-                dist[node] = dist[closest] + weightedGraph[closest][node]
-                pred[node] = closest
-    # append endnode to list path
+    #collect the row,col, and weight info from the weightedGraph 2d 
+    rows = np.zeros(1)
+    cols = np.zeros(1)
+    data = np.zeros(1)
+
+    #Convert the weightedGraph into a 2d matrix for scipy dijkstra
+    for srcNode,dictEdges in weightedGraph.items():
+        for destNode,weight in dictEdges.items():
+            rows = np.append(rows,[srcNode])
+            cols = np.append(cols,[destNode])
+            data = np.append(data,[weight])
+
+    #Create a scipy csr matrix from the rows,cols and append. This saves on memory.
+    arrayWeightedGraph = (sp.coo_matrix((data,(rows,cols)),shape=(numVert,numVert))).tocsr()
+
+    #Run scipy's dijkstra and get the distance matrix and predecessors 
+    dist_matrix,predecessors = sp.csgraph.dijkstra(csgraph=arrayWeightedGraph,directed=True,indices=0,return_predecessors=True)
+    
+    #Backtrack thru the predecessors to get the reverse path
     path = [end]
-    # append contents of pred in reversed order to path
-    while start not in path:
-        path.append(pred[path[-1]])
-    # return path in reverse order (begin to end) and final distance
-    return path[::-1], dist[end]
+    dist = float(dist_matrix[end])
+    #If the predecessor is -9999, that means the index has no parent and thus we have reached the start node
+    while(end != -9999):
+        path.append(predecessors[end])
+        end = predecessors[end]
+
+    #Return the path in ascending order and return the distance
+    return path[-2::-1], dist 
 
 
 def cal_angulardifference(data1,
@@ -821,9 +818,9 @@ def docomparison(fixation_vectors1,
         M_assignment = np.arange(scanpath_dim[0] * scanpath_dim[1]).reshape(scanpath_dim[0], scanpath_dim[1])
         # create a weighted graph of all possible connections per Node, and their weight
         weightedGraph = createdirectedgraph(scanpath_dim, M, M_assignment)
-        # find the shortest path (= lowest sum of weights) through the graph
-        path, dist = dijkstra(weightedGraph, 0, scanpath_dim[0] * scanpath_dim[1] - 1)
-        # compute similarities on alinged scanpaths and normalize them
+        # find the shortest path (= lowest sum of weights) through the graph using scipy dijkstra
+        path,dist = dijkstra(weightedGraph, 0, scanpath_dim[0] * scanpath_dim[1] - 1)
+        # compute similarities on aligned scanpaths and normalize them
         unnormalised = getunnormalised(path1, path2, path, M_assignment)
         normal = normaliseresults(unnormalised, screensize)
         return normal
