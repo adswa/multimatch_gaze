@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-
 import numpy as np
 import math
 import sys
@@ -415,10 +414,10 @@ def createdirectedgraph(scanpath_dim,
             node-pairings
 
     """
+    rows = []
+    cols = []
+    weight = []
 
-    # initialize dictionary for neighbouring vertices and edge weights
-    adjacent = {}
-    weight = {}
     # loop through every node rowwise
     for i in range(0, scanpath_dim[0]):
         # loop through every node columnwise
@@ -426,38 +425,43 @@ def createdirectedgraph(scanpath_dim,
             currentNode = i * scanpath_dim[1] + j
             # if in the last (bottom) row, only go right
             if (i == scanpath_dim[0] - 1) & (j < scanpath_dim[1] - 1):
-                adjacent[M_assignment[i, j]] = [currentNode + 1]
-                weight[M_assignment[i, j]] = [M[i, j + 1]]
+                rows.append(currentNode) 
+                cols.append(currentNode+1) 
+                weight.append(M[i,j+1]) 
+
             # if in the last (rightmost) column, only go down
             elif (i < scanpath_dim[0] - 1) & (j == scanpath_dim[1] - 1):
-                adjacent[M_assignment[i, j]] = [currentNode + scanpath_dim[1]]
-                weight[M_assignment[i, j]] = [M[i + 1, j]]
+                rows.append(currentNode)
+                cols.append(currentNode + scanpath_dim[1])
+                weight.append(M[i+1,j])
+
             # if in the last (bottom-right) vertex, do not move any further
             elif (i == scanpath_dim[0] - 1) & (j == scanpath_dim[1] - 1):
-                adjacent[M_assignment[i, j]] = [currentNode]
-                weight[M_assignment[i, j]] = [0]
+                rows.append(currentNode)
+                cols.append(currentNode)
+                weight.append(0)
+
             # anywhere else, move right, down and down-right.
             else:
-                adjacent[M_assignment[i, j]] = [currentNode + 1,
-                                                currentNode + scanpath_dim[1],
-                                                currentNode + scanpath_dim[1] + 1]
-                weight[M_assignment[i, j]] = [M[i, j + 1],
-                                              M[i + 1, j],
-                                              M[i + 1, j + 1]]
-    # create ascending list ranging from first to last node - this
-    #  will be the first key in the nested dict
-    Startnodes = range(0, scanpath_dim[0] * scanpath_dim[1])
-    # initialize list with adjacent nodes (adjacent to each startnode)
-    # and the weights associated with the paths between them
-    weightedEdges = [
-        dict(zip(a, w)) for a, w in zip(adjacent.values(), weight.values())
-    ]
-    # initialize final dictionary
-    weightedGraph = dict(zip(Startnodes, weightedEdges))
-    return weightedGraph
+                rows.append(currentNode) 
+                rows.append(currentNode)
+                rows.append(currentNode)
+                cols.append(currentNode+1)
+                cols.append(currentNode+scanpath_dim[1])
+                cols.append(currentNode+scanpath_dim[1]+1)
+                weight.append(M[i,j+1])
+                weight.append(M[i+1,j])
+                weight.append(M[i+1,j+1])
+            
+    rows = np.asarray(rows)
+    cols = np.asarray(cols)
+    weight = np.asarray(weight)
+    numVert = scanpath_dim[0]*scanpath_dim[1]
+    return numVert,rows,cols,weight
 
 
-def dijkstra(weightedGraph,
+
+def dijkstra(numVert,rows,cols,data,
             start,
             end):
     """
@@ -473,21 +477,6 @@ def dijkstra(weightedGraph,
     :return: path: array, indices of the shortest path, i.e. best-fitting saccade pairs
     :return: dist: float, sum of weights
     """
-    #The number of vertices in the graph
-    numVert = len(weightedGraph.keys())
-
-    #collect the row,col, and weight info from the weightedGraph 2d 
-    rows = np.zeros(1)
-    cols = np.zeros(1)
-    data = np.zeros(1)
-
-    #Convert the weightedGraph into a 2d matrix for scipy dijkstra
-    for srcNode,dictEdges in weightedGraph.items():
-        for destNode,weight in dictEdges.items():
-            rows = np.append(rows,[srcNode])
-            cols = np.append(cols,[destNode])
-            data = np.append(data,[weight])
-
     #Create a scipy csr matrix from the rows,cols and append. This saves on memory.
     arrayWeightedGraph = (sp.coo_matrix((data,(rows,cols)),shape=(numVert,numVert))).tocsr()
 
@@ -817,9 +806,10 @@ def docomparison(fixation_vectors1,
         scanpath_dim = np.shape(M)
         M_assignment = np.arange(scanpath_dim[0] * scanpath_dim[1]).reshape(scanpath_dim[0], scanpath_dim[1])
         # create a weighted graph of all possible connections per Node, and their weight
-        weightedGraph = createdirectedgraph(scanpath_dim, M, M_assignment)
+        numVert,rows,cols,weight = createdirectedgraph(scanpath_dim,M,M_assignment)
         # find the shortest path (= lowest sum of weights) through the graph using scipy dijkstra
-        path,dist = dijkstra(weightedGraph, 0, scanpath_dim[0] * scanpath_dim[1] - 1)
+        path,dist=dijkstra(numVert,rows,cols,weight,0, scanpath_dim[0] * scanpath_dim[1] - 1)
+
         # compute similarities on aligned scanpaths and normalize them
         unnormalised = getunnormalised(path1, path2, path, M_assignment)
         normal = normaliseresults(unnormalised, screensize)

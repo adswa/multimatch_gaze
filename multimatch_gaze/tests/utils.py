@@ -515,8 +515,8 @@ def docomparison_forrest(shots,
             scanpath_dim = np.shape(M)
             M_assignment = np.arange(scanpath_dim[0] *
                                      scanpath_dim[1]).reshape(scanpath_dim[0], scanpath_dim[1])
-            weightedGraph = mp.createdirectedgraph(scanpath_dim, M, M_assignment)
-            path, dist = mp.dijkstra(weightedGraph, 0, scanpath_dim[0] * scanpath_dim[1] - 1)
+            numVert,rows,cols,weight = mp.createdirectedgraph(scanpath_dim, M, M_assignment)
+            path, dist = mp.dijkstra(numVert,rows,cols,weight, 0, scanpath_dim[0] * scanpath_dim[1] - 1)
             unnormalised = mp.getunnormalised(subj1, subj2, path, M_assignment)
             normal = mp.normaliseresults(unnormalised, screensize)
             scanpathcomparisons.append(normal)
