@@ -91,7 +91,7 @@ users can additionally specify whether smooth pursuit events
 in the data should be kept in the scan path or
 discarded.
 
-# Acknowledgements
+# Acknowledgments
 
 We thank Dr. Richard Dewhurst for kindly and swiftly providing
 the original Matlab code for the MultiMatch toolbox via e-mail
