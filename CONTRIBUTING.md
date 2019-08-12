@@ -12,6 +12,12 @@ When contributing to this repository in the form of a
 please first discuss the change you wish to make via issue,
 email, or any other method with the owners of this repository before making a change.
 
+In order to run the test-suite of ``multimatch-gaze`` locally prior to a PR,
+use [pytest](https://docs.pytest.org/en/latest/), and run the following command in the
+root of the repository:
+
+``python -m pytest -s -v``.
+
 Please note we have a code of conduct, please follow it in all your interactions with the project.
 
 ## Pull request process

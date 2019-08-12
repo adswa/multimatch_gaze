@@ -78,10 +78,18 @@ All bugs, concerns and enhancement requests for this software can be submitted
 here_.
 All contributions, be it in the form of an issue or a pull-request,
 are always welcome.
+If you wish to test the functionality of multimatch-gaze locally, for example
+prior to a pull-request, install pytest_ and run the following command from the
+root of the repository:
 
+.. code::
+
+   python -m pytest
 
 .. _here: https://github.com/adswa/multimatch_gaze/issues/new
+.. _pytest: https://docs.pytest.org/en/latest/
 
+``python -m pytest -s -v``
 
 ================
 Acknowledgements

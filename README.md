@@ -51,7 +51,12 @@ Bug reports, feedback, or any other contribution are always appreciated.
 To report a bug, request a feature, or ask a question, please open an
 [issue](https://github.com/adswa/multimatch_gaze/issues/new).
 [Pull requests](https://help.github.com/en/articles/creating-a-pull-request-from-a-fork)
-are always welcome.
+are always welcome. In order to run the test-suite of ``multimatch-gaze`` locally,
+use [pytest](https://docs.pytest.org/en/latest/), and run the following command in the
+root of the repository:
+
+``python -m pytest -s -v``
+
 For additional information on how to contribute, checkout
 [CONTRIBUTING.md](https://github.com/adswa/multimatch_gaze/blob/master/CONTRIBUTING.md).
 
