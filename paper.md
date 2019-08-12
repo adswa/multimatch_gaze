@@ -51,8 +51,8 @@ non-free software such as Matlab.
 
 ``multimatch-gaze`` is a Python based
 reimplementation of the MultiMatch toolbox for scan path
-comparison, originally developed by [@Jarodzka] and
-implemented by [@Dewhurst] in Matlab.
+comparison, originally developed by @Jarodzka and
+implemented by @Dewhurst in Matlab.
 This algorithm represents scan paths as geometrical
 vectors in a two-dimensional space: Any scan path is built
 up of a coordinate vector sequence in which the start and end position
