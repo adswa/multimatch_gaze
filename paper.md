@@ -29,7 +29,10 @@ bibliography: paper.bib
 
 # Summary
 
-The similarity of scan paths, the trace of eye-movements
+``multimatch-gaze`` is a Python package for computing the
+similarity of scan paths from eye gaze data on five different
+dimensions.
+This similarity of scan paths, the trace of eye-movements
 in space and time, offers insights into commonalities
 and differences of viewing behavior within and between
 observers. In addition to the quantification of position
