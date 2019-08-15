@@ -30,21 +30,26 @@ bibliography: paper.bib
 # Summary
 
 ``multimatch-gaze`` is a Python package for computing the
-similarity of scan paths from eye gaze data on five different
-dimensions.
-This similarity of scan paths, the trace of eye-movements
-in space and time, offers insights into commonalities
-and differences of viewing behavior within and between
-observers. In addition to the quantification of position
-and order of a series of eye-movements, a comparison
-between them adds an insightful dimension to the traditional
-analysis of eyetracking data. For example, scan path
-comparisons are used to study analogy-making [@french],
-visual exploration and imagery [@Johansson], habituation
-in repetitive visual search [@burmester], or spatial
-attention allocation in dynamic scenes [@mital]. The method
-is applied within individuals as a measure of change [@burmester],
-or across samples to study group differences [@french].
+similarity of eye-movement sequences, so called scan paths.
+Scan paths are the trace of eye-movements in space and time,
+usually captured with eye tracking devices.
+Scan path similarity is a measure that is used
+in a variety of disciplines ranging from cognitive psychology,
+medicine, and marketing to man-machine-interfaces.
+In addition to quantifying position and order of a series of
+eye-movements, comparing their temporo-spatial sequence adds an insightful
+dimension to the traditional analysis of eye tracking data.
+It reveals commonalities and differences of
+viewing behavior within and between observers, and is used
+to study how people explore visual information.
+For example, scan path comparisons are used to study
+analogy-making [@french], visual exploration and imagery
+[@Johansson], habituation in repetitive visual search [@burmester],
+or spatial attention allocation in dynamic scenes [@mital].
+The method is applied within individuals as a measure of
+change [@burmester], or across samples to study group
+differences [@french].
+
 Therefore, in recent years, interest
 in the study of eye movement sequences has sparked the development
 of novel methodologies and algorithms to perform scan path
