@@ -35,7 +35,7 @@ Scan paths are the trace of eye-movements in space and time,
 usually captured with eye tracking devices.
 Scan path similarity is a measure that is used
 in a variety of disciplines ranging from cognitive psychology,
-medicine, and marketing to man-machine-interfaces.
+medicine, and marketing to human-machine interfaces.
 In addition to quantifying position and order of a series of
 eye-movements, comparing their temporo-spatial sequence adds an insightful
 dimension to the traditional analysis of eye tracking data.
@@ -57,7 +57,7 @@ comparisons. However, many of the contemporary scan path
 comparison algorithms are implemented in closed-source,
 non-free software such as Matlab.
 
-``multimatch-gaze`` is a Python based
+``multimatch-gaze`` is a Python-based
 reimplementation of the MultiMatch toolbox for scan path
 comparison, originally developed by @Jarodzka and
 implemented by @Dewhurst in Matlab.
