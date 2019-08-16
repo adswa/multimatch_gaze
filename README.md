@@ -5,6 +5,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Build status](https://ci.appveyor.com/api/projects/status/wrphckxqjrfut703?svg=true)](https://ci.appveyor.com/project/adswa/multimatch_gaze)
 [![DOI](https://zenodo.org/badge/151181532.svg)](https://zenodo.org/badge/latestdoi/151181532)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.01525/status.svg)](https://doi.org/10.21105/joss.01525)
+
 
 # multimatch-gaze
 ## Reimplementation of MultiMatch toolbox (Dewhurst et al., 2012) in Python.
