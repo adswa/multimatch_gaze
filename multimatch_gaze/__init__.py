@@ -11,7 +11,7 @@
 # locally - else the modules can't be imported
 from __future__ import absolute_import
 
-__version__ = '0.1.2'
+__version__ = "0.1.2"
 
 from .multimatch_gaze import docomparison
 from .multimatch_gaze import remodnav_reader
