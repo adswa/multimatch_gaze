@@ -6,6 +6,8 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/wrphckxqjrfut703?svg=true)](https://ci.appveyor.com/project/adswa/multimatch_gaze)
 [![DOI](https://zenodo.org/badge/151181532.svg)](https://zenodo.org/badge/latestdoi/151181532)
 [![DOI](https://joss.theoj.org/papers/10.21105/joss.01525/status.svg)](https://doi.org/10.21105/joss.01525)
+[![made-with-datalad](https://www.datalad.org/badges/made_with.svg)](https://datalad.org)
+
 
 
 # multimatch-gaze
