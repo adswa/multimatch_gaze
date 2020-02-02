@@ -29,8 +29,8 @@ def calcangle(x1, x2):
     :return: angle: float, angle in degrees
     """
     angle = math.degrees(
-        math.acos(
-            np.dot(x1, x2) / (np.linalg.norm(x1) * np.linalg.norm(x2))))
+        math.acos(np.dot(x1, x2) / (np.linalg.norm(x1) * np.linalg.norm(x2)))
+    )
     return angle
 
 
@@ -44,6 +44,7 @@ def remodnav_reader(data, screensize, pursuits=False):
     :param pursuits: if True, pursuits will be relabeled to fixations
     """
     from multimatch_gaze.tests import utils as ut
+
     data = ut.read_remodnav(data)
     # this function can be called without any previous check that
     # screensize are two values, so I'm putting an additional check
@@ -54,9 +55,7 @@ def remodnav_reader(data, screensize, pursuits=False):
         raise ValueError(
             "Screensize should be the dimensions of the"
             "screen in x and y direction, such as "
-            "[1000, 800]. I received {}.".format(
-                screensize
-            )
+            "[1000, 800]. I received {}.".format(screensize)
         )
     if pursuits:
         data = ut.pursuits_to_fixations(data)
@@ -84,20 +83,16 @@ def gen_scanpath_structure(data):
 
     # everything into a dict
     # keep coordinates and durations of fixations
-    fixations = dict(
-        x=data['start_x'],
-        y=data['start_y'],
-        dur=data['duration'],
-    )
+    fixations = dict(x=data["start_x"], y=data["start_y"], dur=data["duration"],)
     # calculate saccade length and angle from vector lengths between fixations
-    lenx = np.diff(data['start_x'])
-    leny = np.diff(data['start_y'])
+    lenx = np.diff(data["start_x"])
+    leny = np.diff(data["start_y"])
     rho, theta = cart2pol(lenx, leny)
 
     saccades = dict(
         # fixations are the start coordinates for saccades
-        x=data[:-1]['start_x'],
-        y=data[:-1]['start_y'],
+        x=data[:-1]["start_x"],
+        y=data[:-1]["start_y"],
         lenx=lenx,
         leny=leny,
         theta=theta,
@@ -106,11 +101,7 @@ def gen_scanpath_structure(data):
     return dict(fix=fixations, sac=saccades)
 
 
-def keepsaccade(i,
-                j,
-                sim,
-                data
-                ):
+def keepsaccade(i, j, sim, data):
     """
     Helper function for scanpath simplification. If no simplification can be
     performed on a particular saccade, this functions stores the original data.
@@ -119,13 +110,15 @@ def keepsaccade(i,
     :param sim: dict with current similarities
     :param data: original dict with vector based scanpath representation
     """
-    for t, k in (('sac', 'lenx'),
-                 ('sac', 'leny'),
-                 ('sac', 'x'),
-                 ('sac', 'y'),
-                 ('sac', 'theta'),
-                 ('sac', 'rho'),
-                 ('fix', 'dur')):
+    for t, k in (
+        ("sac", "lenx"),
+        ("sac", "leny"),
+        ("sac", "x"),
+        ("sac", "y"),
+        ("sac", "theta"),
+        ("sac", "rho"),
+        ("fix", "dur"),
+    ):
         sim[t][k].insert(j, data[t][k][i])
 
     return i + 1, j + 1
@@ -133,9 +126,7 @@ def keepsaccade(i,
 
 def _get_empty_path():
     return dict(
-        fix=dict(
-            dur=[],
-        ),
+        fix=dict(dur=[],),
         sac=dict(
             x=[],
             y=[],
@@ -144,9 +135,9 @@ def _get_empty_path():
             theta=[],
             # why 'len' here and 'rho' in input data?
             # MIH -> always rho
-            #len=[],
+            # len=[],
             rho=[],
-        )
+        ),
     )
 
 
@@ -164,10 +155,10 @@ def simlen(path, TAmp, TDur):
     :return: eyedata: dict; one iteration of length based simplification
     """
     # shortcuts
-    saccades = path['sac']
-    fixations = path['fix']
+    saccades = path["sac"]
+    fixations = path["fix"]
 
-    if len(saccades['x']) < 1:
+    if len(saccades["x"]) < 1:
         return path
 
     # the scanpath is long enough
@@ -175,23 +166,23 @@ def simlen(path, TAmp, TDur):
     j = 0
     sim = _get_empty_path()
     # while we don't run into index errors
-    while i <= len(saccades['x']) - 1:
+    while i <= len(saccades["x"]) - 1:
         # if saccade is the last one
-        if i == len(saccades['x']) - 1:
+        if i == len(saccades["x"]) - 1:
             # and if saccade has a length shorter than the threshold:
-            if saccades['rho'][i] < TAmp:
+            if saccades["rho"][i] < TAmp:
                 # and if the fixation duration is short:
-                if (fixations['dur'][-1] < TDur) or (fixations['dur'][-2] < TDur):
+                if (fixations["dur"][-1] < TDur) or (fixations["dur"][-2] < TDur):
                     # calculate sum of local vectors for simplification
-                    v_x = saccades['lenx'][-2] + saccades['lenx'][-1]
-                    v_y = saccades['leny'][-2] + saccades['leny'][-1]
+                    v_x = saccades["lenx"][-2] + saccades["lenx"][-1]
+                    v_y = saccades["leny"][-2] + saccades["leny"][-1]
                     rho, theta = cart2pol(v_x, v_y)
                     # save them in the new vectors
-                    sim['sac']['lenx'][j - 1] = v_x
-                    sim['sac']['leny'][j - 1] = v_y
-                    sim['sac']['theta'][j - 1] = theta
-                    sim['sac']['rho'][j - 1] = rho
-                    sim['fix']['dur'].insert(j, fixations['dur'][i - 1])
+                    sim["sac"]["lenx"][j - 1] = v_x
+                    sim["sac"]["leny"][j - 1] = v_y
+                    sim["sac"]["theta"][j - 1] = theta
+                    sim["sac"]["rho"][j - 1] = rho
+                    sim["fix"]["dur"].insert(j, fixations["dur"][i - 1])
                     j -= 1
                     i += 1
                 # if fixation duration is longer than the threshold:
@@ -206,24 +197,23 @@ def simlen(path, TAmp, TDur):
         # if saccade is not the last one
         else:
             # and if saccade has a length shorter than the threshold
-            if (saccades['rho'][i] < TAmp) and (i < len(saccades['x']) - 1):
+            if (saccades["rho"][i] < TAmp) and (i < len(saccades["x"]) - 1):
                 # and if fixation durations are short
-                if (fixations['dur'][i + 1] < TDur) or \
-                        (fixations['dur'][i] < TDur):
+                if (fixations["dur"][i + 1] < TDur) or (fixations["dur"][i] < TDur):
                     # calculate sum of local vectors in x and y length for
                     # simplification
-                    v_x = saccades['lenx'][i] + saccades['lenx'][i + 1]
-                    v_y = saccades['leny'][i] + saccades['leny'][i + 1]
+                    v_x = saccades["lenx"][i] + saccades["lenx"][i + 1]
+                    v_y = saccades["leny"][i] + saccades["leny"][i + 1]
                     rho, theta = cart2pol(v_x, v_y)
                     # save them in the new vectors
-                    sim['sac']['lenx'].insert(j, v_x)
-                    sim['sac']['leny'].insert(j, v_y)
-                    sim['sac']['x'].insert(j, saccades['x'][i])
-                    sim['sac']['y'].insert(j, saccades['y'][i])
-                    sim['sac']['theta'].insert(j, theta)
-                    sim['sac']['rho'].insert(j, rho)
+                    sim["sac"]["lenx"].insert(j, v_x)
+                    sim["sac"]["leny"].insert(j, v_y)
+                    sim["sac"]["x"].insert(j, saccades["x"][i])
+                    sim["sac"]["y"].insert(j, saccades["y"][i])
+                    sim["sac"]["theta"].insert(j, theta)
+                    sim["sac"]["rho"].insert(j, rho)
                     # add the old fixation duration
-                    sim['fix']['dur'].insert(j, fixations['dur'][i])
+                    sim["fix"]["dur"].insert(j, fixations["dur"][i])
                     i += 2
                     j += 1
                 # if fixation durations longer than the threshold
@@ -235,15 +225,12 @@ def simlen(path, TAmp, TDur):
                 # insert original path in new list -- no simplification
                 i, j = keepsaccade(i, j, sim, path)
     # append the last fixation duration
-    sim['fix']['dur'].append(fixations['dur'][-1])
+    sim["fix"]["dur"].append(fixations["dur"][-1])
 
     return sim
 
 
-def simdir(path,
-           TDir,
-           TDur
-           ):
+def simdir(path, TDir, TDur):
     """Simplify scanpaths based on angular relations between saccades (direction).
 
     Simplify consecutive saccades if the angle between them is smaller than the
@@ -257,42 +244,42 @@ def simdir(path,
     :return: eyedata: dict, one iteration of direction based simplification
     """
     # shortcuts
-    saccades = path['sac']
-    fixations = path['fix']
+    saccades = path["sac"]
+    fixations = path["fix"]
 
-    if len(saccades['x']) < 1:
+    if len(saccades["x"]) < 1:
         return path
     # the scanpath is long enough
     i = 0
     j = 0
     sim = _get_empty_path()
     # while we don't run into index errors
-    while i <= len(saccades['x']) - 1:
-        if i < len(saccades['x']) - 1:
+    while i <= len(saccades["x"]) - 1:
+        if i < len(saccades["x"]) - 1:
             # lets check angles
-            v1 = [saccades['lenx'][i], saccades['leny'][i]]
-            v2 = [saccades['lenx'][i + 1], saccades['leny'][i + 1]]
+            v1 = [saccades["lenx"][i], saccades["leny"][i]]
+            v2 = [saccades["lenx"][i + 1], saccades["leny"][i + 1]]
             angle = calcangle(v1, v2)
         else:
             # an angle of infinite size won't go into any further loop
-            angle = float('inf')
+            angle = float("inf")
         # if the angle is smaller than the threshold and its not the last saccade
-        if (angle < TDir) & (i < len(saccades['x']) - 1):
+        if (angle < TDir) & (i < len(saccades["x"]) - 1):
             # if the fixation duration is short:
-            if fixations['dur'][i + 1] < TDur:
+            if fixations["dur"][i + 1] < TDur:
                 # calculate the sum of local vectors
-                v_x = saccades['lenx'][i] + saccades['lenx'][i + 1]
-                v_y = saccades['leny'][i] + saccades['leny'][i + 1]
+                v_x = saccades["lenx"][i] + saccades["lenx"][i + 1]
+                v_y = saccades["leny"][i] + saccades["leny"][i + 1]
                 rho, theta = cart2pol(v_x, v_y)
                 # save them in the new vectors
-                sim['sac']['lenx'].insert(j, v_x)
-                sim['sac']['leny'].insert(j, v_y)
-                sim['sac']['x'].insert(j, saccades['x'][i])
-                sim['sac']['y'].insert(j, saccades['y'][i])
-                sim['sac']['theta'].insert(j, theta)
-                sim['sac']['rho'].insert(j, rho)
+                sim["sac"]["lenx"].insert(j, v_x)
+                sim["sac"]["leny"].insert(j, v_y)
+                sim["sac"]["x"].insert(j, saccades["x"][i])
+                sim["sac"]["y"].insert(j, saccades["y"][i])
+                sim["sac"]["theta"].insert(j, theta)
+                sim["sac"]["rho"].insert(j, rho)
                 # add the fixation duration
-                sim['fix']['dur'].insert(j, fixations['dur'][i])
+                sim["fix"]["dur"].insert(j, fixations["dur"][i])
                 i += 2
                 j += 1
             else:
@@ -329,16 +316,12 @@ def simdir(path,
             # insert original path in new list -- no simplification
             i, j = keepsaccade(i, j, sim, path)
     # now append the last fixation duration
-    sim['fix']['dur'].append(fixations['dur'][-1])
+    sim["fix"]["dur"].append(fixations["dur"][-1])
 
     return sim
 
 
-def simplify_scanpath(path,
-                      TAmp,
-                      TDir,
-                      TDur
-                      ):
+def simplify_scanpath(path, TAmp, TDir, TDur):
     """Simplify scanpaths until no further simplification is possible.
 
     Loops over simplification functions simdir and simlen until no
@@ -357,13 +340,11 @@ def simplify_scanpath(path,
         path = simdir(path, TDir, TDur)
         path = simlen(path, TAmp, TDur)
         looptime += 1
-        if looptime == len(path['fix']['dur']):
+        if looptime == len(path["fix"]["dur"]):
             return path
 
 
-def cal_vectordifferences(path1,
-                          path2
-                          ):
+def cal_vectordifferences(path1, path2):
     """Create matrix of vector-length differences of all vector pairs
 
     Create M, a Matrix with all possible saccade-length differences between
@@ -376,10 +357,10 @@ def cal_vectordifferences(path1,
 
     """
     # take length in x and y direction of both scanpaths
-    x1 = np.asarray(path1['sac']['lenx'])
-    x2 = np.asarray(path2['sac']['lenx'])
-    y1 = np.asarray(path1['sac']['leny'])
-    y2 = np.asarray(path2['sac']['leny'])
+    x1 = np.asarray(path1["sac"]["lenx"])
+    x2 = np.asarray(path2["sac"]["lenx"])
+    y1 = np.asarray(path1["sac"]["leny"])
+    y2 = np.asarray(path2["sac"]["leny"])
     # initialize empty list for rows, will become matrix to store sacc-length
     # pairings
     rows = []
@@ -393,10 +374,7 @@ def cal_vectordifferences(path1,
     return M
 
 
-def createdirectedgraph(scanpath_dim,
-                        M,
-                        M_assignment
-                        ):
+def createdirectedgraph(scanpath_dim, M, M_assignment):
     """Create a directed graph:
     The data structure of the result is a nested dictionary such as
     weightedGraph = {0 : {1:259.55, 15:48.19, 16:351.95},
@@ -425,15 +403,15 @@ def createdirectedgraph(scanpath_dim,
             currentNode = i * scanpath_dim[1] + j
             # if in the last (bottom) row, only go right
             if (i == scanpath_dim[0] - 1) & (j < scanpath_dim[1] - 1):
-                rows.append(currentNode) 
-                cols.append(currentNode+1) 
-                weight.append(M[i,j+1]) 
+                rows.append(currentNode)
+                cols.append(currentNode + 1)
+                weight.append(M[i, j + 1])
 
             # if in the last (rightmost) column, only go down
             elif (i < scanpath_dim[0] - 1) & (j == scanpath_dim[1] - 1):
                 rows.append(currentNode)
                 cols.append(currentNode + scanpath_dim[1])
-                weight.append(M[i+1,j])
+                weight.append(M[i + 1, j])
 
             # if in the last (bottom-right) vertex, do not move any further
             elif (i == scanpath_dim[0] - 1) & (j == scanpath_dim[1] - 1):
@@ -443,27 +421,24 @@ def createdirectedgraph(scanpath_dim,
 
             # anywhere else, move right, down and down-right.
             else:
-                rows.append(currentNode) 
                 rows.append(currentNode)
                 rows.append(currentNode)
-                cols.append(currentNode+1)
-                cols.append(currentNode+scanpath_dim[1])
-                cols.append(currentNode+scanpath_dim[1]+1)
-                weight.append(M[i,j+1])
-                weight.append(M[i+1,j])
-                weight.append(M[i+1,j+1])
-            
+                rows.append(currentNode)
+                cols.append(currentNode + 1)
+                cols.append(currentNode + scanpath_dim[1])
+                cols.append(currentNode + scanpath_dim[1] + 1)
+                weight.append(M[i, j + 1])
+                weight.append(M[i + 1, j])
+                weight.append(M[i + 1, j + 1])
+
     rows = np.asarray(rows)
     cols = np.asarray(cols)
     weight = np.asarray(weight)
-    numVert = scanpath_dim[0]*scanpath_dim[1]
-    return numVert,rows,cols,weight
+    numVert = scanpath_dim[0] * scanpath_dim[1]
+    return numVert, rows, cols, weight
 
 
-
-def dijkstra(numVert,rows,cols,data,
-            start,
-            end):
+def dijkstra(numVert, rows, cols, data, start, end):
     """
     Dijkstra algorithm:
     Use dijkstra's algorithm from the scipy module to find the shortest path through a directed
@@ -477,29 +452,29 @@ def dijkstra(numVert,rows,cols,data,
     :return: path: array, indices of the shortest path, i.e. best-fitting saccade pairs
     :return: dist: float, sum of weights
     """
-    #Create a scipy csr matrix from the rows,cols and append. This saves on memory.
-    arrayWeightedGraph = (sp.coo_matrix((data,(rows,cols)),shape=(numVert,numVert))).tocsr()
+    # Create a scipy csr matrix from the rows,cols and append. This saves on memory.
+    arrayWeightedGraph = (
+        sp.coo_matrix((data, (rows, cols)), shape=(numVert, numVert))
+    ).tocsr()
 
-    #Run scipy's dijkstra and get the distance matrix and predecessors 
-    dist_matrix,predecessors = sp.csgraph.dijkstra(csgraph=arrayWeightedGraph,directed=True,indices=0,return_predecessors=True)
-    
-    #Backtrack thru the predecessors to get the reverse path
+    # Run scipy's dijkstra and get the distance matrix and predecessors
+    dist_matrix, predecessors = sp.csgraph.dijkstra(
+        csgraph=arrayWeightedGraph, directed=True, indices=0, return_predecessors=True
+    )
+
+    # Backtrack thru the predecessors to get the reverse path
     path = [end]
     dist = float(dist_matrix[end])
-    #If the predecessor is -9999, that means the index has no parent and thus we have reached the start node
-    while(end != -9999):
+    # If the predecessor is -9999, that means the index has no parent and thus we have reached the start node
+    while end != -9999:
         path.append(predecessors[end])
         end = predecessors[end]
 
-    #Return the path in ascending order and return the distance
-    return path[-2::-1], dist 
+    # Return the path in ascending order and return the distance
+    return path[-2::-1], dist
 
 
-def cal_angulardifference(data1,
-                          data2,
-                          path,
-                          M_assignment
-                          ):
+def cal_angulardifference(data1, data2, path, M_assignment):
     """Calculate angular similarity of two scanpaths:
 
     :param: data1: dict; contains vector-based scanpath representation of the
@@ -516,8 +491,8 @@ def cal_angulardifference(data1,
 
     """
     # get the angle between saccades from the scanpaths
-    theta1 = data1['sac']['theta']
-    theta2 = data2['sac']['theta']
+    theta1 = data1["sac"]["theta"]
+    theta2 = data2["sac"]["theta"]
     # initialize list to hold individual angle differences
     anglediff = []
     # calculate angular differences between the saccades along specified path
@@ -537,11 +512,7 @@ def cal_angulardifference(data1,
     return anglediff
 
 
-def cal_durationdifference(data1,
-                           data2,
-                           path,
-                           M_assignment
-                           ):
+def cal_durationdifference(data1, data2, path, M_assignment):
     """Calculate similarity of two scanpaths fixation durations.
 
     :param: data1: array-like
@@ -562,8 +533,8 @@ def cal_durationdifference(data1,
 
     """
     # get the duration of fixations in the scanpath
-    dur1 = data1['fix']['dur']
-    dur2 = data2['fix']['dur']
+    dur1 = data1["fix"]["dur"]
+    dur2 = data2["fix"]["dur"]
     # initialize list to hold individual duration differences
     durdiff = []
     # calculation fixation duration differences between saccades along path
@@ -572,16 +543,11 @@ def cal_durationdifference(data1,
         i, j = np.where(M_assignment == p)
         maxlist = [dur1[i.item()], dur2[j.item()]]
         # compute abs. duration diff, normalize by largest duration in pair
-        durdiff.append(abs(dur1[i.item()] -
-                           dur2[j.item()]) / abs(max(maxlist)))
+        durdiff.append(abs(dur1[i.item()] - dur2[j.item()]) / abs(max(maxlist)))
     return durdiff
 
 
-def cal_lengthdifference(data1,
-                         data2,
-                         path,
-                         M_assignment
-                         ):
+def cal_lengthdifference(data1, data2, path, M_assignment):
     """Calculate length similarity of two scanpaths.
 
     :param: data1: array-like
@@ -601,8 +567,8 @@ def cal_lengthdifference(data1,
 
     """
     # get the saccade lengths rho
-    len1 = np.asarray(data1['sac']['rho'])
-    len2 = np.asarray(data2['sac']['rho'])
+    len1 = np.asarray(data1["sac"]["rho"])
+    len2 = np.asarray(data2["sac"]["rho"])
     # initialize list to hold individual length differences
     lendiff = []
     # calculate length differences between saccades along path
@@ -612,11 +578,7 @@ def cal_lengthdifference(data1,
     return lendiff
 
 
-def cal_positiondifference(data1,
-                           data2,
-                           path,
-                           M_assignment
-                           ):
+def cal_positiondifference(data1, data2, path, M_assignment):
     """Calculate position similarity of two scanpaths.
 
     :param: data1: array-like
@@ -637,25 +599,24 @@ def cal_positiondifference(data1,
 
     """
     # get the x and y coordinates of points between saccades
-    x1 = np.asarray(data1['sac']['x'])
-    x2 = np.asarray(data2['sac']['x'])
-    y1 = np.asarray(data1['sac']['y'])
-    y2 = np.asarray(data2['sac']['y'])
+    x1 = np.asarray(data1["sac"]["x"])
+    x2 = np.asarray(data2["sac"]["x"])
+    y1 = np.asarray(data1["sac"]["y"])
+    y2 = np.asarray(data2["sac"]["y"])
     # initialize list to hold individual position differences
     posdiff = []
     # calculate position differences along path
     for p in path:
         i, j = np.where(M_assignment == p)
-        posdiff.append(math.sqrt((x1[i.item()] - x2[j.item()]) ** 2 +
-                                 (y1[i.item()] - y2[j.item()]) ** 2))
+        posdiff.append(
+            math.sqrt(
+                (x1[i.item()] - x2[j.item()]) ** 2 + (y1[i.item()] - y2[j.item()]) ** 2
+            )
+        )
     return posdiff
 
 
-def cal_vectordifferencealongpath(data1,
-                                  data2,
-                                  path,
-                                  M_assignment
-                                  ):
+def cal_vectordifferencealongpath(data1, data2, path, M_assignment):
     """Calculate vector similarity of two scanpaths.
 
     :param: data1: array-like
@@ -676,26 +637,25 @@ def cal_vectordifferencealongpath(data1,
 
     """
     # get the saccade lengths in x and y direction of both scanpaths
-    x1 = np.asarray(data1['sac']['lenx'])
-    x2 = np.asarray(data2['sac']['lenx'])
-    y1 = np.asarray(data1['sac']['leny'])
-    y2 = np.asarray(data2['sac']['leny'])
+    x1 = np.asarray(data1["sac"]["lenx"])
+    x2 = np.asarray(data2["sac"]["lenx"])
+    y1 = np.asarray(data1["sac"]["leny"])
+    y2 = np.asarray(data2["sac"]["leny"])
     # initialize list to hold individual vector differences
     vectordiff = []
     # calculate vector differences along path
     # TODO look at this again, should be possible simpler
     for p in path:
         i, j = np.where(M_assignment == p)
-        vectordiff.append(np.sqrt((x1[i.item()] - x2[j.item()]) ** 2 +
-                                  (y1[i.item()] - y2[j.item()]) ** 2))
+        vectordiff.append(
+            np.sqrt(
+                (x1[i.item()] - x2[j.item()]) ** 2 + (y1[i.item()] - y2[j.item()]) ** 2
+            )
+        )
     return vectordiff
 
 
-def getunnormalised(data1,
-                    data2,
-                    path,
-                    M_assignment
-                    ):
+def getunnormalised(data1, data2, path, M_assignment):
     """Calculate unnormalised similarity measures.
 
     Calls the five functions to create unnormalised similarity measures for
@@ -721,11 +681,13 @@ def getunnormalised(data1,
     """
     return [
         np.median(fx(data1, data2, path, M_assignment))
-        for fx in (cal_vectordifferencealongpath,
-                   cal_angulardifference,
-                   cal_lengthdifference,
-                   cal_positiondifference,
-                   cal_durationdifference)
+        for fx in (
+            cal_vectordifferencealongpath,
+            cal_angulardifference,
+            cal_lengthdifference,
+            cal_positiondifference,
+            cal_durationdifference,
+        )
     ]
 
 
@@ -749,27 +711,39 @@ def normaliseresults(unnormalised, screensize):
     """
     # normalize vector similarity against two times screen diagonal, the maximum
     # theoretical distance
-    VectorSimilarity = 1 - unnormalised[0] / (2 * math.sqrt(screensize[0] ** 2 + screensize[1] ** 2))
+    VectorSimilarity = 1 - unnormalised[0] / (
+        2 * math.sqrt(screensize[0] ** 2 + screensize[1] ** 2)
+    )
     # normalize against pi
     DirectionSimilarity = 1 - unnormalised[1] / math.pi
     # normalize against screen diagonal
-    LengthSimilarity = 1 - unnormalised[2] / math.sqrt(screensize[0] ** 2 + screensize[1] ** 2)
-    PositionSimilarity = 1 - unnormalised[3] / math.sqrt(screensize[0] ** 2 + screensize[1] ** 2)
+    LengthSimilarity = 1 - unnormalised[2] / math.sqrt(
+        screensize[0] ** 2 + screensize[1] ** 2
+    )
+    PositionSimilarity = 1 - unnormalised[3] / math.sqrt(
+        screensize[0] ** 2 + screensize[1] ** 2
+    )
     # no normalisazion necessary, already done
     DurationSimilarity = 1 - unnormalised[4]
-    normalresults = [VectorSimilarity, DirectionSimilarity, LengthSimilarity,
-                     PositionSimilarity, DurationSimilarity]
+    normalresults = [
+        VectorSimilarity,
+        DirectionSimilarity,
+        LengthSimilarity,
+        PositionSimilarity,
+        DurationSimilarity,
+    ]
     return normalresults
 
 
-def docomparison(fixation_vectors1,
-                 fixation_vectors2,
-                 screensize,
-                 grouping=False,
-                 TDir=0.0,
-                 TDur=0.0,
-                 TAmp=0.0
-                 ):
+def docomparison(
+    fixation_vectors1,
+    fixation_vectors2,
+    screensize,
+    grouping=False,
+    TDir=0.0,
+    TDur=0.0,
+    TAmp=0.0,
+):
     """Compare two scanpaths on five similarity dimensions.
 
 
@@ -804,11 +778,15 @@ def docomparison(fixation_vectors1,
         M = cal_vectordifferences(path1, path2)
         # initialize a matrix of size M for a matrix of nodes
         scanpath_dim = np.shape(M)
-        M_assignment = np.arange(scanpath_dim[0] * scanpath_dim[1]).reshape(scanpath_dim[0], scanpath_dim[1])
+        M_assignment = np.arange(scanpath_dim[0] * scanpath_dim[1]).reshape(
+            scanpath_dim[0], scanpath_dim[1]
+        )
         # create a weighted graph of all possible connections per Node, and their weight
-        numVert,rows,cols,weight = createdirectedgraph(scanpath_dim,M,M_assignment)
+        numVert, rows, cols, weight = createdirectedgraph(scanpath_dim, M, M_assignment)
         # find the shortest path (= lowest sum of weights) through the graph using scipy dijkstra
-        path,dist=dijkstra(numVert,rows,cols,weight,0, scanpath_dim[0] * scanpath_dim[1] - 1)
+        path, dist = dijkstra(
+            numVert, rows, cols, weight, 0, scanpath_dim[0] * scanpath_dim[1] - 1
+        )
 
         # compute similarities on aligned scanpaths and normalize them
         unnormalised = getunnormalised(path1, path2, path, M_assignment)
@@ -830,52 +808,70 @@ def parse_args(args):
     import argparse
 
     parser = argparse.ArgumentParser(
-        prog='multimatch_gaze',
-        description='{}'.format(
-            main.__doc__
-        ),
-        formatter_class=argparse.RawDescriptionHelpFormatter)
+        prog="multimatch_gaze",
+        description="{}".format(main.__doc__),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
 
     parser.add_argument(
-        'input1', metavar='<datafile>',
+        "input1",
+        metavar="<datafile>",
         help="""Fixation data of scanpath 1. Should be a tab separated
         file with columns corresponding to x-coordinates ('start_x'),
         y-coordinates ('start_y'), and fixation duration ('duration')
-        in seconds.""")
+        in seconds.""",
+    )
     parser.add_argument(
-        'input2', metavar='<datafile>',
+        "input2",
+        metavar="<datafile>",
         help="""Fixation data of scanpath 2. Should be a tab separated
         file with columns corresponding to x-coordinates ('start_x'),
         y-coordinates ('start_y'), and fixation duration ('duration')
-        in seconds.""")
+        in seconds.""",
+    )
     parser.add_argument(
-        'screensize',  metavar='<screensize>',
-        nargs='+',
+        "screensize",
+        metavar="<screensize>",
+        nargs="+",
         help="""screensize: Resolution of screen in px, should be supplied as
         1000 800 for a screen of resolution [1000, 800]. This parameter is
         necessary to correctly normalize Length, Position, and Vector similarity
-        to range [0, 1].""")
+        to range [0, 1].""",
+    )
     parser.add_argument(
-        '--direction-threshold', type=float, metavar='<TDir>', default=0.0,
+        "--direction-threshold",
+        type=float,
+        metavar="<TDir>",
+        default=0.0,
         help="""Threshold for direction based grouping in degree (example: 45.0).
         Two consecutive saccades with an angle below TDir and short fixations will
         be grouped together to reduce scanpath complexity. If 0: no
         simplification will be performed.
-        Default: 0 (no simplification)""")
+        Default: 0 (no simplification)""",
+    )
     parser.add_argument(
-        '--amplitude-threshold', type=float, metavar='<TAmp>', default=0.0,
+        "--amplitude-threshold",
+        type=float,
+        metavar="<TAmp>",
+        default=0.0,
         help="""Threshold for amplitude based grouping in pixel (example: 140.0).
         Two consecutive saccades shorter than TAmp and short fixations will be
         grouped together to reduce scanpath complexity. If 0: no simplification
         will be performed.
-        Default: 0 (no simplification)""")
+        Default: 0 (no simplification)""",
+    )
     parser.add_argument(
-        '--duration-threshold', type=float, metavar='<TDur>', default=0.0,
+        "--duration-threshold",
+        type=float,
+        metavar="<TDur>",
+        default=0.0,
         help="""Threshold for fixation duration during amplitude and direction
         based grouping, in seconds (example: 0.1).
-        Default: 0 (no simplification)""")
+        Default: 0 (no simplification)""",
+    )
     parser.add_argument(
-        '-o', '--output-type',
+        "-o",
+        "--output-type",
         help="""Specify output format of the results: "hr", "single-row"
         or "single-del".
         <hr>: the most Human Readable option, will print dimension
@@ -886,19 +882,25 @@ def parse_args(args):
         delimiter (tab), row-wise, without whitespace. Useful to pick a selection
         of scores, split by a single tab, without worrying about whitespace
         default: hr""",
-        default = 'hr')
+        default="hr",
+    )
     parser.add_argument(
-        '--remodnav', default=False, action='store_true',
+        "--remodnav",
+        default=False,
+        action="store_true",
         help="""If the input files are output of the REMoDNaV algorithm, and
         the --remodnav parameter is given, multimatch-gaze will read in the
-        REMoDNaV data natively. default: False""")
+        REMoDNaV data natively. default: False""",
+    )
     parser.add_argument(
-        '--pursuit', choices=('discard', 'keep'),
+        "--pursuit",
+        choices=("discard", "keep"),
         help="""IF the --remodnav parameter is given: Which action to take to
         deal with results? Chose from: 'discard', 'keep'.
         Discard will discard any pursuit event.
         Keep will keep start and end points of pursuits in the
-        gaze path.""")
+        gaze path.""",
+    )
 
     return parser.parse_args(args)
 
@@ -921,9 +923,7 @@ def main(args=None):
     """
     # I want to give infos to the user in the command line, but it shouldn't
     # go to stdout -- that would make collation in a table horrible.
-    logging.basicConfig(
-        format='%(levelname)s:%(message)s',
-        level=logging.INFO)
+    logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
     # I'm sure this function parameter is ugly -- I'm trying to test main with
     # my unit test, in which I need to pass the args...
     if not args:
@@ -932,38 +932,46 @@ def main(args=None):
     screensize = [float(i) for i in args.screensize]
     if len(screensize) != 2:
         raise ValueError(
-            'I expected two floats after for the positional'
-            'screensize argument, such as 1280 720. '
-            'However, I got {}. Please provide the screensize'
-            'in pixel')
+            "I expected two floats after for the positional"
+            "screensize argument, such as 1280 720. "
+            "However, I got {}. Please provide the screensize"
+            "in pixel"
+        )
 
     if args.remodnav:
         from multimatch_gaze.tests import utils as ut
+
         # read in the remodnav data
         data1 = ut.read_remodnav(args.input1)
         data2 = ut.read_remodnav(args.input2)
 
-        if args.pursuit == 'keep':
+        if args.pursuit == "keep":
             data1 = ut.pursuits_to_fixations(data1)
             data2 = ut.pursuits_to_fixations(data2)
-            #print("Triggered")
-            #import pdb; pdb.set_trace()
+            # print("Triggered")
+            # import pdb; pdb.set_trace()
 
         data1 = ut.preprocess_remodnav(data1, screensize)
         data2 = ut.preprocess_remodnav(data2, screensize)
     else:
-        data1 = np.recfromcsv(args.input1,
-                              delimiter='\t',
-                              dtype={'names': ('start_x', 'start_y', 'duration'),
-                                     'formats': ('f8', 'f8', 'f8')},
-                              usecols=(0, 1, 2)
-                              )
-        data2 = np.recfromcsv(args.input2,
-                              delimiter='\t',
-                              dtype={'names': ('start_x', 'start_y', 'duration'),
-                                     'formats': ('f8', 'f8', 'f8')},
-                              usecols=(0, 1, 2)
-                              )
+        data1 = np.recfromcsv(
+            args.input1,
+            delimiter="\t",
+            dtype={
+                "names": ("start_x", "start_y", "duration"),
+                "formats": ("f8", "f8", "f8"),
+            },
+            usecols=(0, 1, 2),
+        )
+        data2 = np.recfromcsv(
+            args.input2,
+            delimiter="\t",
+            dtype={
+                "names": ("start_x", "start_y", "duration"),
+                "formats": ("f8", "f8", "f8"),
+            },
+            usecols=(0, 1, 2),
+        )
 
     TDir = args.direction_threshold
     TAmp = args.amplitude_threshold
@@ -973,50 +981,52 @@ def main(args=None):
         grouping = True
         # give information about the specified analysis, but to stderr
         logging.info(
-            'Scanpath comparison is done with simplification. Two consecutive '
-            'saccades shorter than {}px and '
-            'with an angle smaller than {} degrees are grouped together if '
-            'intermediate fixations are shorter '
-            'than {} seconds.'.format(TAmp, TDir, TDur))
+            "Scanpath comparison is done with simplification. Two consecutive "
+            "saccades shorter than {}px and "
+            "with an angle smaller than {} degrees are grouped together if "
+            "intermediate fixations are shorter "
+            "than {} seconds.".format(TAmp, TDir, TDur)
+        )
     else:
         grouping = False
-        logging.info(
-            'Scanpath comparison is done without any simplification.')
+        logging.info("Scanpath comparison is done without any simplification.")
 
-    allowed_output = ['hr', 'single-row', 'single-del']
+    allowed_output = ["hr", "single-row", "single-del"]
     output = args.output_type if args.output_type in allowed_output else False
 
     if not output:
         raise ValueError(
-                "I expected an output type specification of 'hr', 'single-row'"
-                " or 'single-del', supplied as a string (as in -o 'single-row')."
-                " However, I got '{}' instead.".format(args.output_type)
-                )
-    result = docomparison(data1,
-                          data2,
-                          screensize=screensize,
-                          grouping=grouping,
-                          TDir=TDir,
-                          TDur=TDur,
-                          TAmp=TAmp)
+            "I expected an output type specification of 'hr', 'single-row'"
+            " or 'single-del', supplied as a string (as in -o 'single-row')."
+            " However, I got '{}' instead.".format(args.output_type)
+        )
+    result = docomparison(
+        data1,
+        data2,
+        screensize=screensize,
+        grouping=grouping,
+        TDir=TDir,
+        TDur=TDur,
+        TAmp=TAmp,
+    )
 
-    for i, label in enumerate(('Vector',
-                               'Direction',
-                               'Length',
-                               'Position',
-                               'Duration')):
-        if output == 'hr':
-            print('{} similarity = {}'.format(label, result[i]))
-        elif output == 'single-del':
-            print('{}\t{}\t'.format(label, result[i]))
+    for i, label in enumerate(
+        ("Vector", "Direction", "Length", "Position", "Duration")
+    ):
+        if output == "hr":
+            print("{} similarity = {}".format(label, result[i]))
+        elif output == "single-del":
+            print("{}\t{}\t".format(label, result[i]))
 
-    if output == 'single-row':
-        print('{}\t{}\t{}\t{}\t{}\t'.format(result[0],
-                                            result[1],
-                                            result[2],
-                                            result[3],
-                                            result[4]))
-if __name__ == '__main__':
+    if output == "single-row":
+        print(
+            "{}\t{}\t{}\t{}\t{}\t".format(
+                result[0], result[1], result[2], result[3], result[4]
+            )
+        )
+
+
+if __name__ == "__main__":
 
     # execution
     main()

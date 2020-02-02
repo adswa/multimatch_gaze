@@ -7,11 +7,20 @@ from bisect import bisect_right
 from bisect import bisect_left
 from .. import multimatch_gaze as mp
 
-dtype = [('onset', '<f8'), ('duration', '<f8'),
-         ('label', '<U10'), ('start_x', '<f8'),
-         ('start_y', '<f8'), ('end_x', '<f8'),
-         ('end_y', '<f8'), ('amp', '<f8'),
-         ('peak_vel', '<f8'), ('med_vel', '<f8'), ('avg_vel', '<f8')]
+dtype = [
+    ("onset", "<f8"),
+    ("duration", "<f8"),
+    ("label", "<U10"),
+    ("start_x", "<f8"),
+    ("start_y", "<f8"),
+    ("end_x", "<f8"),
+    ("end_y", "<f8"),
+    ("amp", "<f8"),
+    ("peak_vel", "<f8"),
+    ("med_vel", "<f8"),
+    ("avg_vel", "<f8"),
+]
+
 
 def same_sample(run=1, subj=1):
     """duplicate dataset to force exactly similar scanpaths. Choose the run
@@ -20,44 +29,74 @@ def same_sample(run=1, subj=1):
         sub = "sub-30"
     else:
         sub = "sub-10"
-    path = os.path.join("multimatch_gaze/tests/testdata",
-                        "{}_task-movie_run-{}_events.tsv".format(sub, run))
-    loc = os.path.join("multimatch_gaze/tests/testdata",
-                       "locations_run-{}_events.tsv".format(run))
-    data = np.recfromcsv(path,
-                         delimiter='\t',
-                         dtype={'names': ('onset', 'duration', 'label',
-                                          'start_x', 'start_y', 'end_x',
-                                          'end_y', 'amp', 'peak_vel',
-                                          'med_vel', 'avg_vel'),
-                                'formats': ('f8', 'f8', 'U10', 'f8', 'f8',
-                                            'f8', 'f8', 'f8', 'f8', 'f8',
-                                            'f8')})
+    path = os.path.join(
+        "multimatch_gaze/tests/testdata",
+        "{}_task-movie_run-{}_events.tsv".format(sub, run),
+    )
+    loc = os.path.join(
+        "multimatch_gaze/tests/testdata", "locations_run-{}_events.tsv".format(run)
+    )
+    data = np.recfromcsv(
+        path,
+        delimiter="\t",
+        dtype={
+            "names": (
+                "onset",
+                "duration",
+                "label",
+                "start_x",
+                "start_y",
+                "end_x",
+                "end_y",
+                "amp",
+                "peak_vel",
+                "med_vel",
+                "avg_vel",
+            ),
+            "formats": (
+                "f8",
+                "f8",
+                "U10",
+                "f8",
+                "f8",
+                "f8",
+                "f8",
+                "f8",
+                "f8",
+                "f8",
+                "f8",
+            ),
+        },
+    )
     data2 = data
-    shots = pd.read_csv(loc, sep='\t')
+    shots = pd.read_csv(loc, sep="\t")
     return data, data2, shots
 
 
 def short_shots(run=3):
     """create a shortened shots location annotation to test longshots()"""
-    loc = os.path.join("multimatch_gaze/tests/testdata",
-                       "locations_run-{}_events.tsv".format(run))
-    shots = pd.read_csv(loc, sep='\t')
+    loc = os.path.join(
+        "multimatch_gaze/tests/testdata", "locations_run-{}_events.tsv".format(run)
+    )
+    shots = pd.read_csv(loc, sep="\t")
     shortshots = shots[0:20]
     return shortshots
 
 
 def mk_fix_vector(length=5):
     """creates a random length x 3 fixation vector in form of a record array"""
-    fix = np.recarray((0,), dtype=[('start_x', '<f8'), ('start_y', '<f8'),
-                                   ('duration', '<f8')])
+    fix = np.recarray(
+        (0,), dtype=[("start_x", "<f8"), ("start_y", "<f8"), ("duration", "<f8")]
+    )
     for i in range(0, length):
-        fixation = np.array((np.random.uniform(1, 720),
-                             np.random.uniform(1, 720),
-                             np.random.uniform(0.01, 5)),
-                            dtype=[('start_x', float),
-                                   ('start_y', float),
-                                   ('duration', float)])
+        fixation = np.array(
+            (
+                np.random.uniform(1, 720),
+                np.random.uniform(1, 720),
+                np.random.uniform(0.01, 5),
+            ),
+            dtype=[("start_x", float), ("start_y", float), ("duration", float)],
+        )
         fix = np.append(fix, fixation)
     return fix
 
@@ -75,11 +114,7 @@ def mk_strucarray(length=5):
     saccade_rho = random.sample(range(700), length - 1)
     saccade_theta = random.sample(range(4), length - 1)
     eyedata = dict(
-        fix=dict(
-            x=fixation_x,
-            y=fixation_y,
-            dur=fixation_dur,
-        ),
+        fix=dict(x=fixation_x, y=fixation_y, dur=fixation_dur,),
         sac=dict(
             x=saccade_x,
             y=saccade_y,
@@ -87,13 +122,11 @@ def mk_strucarray(length=5):
             leny=saccade_leny,
             theta=saccade_theta,
             rho=saccade_rho,
-        )
+        ),
     )
     eyedata2 = dict(
         fix=dict(
-            x=fixation_x[::-1] * 2,
-            y=fixation_y[::-1] * 2,
-            dur=fixation_dur[::-1] * 2,
+            x=fixation_x[::-1] * 2, y=fixation_y[::-1] * 2, dur=fixation_dur[::-1] * 2,
         ),
         sac=dict(
             x=saccade_x[::-1] * 2,
@@ -102,7 +135,7 @@ def mk_strucarray(length=5):
             leny=saccade_leny[::-1] * 2,
             theta=saccade_theta[::-1] * 2,
             rho=saccade_rho[::-1] * 2,
-        )
+        ),
     )
     return eyedata, eyedata2
 
@@ -135,15 +168,21 @@ def mk_durs():
 
 
 def mk_supershort_shots():
-    data = {'onset': np.arange(0, 20), 'duration': np.repeat(1, 20),
-            'locale': np.repeat('somewhere', 20)}
+    data = {
+        "onset": np.arange(0, 20),
+        "duration": np.repeat(1, 20),
+        "locale": np.repeat("somewhere", 20),
+    }
     shots = pd.DataFrame(data)
     return shots
 
 
 def mk_longershots():
-    data = {'onset': np.arange(0, 20), 'duration': np.repeat(5, 20),
-            'locale': np.repeat('somewhere', 20)}
+    data = {
+        "onset": np.arange(0, 20),
+        "duration": np.repeat(5, 20),
+        "locale": np.repeat("somewhere", 20),
+    }
     shots = pd.DataFrame(data)
     return shots
 
@@ -151,6 +190,7 @@ def mk_longershots():
 # some functions to work specifically with studyforrest eye tracking data
 
 # Functions specifically for the data at hand
+
 
 def takeclosestright(mylist, mynumber):
     """Return integer closest right to 'myNumber' in an ordered list.
@@ -203,8 +243,8 @@ def create_onsets(data, dur):
     """
     onsets = []
     for index, row in data.iterrows():
-        if row['duration'] >= dur:
-            onsets.append(row['onset'])
+        if row["duration"] >= dur:
+            onsets.append(row["onset"])
     return onsets
 
 
@@ -222,10 +262,10 @@ def create_offsets(data, dur):
 
     offsets = []
     for index, row in data.iterrows():
-        if row['duration'] >= dur:
+        if row["duration"] >= dur:
             # calculate end of shot by adding onset + duration, subtract an
             # epsilon to be really sure not to get into a cut
-            offsets.append(row['onset'] + row['duration'] - 0.03)
+            offsets.append(row["onset"] + row["duration"] - 0.03)
     return offsets
 
 
@@ -247,10 +287,10 @@ def create_chunks(onsets, fixations, dur):
     # initialize empty lists
     startidx, endidx = [], []
     for shotonset in onsets:
-        start = takeclosestright(fixations['onset'], shotonset)
-        startidx.append(np.where(fixations['onset'] == start)[0].tolist())
-        end = takeclosestright(fixations['onset'], shotonset + dur)
-        endidx.append(np.where(fixations['onset'] == end)[0].tolist())
+        start = takeclosestright(fixations["onset"], shotonset)
+        startidx.append(np.where(fixations["onset"] == start)[0].tolist())
+        end = takeclosestright(fixations["onset"], shotonset + dur)
+        endidx.append(np.where(fixations["onset"] == end)[0].tolist())
     # flatten the nested lists
     startidx = [element for sublist in startidx for element in sublist]
     endidx = [element for sublist in endidx for element in sublist]
@@ -273,10 +313,10 @@ def create_offsetchunks(offsets, fixations, dur):
     """
     startidx, endidx = [], []
     for shotoffset in offsets:
-        start = takeclosestright(fixations['onset'], shotoffset - dur)
-        startidx.append(np.where(fixations['onset'] == start)[0].tolist())
-        end = takeclosestleft(fixations['onset'], shotoffset)
-        endidx.append(np.where(fixations['onset'] == end)[0].tolist())
+        start = takeclosestright(fixations["onset"], shotoffset - dur)
+        startidx.append(np.where(fixations["onset"] == start)[0].tolist())
+        end = takeclosestleft(fixations["onset"], shotoffset)
+        endidx.append(np.where(fixations["onset"] == end)[0].tolist())
     # flatten the nested lists
     startidx = [element for sublist in startidx for element in sublist]
     endidx = [element for sublist in endidx for element in sublist]
@@ -300,9 +340,7 @@ def fixations_chunks(fixations, startid, endid):
     # slice fixation data according to indices, take columns
     # start_x, start_y and duration
     for idx in range(0, len(startid)):
-        ind = fixations[startid[idx]:endid[idx]][["start_x",
-                                                  "start_y",
-                                                  "duration"]]
+        ind = fixations[startid[idx] : endid[idx]][["start_x", "start_y", "duration"]]
         fixation_vector.append(ind)
     return fixation_vector
 
@@ -326,19 +364,20 @@ def pursuits_to_fixations(remodnav_data):
     # reassemble rec array.
     # split pursuits to use end and start as fixations later
     from copy import deepcopy
+
     data = deepcopy(remodnav_data)
     for i, d in enumerate(data):
-        if data[i]['label'] == 'PURS':
+        if data[i]["label"] == "PURS":
             # start and end point of pursuit get
             #  half the total duration
-            d['duration'] = d['duration'] / 2
-            d['label'] = 'FIXA'
+            d["duration"] = d["duration"] / 2
+            d["label"] = "FIXA"
             d2 = deepcopy(d)
             # end point of the pursuit is start
             # of new fixation
-            d2['onset'] += d2['duration']
-            d2['start_x'] = d2['end_x']
-            d2['start_y'] = d2['end_y']
+            d2["onset"] += d2["duration"]
+            d2["start_x"] = d2["end_x"]
+            d2["start_y"] = d2["end_y"]
             newdata = np.append(newdata, np.array(d, dtype=dtype))
             newdata = np.append(newdata, np.array(d2, dtype=dtype))
         else:
@@ -363,33 +402,35 @@ def preprocess_remodnav(data, screensize):
 
     """
     # only fixation labels
-    filterevents = data[(data['label'] == 'FIXA')]
+    filterevents = data[(data["label"] == "FIXA")]
     # within x coordinates?
-    filterxbounds = filterevents[np.logical_and(filterevents['start_x'] >= 0,
-                                                filterevents['start_x'] <= screensize[0])]
+    filterxbounds = filterevents[
+        np.logical_and(
+            filterevents["start_x"] >= 0, filterevents["start_x"] <= screensize[0]
+        )
+    ]
     # within y coordinates?
-    filterybounds = filterxbounds[np.logical_and(filterxbounds['start_y'] >= 0,
-                                                 filterxbounds['end_y'] <= screensize[1])]
+    filterybounds = filterxbounds[
+        np.logical_and(
+            filterxbounds["start_y"] >= 0, filterxbounds["end_y"] <= screensize[1]
+        )
+    ]
     # give me onset times, start_x, start_y and duration
-    fixations = filterybounds[["onset", "start_x", "start_y",
-                               "duration"]]
+    fixations = filterybounds[["onset", "start_x", "start_y", "duration"]]
     return fixations
+
 
 def read_remodnav(data):
     """ Helper to read input data produced by the REMoDNaV algorithm.
     Further information on the REMoDNaV algorithm can be found here:
     https://github.com/psychoinformatics-de/remodnav
     """
-    d = np.recfromcsv(data,
-        delimiter='\t',
-        dtype=dtype
-         )
+    d = np.recfromcsv(data, delimiter="\t", dtype=dtype)
 
     return d
 
-def longshot(shots,
-             group_shots,
-             ldur=4.92):
+
+def longshot(shots, group_shots, ldur=4.92):
     """Group movie shots without a cut together to obtain longer segments.
 
     Note: This way, fewer but longer scanpaths are obtained. Example: use
@@ -411,32 +452,39 @@ def longshot(shots,
             if structshots[i] == structshots[-1]:
                 break
             else:
-                if (structshots[i]['duration'] < ldur) & \
-                        (structshots[i + 1]['duration'] < ldur) & \
-                        (structshots[i]['locale'] == structshots[i + 1]['locale']):
+                if (
+                    (structshots[i]["duration"] < ldur)
+                    & (structshots[i + 1]["duration"] < ldur)
+                    & (structshots[i]["locale"] == structshots[i + 1]["locale"])
+                ):
                     # add durations together and delete second row
-                    structshots[i]['duration'] += structshots[i + 1]['duration']
+                    structshots[i]["duration"] += structshots[i + 1]["duration"]
                     structshots = np.delete(structshots, i + 1, 0)
                 else:
                     i += 1
-    aggregated = pd.DataFrame({'onset': structshots['onset'].tolist(),
-                               'duration': structshots['duration'].tolist()},
-                              columns=['onset', 'duration'])
+    aggregated = pd.DataFrame(
+        {
+            "onset": structshots["onset"].tolist(),
+            "duration": structshots["duration"].tolist(),
+        },
+        columns=["onset", "duration"],
+    )
     return aggregated
 
 
-def docomparison_forrest(shots,
-                         data1,
-                         data2,
-                         screensize=[1280, 720],
-                         dur=4.92,
-                         ldur=0,
-                         offset=False,
-                         TDur=0,
-                         TDir=0,
-                         TAmp=0,
-                         grouping=False
-                         ):
+def docomparison_forrest(
+    shots,
+    data1,
+    data2,
+    screensize=[1280, 720],
+    dur=4.92,
+    ldur=0,
+    offset=False,
+    TDur=0,
+    TDir=0,
+    TAmp=0,
+    grouping=False,
+):
     """Compare two scanpaths on five similarity dimensions.
 
     :param: data1, data2: recarray, eyemovement information of forrest gump studyforrest dataset
@@ -468,7 +516,7 @@ def docomparison_forrest(shots,
     # transform pursuits into fixations
     newdata1 = pursuits_to_fixations(data1)
     newdata2 = pursuits_to_fixations(data2)
-    print('Loaded data.')
+    print("Loaded data.")
     # preprocess input files
     fixations1 = preprocess_remodnav(newdata1, screensize)
     fixations2 = preprocess_remodnav(newdata2, screensize)
@@ -484,28 +532,27 @@ def docomparison_forrest(shots,
         startid2, endid2 = create_chunks(onset, fixations2, dur)
     fixation_vectors1 = fixations_chunks(fixations1, startid1, endid1)
     fixation_vectors2 = fixations_chunks(fixations2, startid2, endid2)
-    print('Split fixation data into {} scanpaths.'.format(len(startid1)))
+    print("Split fixation data into {} scanpaths.".format(len(startid1)))
     # save onset and duration times, if valid ones can be calculated
     onset_times = []
     exact_durations = []
     for i in range(0, len(startid1)):
-        onset_time = fixations1[startid1[i]]['onset']
+        onset_time = fixations1[startid1[i]]["onset"]
         onset_times.append(onset_time)
-        exact_duration = fixations1[endid1[i]]['onset'] - \
-                         fixations1[startid1[i]]['onset']
+        exact_duration = (
+            fixations1[endid1[i]]["onset"] - fixations1[startid1[i]]["onset"]
+        )
         # capture negative durations for invalid scanpaths
         if exact_duration > 0:
             exact_durations.append(exact_duration)
         else:
             exact_durations.append(np.nan)
         if i == len(startid1):
-            print('Captured onsets and duration'
-                  ' times of all scanpath pairs.')
+            print("Captured onsets and duration" " times of all scanpath pairs.")
     # loop over all fixation vectors/scanpaths and calculate similarity
     for i in range(0, len(onset)):
         # check if fixation vectors/scanpaths are long enough
-        if (len(fixation_vectors1[i]) >= 3) &\
-                (len(fixation_vectors2[i]) >= 3):
+        if (len(fixation_vectors1[i]) >= 3) & (len(fixation_vectors2[i]) >= 3):
             subj1 = mp.gen_scanpath_structure(fixation_vectors1[i])
             subj2 = mp.gen_scanpath_structure(fixation_vectors2[i])
             if grouping:
@@ -513,17 +560,25 @@ def docomparison_forrest(shots,
                 subj2 = mp.simplify_scanpath(subj2, TAmp, TDir, TDur)
             M = mp.cal_vectordifferences(subj1, subj2)
             scanpath_dim = np.shape(M)
-            M_assignment = np.arange(scanpath_dim[0] *
-                                     scanpath_dim[1]).reshape(scanpath_dim[0], scanpath_dim[1])
-            numVert,rows,cols,weight = mp.createdirectedgraph(scanpath_dim, M, M_assignment)
-            path, dist = mp.dijkstra(numVert,rows,cols,weight, 0, scanpath_dim[0] * scanpath_dim[1] - 1)
+            M_assignment = np.arange(scanpath_dim[0] * scanpath_dim[1]).reshape(
+                scanpath_dim[0], scanpath_dim[1]
+            )
+            numVert, rows, cols, weight = mp.createdirectedgraph(
+                scanpath_dim, M, M_assignment
+            )
+            path, dist = mp.dijkstra(
+                numVert, rows, cols, weight, 0, scanpath_dim[0] * scanpath_dim[1] - 1
+            )
             unnormalised = mp.getunnormalised(subj1, subj2, path, M_assignment)
             normal = mp.normaliseresults(unnormalised, screensize)
             scanpathcomparisons.append(normal)
         # return nan as result if at least one scanpath it too short
         else:
             scanpathcomparisons.append(np.repeat(np.nan, 5))
-            print('Scanpath {} had a length of {}, however, a minimal '
-                  'length of 3 is required. Appending nan.'.format(i,
-                                                                   min(len(fixation_vectors1), len(fixation_vectors2))))
+            print(
+                "Scanpath {} had a length of {}, however, a minimal "
+                "length of 3 is required. Appending nan.".format(
+                    i, min(len(fixation_vectors1), len(fixation_vectors2))
+                )
+            )
     return scanpathcomparisons, onset_times, exact_durations
