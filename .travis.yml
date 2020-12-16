@@ -26,7 +26,7 @@ install:
 #command to run tests
 script:
     - PATH=$PWD/tools/coverage-bin:$PATH
-      pytest --timeout=15 -s -v --cov=multimatch_gaze/ --cov-report=xml:coverage.xml
+      pytest --timeout=100 -s -v --cov=multimatch_gaze/ --cov-report=xml:coverage.xml
     # upload my python reports
     - bash <(curl -s https://codecov.io/bash) -cF python
     - codecov
