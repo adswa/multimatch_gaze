@@ -22,10 +22,11 @@ install:
     - pip install -r requirements.txt
     - pip install -U codecov
     - pip install pytest-cov
+    - pip install pytest-timeout
 #command to run tests
 script:
     - PATH=$PWD/tools/coverage-bin:$PATH
-      python -m pytest -s -v --cov=multimatch_gaze/ --cov-report=xml:coverage.xml
+      pytest --timeout=15 -s -v --cov=multimatch_gaze/ --cov-report=xml:coverage.xml
     # upload my python reports
     - bash <(curl -s https://codecov.io/bash) -cF python
     - codecov
