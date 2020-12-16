@@ -335,13 +335,15 @@ def simplify_scanpath(path, TAmp, TDir, TDur):
 
     :return: eyedata: dict, simplified vector-based scanpath representation
     """
-    looptime = 0
+    prev_length = len(path["fix"]["dur"])
     while True:
         path = simdir(path, TDir, TDur)
         path = simlen(path, TAmp, TDur)
-        looptime += 1
-        if looptime == len(path["fix"]["dur"]):
+        length = len(path["fix"]["dur"])
+        if length == prev_length:
             return path
+        else:
+            prev_length = length
 
 
 def cal_vectordifferences(path1, path2):
