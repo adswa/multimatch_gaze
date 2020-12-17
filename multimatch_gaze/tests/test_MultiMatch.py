@@ -522,3 +522,16 @@ def test_read_remodnav():
     with pytest.raises(ValueError):
         # blow up with wrong screensize
         mp.remodnav_reader(f, [1280, 720, 5])
+
+
+def test_simplification_bf46():
+    """
+    Test whether simplifications run indefinitely (see
+    https://github.com/adswa/multimatch_gaze/issues/46)
+    :return:
+    """
+    testfile = os.path.abspath("multimatch_gaze/tests/testdata/sp-46.csv")
+    data = np.recfromcsv(testfile, delimiter=",")
+    path = mp.gen_scanpath_structure(data)
+    # this should fail if it isn't terminated after 60 seconds
+    mp.simplify_scanpath(path, TDir=30.0, TDur=0.1, TAmp=100.1)
