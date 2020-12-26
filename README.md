@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.com/adswa/multimatch_gaze.svg?branch=master)](https://travis-ci.com/adswa/multimatch_gaze)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![codecov](https://codecov.io/gh/adswa/multimatch_gaze/branch/master/graph/badge.svg)](https://codecov.io/gh/adswa/multimatch_gaze)
 [![Documentation](https://readthedocs.org/projects/multimatch/badge/?version=latest)](https://multimatch.readthedocs.io/en/latest/)
@@ -137,6 +137,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
 <table>
   <tr>
     <td align="center"><a href="http://www.onerussian.com"><img src="https://avatars3.githubusercontent.com/u/39889?v=4" width="100px;" alt=""/><br /><sub><b>Yaroslav Halchenko</b></sub></a><br /><a href="#ideas-yarikoptic" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="http://psychoinformatics.de"><img src="https://avatars1.githubusercontent.com/u/136479?v=4" width="100px;" alt=""/><br /><sub><b>Michael Hanke</b></sub></a><br /><a href="https://github.com/adswa/multimatch_gaze/commits?author=mih" title="Code">💻</a></td>
   </tr>
 </table>
 
