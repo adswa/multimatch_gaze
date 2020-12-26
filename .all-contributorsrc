@@ -1,0 +1,53 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "yarikoptic",
+      "name": "Yaroslav Halchenko",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/39889?v=4",
+      "profile": "http://www.onerussian.com",
+      "contributions": [
+        "ideas"
+      ]
+    },
+    {
+      "login": "mih",
+      "name": "Michael Hanke",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/136479?v=4",
+      "profile": "http://psychoinformatics.de",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "mflan48",
+      "name": "mflan48",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/46726614?v=4",
+      "profile": "https://github.com/mflan48",
+      "contributions": [
+        "code",
+        "bug"
+      ]
+    },
+    {
+      "login": "LFaggi",
+      "name": "LFaggi",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/73990795?v=4",
+      "profile": "https://github.com/LFaggi",
+      "contributions": [
+        "code",
+        "bug"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "multimatch_gaze",
+  "projectOwner": "adswa",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
