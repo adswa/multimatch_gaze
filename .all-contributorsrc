@@ -22,6 +22,16 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "mflan48",
+      "name": "mflan48",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/46726614?v=4",
+      "profile": "https://github.com/mflan48",
+      "contributions": [
+        "code",
+        "bug"
+      ]
     }
   ],
   "contributorsPerLine": 7,
