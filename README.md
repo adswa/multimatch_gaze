@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.com/adswa/multimatch_gaze.svg?branch=master)](https://travis-ci.com/adswa/multimatch_gaze)
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![codecov](https://codecov.io/gh/adswa/multimatch_gaze/branch/master/graph/badge.svg)](https://codecov.io/gh/adswa/multimatch_gaze)
 [![Documentation](https://readthedocs.org/projects/multimatch/badge/?version=latest)](https://multimatch.readthedocs.io/en/latest/)
@@ -139,6 +139,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
     <td align="center"><a href="http://www.onerussian.com"><img src="https://avatars3.githubusercontent.com/u/39889?v=4" width="100px;" alt=""/><br /><sub><b>Yaroslav Halchenko</b></sub></a><br /><a href="#ideas-yarikoptic" title="Ideas, Planning, & Feedback">🤔</a></td>
     <td align="center"><a href="http://psychoinformatics.de"><img src="https://avatars1.githubusercontent.com/u/136479?v=4" width="100px;" alt=""/><br /><sub><b>Michael Hanke</b></sub></a><br /><a href="https://github.com/adswa/multimatch_gaze/commits?author=mih" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/mflan48"><img src="https://avatars3.githubusercontent.com/u/46726614?v=4" width="100px;" alt=""/><br /><sub><b>mflan48</b></sub></a><br /><a href="https://github.com/adswa/multimatch_gaze/commits?author=mflan48" title="Code">💻</a> <a href="https://github.com/adswa/multimatch_gaze/issues?q=author%3Amflan48" title="Bug reports">🐛</a></td>
+    <td align="center"><a href="https://github.com/LFaggi"><img src="https://avatars1.githubusercontent.com/u/73990795?v=4" width="100px;" alt=""/><br /><sub><b>LFaggi</b></sub></a><br /><a href="https://github.com/adswa/multimatch_gaze/commits?author=LFaggi" title="Code">💻</a> <a href="https://github.com/adswa/multimatch_gaze/issues?q=author%3ALFaggi" title="Bug reports">🐛</a></td>
   </tr>
 </table>
 
