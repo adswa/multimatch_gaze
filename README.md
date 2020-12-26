@@ -1,4 +1,7 @@
 [![Build Status](https://travis-ci.com/adswa/multimatch_gaze.svg?branch=master)](https://travis-ci.com/adswa/multimatch_gaze)
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 [![codecov](https://codecov.io/gh/adswa/multimatch_gaze/branch/master/graph/badge.svg)](https://codecov.io/gh/adswa/multimatch_gaze)
 [![Documentation](https://readthedocs.org/projects/multimatch/badge/?version=latest)](https://multimatch.readthedocs.io/en/latest/)
 [![PyPI version](https://badge.fury.io/py/multimatch-gaze.svg)](https://badge.fury.io/py/multimatch-gaze)
@@ -123,3 +126,22 @@ multidimensional scanpath similarity measure. In Proceedings of the 2010
 symposium on eye-tracking research & applications (pp. 211-218). ACM.
 [doi: 10.1145/1743666.1743718](https://doi.org/10.1145/1743666.1743718)
 
+
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tr>
+    <td align="center"><a href="http://www.onerussian.com"><img src="https://avatars3.githubusercontent.com/u/39889?v=4" width="100px;" alt=""/><br /><sub><b>Yaroslav Halchenko</b></sub></a><br /><a href="#ideas-yarikoptic" title="Ideas, Planning, & Feedback">🤔</a></td>
+  </tr>
+</table>
+
+<!-- markdownlint-enable -->
+<!-- prettier-ignore-end -->
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
